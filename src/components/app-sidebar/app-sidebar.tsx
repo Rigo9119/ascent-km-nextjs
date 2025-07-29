@@ -55,12 +55,12 @@ export function AppSidebar({ user }: AppSidebarProps) {
     },
     {
       title: 'Events',
-      url: '/event',
+      url: '/events',
       icon: Ticket
     },
     {
       title: 'Locations',
-      url: '/location',
+      url: '/locations',
       icon: Map
     },
     {
