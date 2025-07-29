@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,13 +23,13 @@ interface AppBreadcrumbsProps {
 export function AppBreadcrumbs({ breadcrumbs }: AppBreadcrumbsProps) {
 
   return (
-    <Breadcrumb className='mt-1 ml-2'>
-      <BreadcrumbList>
+    <Breadcrumb className="h-auto w-fit">
+      <BreadcrumbList className="h-auto flex-nowrap">
         <BreadcrumbItem>
           <BreadcrumbLink href="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
         {breadcrumbs.map((breadcrumb: BreadcrumbData, index: number) => (
-          <div key={index}>
+          <React.Fragment key={index}>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               {breadcrumb.isLast ? (
@@ -41,7 +42,7 @@ export function AppBreadcrumbs({ breadcrumbs }: AppBreadcrumbsProps) {
                 </BreadcrumbLink>
               )}
             </BreadcrumbItem>
-          </div>
+          </React.Fragment>
         ))}
       </BreadcrumbList>
     </Breadcrumb>
