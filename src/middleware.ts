@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           response = NextResponse.next({
             request: {
               headers: request.headers,
@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
   // Protected routes - redirect to auth if not authenticated
   const protectedPaths = ['/dashboard', '/profile', '/communities']
   const isProtectedPath = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path))
-  
+
   if (isProtectedPath && !user) {
     const url = new URL('/auth', request.url)
     return NextResponse.redirect(url)

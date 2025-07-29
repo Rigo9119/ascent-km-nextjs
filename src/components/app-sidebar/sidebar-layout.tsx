@@ -1,10 +1,11 @@
 'use client'
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 import { usePathname } from 'next/navigation'
 import { useMemo } from "react";
-import { AppBreadcrumbs } from "./app-breadcrumb";
+
 import { User } from "@supabase/supabase-js";
+import { Breadcrumb, SiteHeader } from "./site-header";
 
 interface SidebarLayoutProps {
   user: User | null;
@@ -15,7 +16,7 @@ export const SidebarLayout = ({ children, user }: SidebarLayoutProps) => {
   // Inside your component:
   const pathname = usePathname()
 
-  const breadcrumbs = useMemo(() => {
+  const breadcrumbs: Breadcrumb[] = useMemo(() => {
     // Remove leading slash and split into segments
     const urlSegments = pathname.slice(1).split('/').filter(Boolean)
 
@@ -27,13 +28,15 @@ export const SidebarLayout = ({ children, user }: SidebarLayoutProps) => {
   }, [pathname])
 
   return (
-    <SidebarProvider>
+    <SidebarProvider style={
+      {
+        "--sidebar-width": "calc(var(--spacing) * 72)",
+        "--header-height": "calc(var(--spacing) * 12)",
+      } as React.CSSProperties
+    }>
       <AppSidebar user={user} />
       <SidebarInset>
-        <header className="flex h-8 shrink-0 items-center gap-2 px-4">
-          <SidebarTrigger className="bg-emerald-300 -ml-1" />
-          {breadcrumbs.length > 0 && (<AppBreadcrumbs breadcrumbs={breadcrumbs} />)}
-        </header>
+        <SiteHeader breadcrumbs={breadcrumbs} />
         <main>
           {children}
         </main>

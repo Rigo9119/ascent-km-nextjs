@@ -117,7 +117,7 @@ export function AppSidebar({ user: serverUser }: AppSidebarProps) {
   ]
 
   return (
-    <Sidebar>
+    <Sidebar collapsible="offcanvas" variant="inset">
       <SidebarHeader>
         <div className="flex flex-row items-center justify-between">
           <h2 className="font-semibold text-emerald-600">Menu</h2>
