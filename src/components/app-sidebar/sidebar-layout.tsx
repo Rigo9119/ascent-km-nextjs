@@ -3,16 +3,13 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 import { usePathname } from 'next/navigation'
 import { useMemo } from "react";
-
-import { User } from "@supabase/supabase-js";
 import { Breadcrumb, SiteHeader } from "./site-header";
 
 interface SidebarLayoutProps {
-  user: User | null;
   children: React.ReactNode
 }
 
-export const SidebarLayout = ({ children, user }: SidebarLayoutProps) => {
+export const SidebarLayout = ({ children }: SidebarLayoutProps) => {
   // Inside your component:
   const pathname = usePathname()
 
@@ -34,7 +31,7 @@ export const SidebarLayout = ({ children, user }: SidebarLayoutProps) => {
         "--header-height": "calc(var(--spacing) * 12)",
       } as React.CSSProperties
     }>
-      <AppSidebar user={user} />
+      <AppSidebar />
       <SidebarInset>
         <SiteHeader breadcrumbs={breadcrumbs} />
         <main>

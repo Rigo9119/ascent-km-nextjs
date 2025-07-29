@@ -26,11 +26,6 @@ export const metadata: Metadata = {
   description: 'Nextroots page',
 };
 
-export async function getUser(): Promise<User | null> {
-  const supabase: SupabaseClient = await createSupabaseClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  return user
-}
 
 export default async function RootLayout({
   children,
@@ -38,15 +33,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 
 }>): Promise<React.ReactNode> {
-  const user: User | null = await getUser()
-
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <SidebarLayout user={user}>
+          <SidebarLayout>
             {children}
           </SidebarLayout>
         </AuthProvider>

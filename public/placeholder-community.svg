@@ -1,0 +1,18 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#F3F4F6"/>
+  <circle cx="180" cy="120" r="18" fill="#E5E7EB"/>
+  <circle cx="180" cy="115" r="8" fill="#9CA3AF"/>
+  <path d="M165 135 Q165 128 172 128 L188 128 Q195 128 195 135 L195 145 L165 145 Z" fill="#9CA3AF"/>
+  
+  <circle cx="220" cy="120" r="18" fill="#E5E7EB"/>
+  <circle cx="220" cy="115" r="8" fill="#9CA3AF"/>
+  <path d="M205 135 Q205 128 212 128 L228 128 Q235 128 235 135 L235 145 L205 145 Z" fill="#9CA3AF"/>
+  
+  <circle cx="200" cy="100" r="20" fill="#10B981"/>
+  <circle cx="200" cy="94" r="9" fill="#FFFFFF"/>
+  <path d="M182 118 Q182 110 190 110 L210 110 Q218 110 218 118 L218 130 L182 130 Z" fill="#FFFFFF"/>
+  
+  <rect x="160" y="170" width="80" height="4" fill="#9CA3AF"/>
+  <rect x="170" y="180" width="60" height="4" fill="#9CA3AF"/>
+  <text x="200" y="210" text-anchor="middle" fill="#6B7280" font-family="system-ui" font-size="14" font-weight="500">Community</text>
+</svg>

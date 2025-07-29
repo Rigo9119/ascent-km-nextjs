@@ -16,7 +16,6 @@ import {
   MessageSquare,
 } from 'lucide-react'
 import Link from 'next/link'
-import { User } from '@supabase/supabase-js'
 import {
   Sidebar,
   SidebarContent,
@@ -34,11 +33,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import MenuItems from '@/components/app-sidebar/menu-items'
 import { useAuth } from '@/hooks/use-auth'
 
-interface AppSidebarProps {
-  user: User | null | undefined
-}
 
-export function AppSidebar({ user: serverUser }: AppSidebarProps) {
+export function AppSidebar() {
   const sidebar = useSidebar()
   const { signOut, user, isLoading } = useAuth()
 
