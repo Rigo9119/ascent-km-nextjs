@@ -4,12 +4,14 @@ import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 import { usePathname } from 'next/navigation'
 import { useMemo } from "react";
 import { AppBreadcrumbs } from "./app-breadcrumb";
+import { User } from "@supabase/supabase-js";
 
 interface SidebarLayoutProps {
+  user: User | null;
   children: React.ReactNode
 }
 
-export const SidebarLayout = ({ children }: SidebarLayoutProps) => {
+export const SidebarLayout = ({ children, user }: SidebarLayoutProps) => {
   // Inside your component:
   const pathname = usePathname()
 
@@ -26,7 +28,7 @@ export const SidebarLayout = ({ children }: SidebarLayoutProps) => {
 
   return (
     <SidebarProvider>
-      <AppSidebar user={null} />
+      <AppSidebar user={user} />
       <SidebarTrigger />
       {breadcrumbs.length > 0 && (<AppBreadcrumbs breadcrumbs={breadcrumbs} />)}
       <SidebarInset>

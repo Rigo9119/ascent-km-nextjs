@@ -8,8 +8,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { usePathname } from 'next/navigation'
-import { Fragment, useMemo } from 'react'
 
 interface BreadcrumbData {
   label: string
@@ -30,7 +28,7 @@ export function AppBreadcrumbs({ breadcrumbs }: AppBreadcrumbsProps) {
           <BreadcrumbLink href="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
         {breadcrumbs.map((breadcrumb: BreadcrumbData, index: number) => (
-          <Fragment key={index}>
+          <div key={index}>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               {breadcrumb.isLast ? (
@@ -43,7 +41,7 @@ export function AppBreadcrumbs({ breadcrumbs }: AppBreadcrumbsProps) {
                 </BreadcrumbLink>
               )}
             </BreadcrumbItem>
-          </Fragment>
+          </div>
         ))}
       </BreadcrumbList>
     </Breadcrumb>

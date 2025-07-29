@@ -16,8 +16,6 @@ import {
   MessageSquare,
 } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { createClient } from '@supabase/supabase-js'
 import { User } from '@supabase/supabase-js'
 import {
   Sidebar,
@@ -41,18 +39,6 @@ interface AppSidebarProps {
 
 export function AppSidebar({ user }: AppSidebarProps) {
   const sidebar = useSidebar()
-  const router = useRouter()
-
-  // Note: You'll need to provide the supabase client instance
-  // const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
-
-  const handleLogin = () => {
-    router.push('/auth?mode=login')
-  }
-
-  const handleSignup = () => {
-    router.push('/auth?mode=sign-up')
-  }
 
   const handleLogout = async () => {
     // await supabase.auth.signOut()
