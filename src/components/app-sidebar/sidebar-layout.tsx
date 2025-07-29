@@ -30,8 +30,8 @@ export const SidebarLayout = ({ children, user }: SidebarLayoutProps) => {
     <SidebarProvider>
       <AppSidebar user={user} />
       <SidebarInset>
-        <header className="flex h-8 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger />
+        <header className="flex h-8 shrink-0 items-center gap-2 px-4">
+          <SidebarTrigger className="bg-emerald-300 -ml-1" />
           {breadcrumbs.length > 0 && (<AppBreadcrumbs breadcrumbs={breadcrumbs} />)}
         </header>
         <main>

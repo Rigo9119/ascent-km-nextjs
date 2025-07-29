@@ -32,18 +32,18 @@ import {
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import MenuItems from '@/components/app-sidebar/menu-items'
+import { useAuth } from '@/hooks/use-auth'
 
 interface AppSidebarProps {
   user: User | null | undefined
 }
 
-export function AppSidebar({ user }: AppSidebarProps) {
+export function AppSidebar({ user: serverUser }: AppSidebarProps) {
   const sidebar = useSidebar()
+  const { signOut, user, isLoading } = useAuth()
 
   const handleLogout = async () => {
-    // await supabase.auth.signOut()
-    // router.push('/')
-    // router.refresh()
+    await signOut()
   }
 
   // Menu items
@@ -143,7 +143,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
 
         <SidebarSeparator />
 
-        {user === undefined ? (
+        {isLoading ? (
           <Skeleton className="h-20 w-full" />
         ) : user ? (
           <SidebarGroup>
@@ -158,9 +158,8 @@ export function AppSidebar({ user }: AppSidebarProps) {
       </SidebarContent>
 
       <SidebarFooter>
-        {user === undefined ? (
-          // Optionally, show a spinner or nothing while loading
-          null
+        {isLoading ? (
+          <Skeleton className="h-10 w-full" />
         ) : !user ? (
           <div className="flex flex-col gap-2">
             <Button

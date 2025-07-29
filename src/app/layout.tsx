@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SidebarLayout } from "@/components/app-sidebar/sidebar-layout";
 import { createSupabaseClient } from "@/lib/supabase/server";
+import { AuthProvider } from "@/contexts/auth-context";
 
 
 const geistSans = Geist({
@@ -39,9 +40,11 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SidebarLayout user={user}>
-          {children}
-        </SidebarLayout>
+        <AuthProvider>
+          <SidebarLayout user={user}>
+            {children}
+          </SidebarLayout>
+        </AuthProvider>
       </body>
     </html>
   );
