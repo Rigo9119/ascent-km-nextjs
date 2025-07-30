@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tables } from "@/lib/types/supabase";
+import { useRouter } from "next/navigation";
 
 interface EventsListProps {
   events: Tables<"events_with_details_v2">[];
@@ -10,6 +11,8 @@ interface EventsListProps {
 }
 
 export default function EventsList({ events, loading = false }: EventsListProps) {
+  const router = useRouter();
+
   if (loading) {
     return (
       <div className="lg:col-span-3">
@@ -59,6 +62,7 @@ export default function EventsList({ events, loading = false }: EventsListProps)
                       className="border-emerald-500 text-emerald-500 hover:text-emerald-500" 
                       variant="outline" 
                       size="sm"
+                      onClick={() => router.push(`/events/${event.event_id}`)}
                     >
                       Learn More
                     </Button>

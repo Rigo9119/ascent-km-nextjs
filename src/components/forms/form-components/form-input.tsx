@@ -14,8 +14,8 @@ interface FormInputProps {
 }
 
 export const FormInput = ({ field, label, name, type, placeholder, value, onChange }: FormInputProps) => (
-  <div>
-    <Label>{label}</Label>
+  <div className='w-full'>
+    <Label className='mb-4'>{label}</Label>
     <Input name={name} type={type} placeholder={placeholder} value={value} onChange={onChange} />
     <FieldInfo field={field} />
   </div>

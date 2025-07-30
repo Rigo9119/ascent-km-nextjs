@@ -22,10 +22,10 @@ interface FormSelectProps {
 
 export default function FormSelect({ field, id, name, label, value, placeholder, optionsLabel, options, onValueChange }: FormSelectProps) {
   return (
-    <div id={id}>
-      <Label>{label}</Label>
+    <div id={id} className='w-full'>
+      <Label className='mb-2'>{label}</Label>
       <Select value={value} onValueChange={onValueChange} name={name}>
-        <SelectTrigger>
+        <SelectTrigger className='w-full'>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>

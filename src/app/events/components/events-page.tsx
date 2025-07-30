@@ -6,7 +6,7 @@ import EventsList from "./events-list";
 
 interface EventsPageCmpProps {
   categories: Tables<"categories">[];
-  locations: { id: string; name: string }[];
+  locations: { location_id: string; location_name: string }[];
   events: Tables<"events_with_details_v2">[];
 }
 

@@ -17,7 +17,7 @@ export type FilterState = {
 
 interface EventsFiltersProps {
   categories: Tables<"categories">[];
-  locations: { id: string; name: string }[];
+  locations: { location_id: string; location_name: string }[];
   filters: FilterState;
   onFiltersChange: (filters: FilterState) => void;
 }
@@ -36,7 +36,7 @@ export default function EventsFilters({
 
   const locationOptions = [
     { value: "all", label: "All Locations" },
-    ...(locations || []).map((loc) => ({ value: loc.id, label: loc.name })),
+    ...(locations || []).map((loc) => ({ value: loc.location_id, label: loc.location_name })),
   ];
 
   const handleFilterChange = (key: keyof FilterState, value: string | Date | undefined) => {
@@ -99,12 +99,9 @@ export default function EventsFilters({
             className="w-full"
           />
 
-          <Button className="w-full bg-emerald-500 hover:bg-emerald-600">
-            Apply Filters
-          </Button>
           <Button
             variant="outline"
-            className="w-full border-emerald-500 text-emerald-500 hover:text-emerald-500"
+            className="w-full mt-4 border-emerald-500 text-emerald-500 hover:text-emerald-500"
             onClick={handleClearAll}
           >
             Clear All

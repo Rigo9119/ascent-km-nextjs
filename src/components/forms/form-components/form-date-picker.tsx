@@ -22,8 +22,8 @@ export const FormDatePicker = ({
   disabled = false,
   className
 }: FormDatePickerProps) => (
-  <div>
-    <Label>{label}</Label>
+  <div className='w-full'>
+    <Label className='mb-2'>{label}</Label>
     <DatePicker
       date={value}
       onDateChange={onChange}
