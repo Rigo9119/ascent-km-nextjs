@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SidebarLayout } from "@/components/app-sidebar/sidebar-layout";
-import { createSupabaseClient } from "@/lib/supabase/server";
 import { AuthProvider } from "@/contexts/auth-context";
-import { SupabaseClient, User } from "@supabase/supabase-js";
 import { NextFontWithVariable } from "next/dist/compiled/@next/font";
 
 
