@@ -51,6 +51,8 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
           {event.image_url && (
             <div className="h-64 md:h-96 w-full rounded-lg overflow-hidden mb-6">
               <Image
+                height={200}
+                width={200}
                 src={event.image_url}
                 alt={event.name}
                 className="w-full h-full object-cover"
