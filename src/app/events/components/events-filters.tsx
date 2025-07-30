@@ -8,7 +8,7 @@ import FormSelect from "@/components/forms/form-components/form-select";
 import { Tables } from "@/lib/types/supabase";
 import { AnyFieldApi } from "@tanstack/react-form";
 
-export interface FilterState {
+export type FilterState = {
   search: string;
   category: string;
   location: string;
@@ -39,7 +39,7 @@ export default function EventsFilters({
     ...(locations || []).map((loc) => ({ value: loc.id, label: loc.name })),
   ];
 
-  const handleFilterChange = (key: keyof FilterState, value: any) => {
+  const handleFilterChange = (key: keyof FilterState, value: string | Date | undefined) => {
     onFiltersChange({
       ...filters,
       [key]: value,

@@ -63,7 +63,7 @@ export default function EventsPageCmp({ categories, locations, events }: EventsP
           filters={filters}
           onFiltersChange={setFilters}
         />
-        
+
         <EventsList events={filteredEvents} />
       </div>
     </div>
