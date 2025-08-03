@@ -57,7 +57,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (event === 'SIGNED_IN') {
           setError(null)
-          router.push('/')
+          // Check if this is a new user (signup) by checking metadata
+          if (session?.user?.user_metadata?.is_new_user) {
+            router.push('/auth/onboarding')
+          } else {
+            router.push('/')
+          }
         } else if (event === 'SIGNED_OUT') {
           setError(null)
           router.push('/auth')
@@ -78,7 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/`
+          redirectTo: `${window.location.origin}/auth/callback`
         }
       })
 
@@ -117,9 +122,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            is_new_user: true
+          }
+        }
       })
 
       if (error) throw error
+      
+      // If signup is successful, redirect will happen via auth state change
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred'
       setError(message)
