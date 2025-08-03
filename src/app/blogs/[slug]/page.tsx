@@ -4,14 +4,16 @@ import { notFound } from "next/navigation";
 import BlogPostCmp from "./components/blog-post";
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-export default function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  const { slug } = await params;
+  
   // In a real implementation, this would fetch from Sanity CMS by slug
-  const blog = mockBlogs.find(b => b.slug === params.slug && b.isPublished);
+  const blog = mockBlogs.find(b => b.slug === slug && b.isPublished);
   
   if (!blog) {
     notFound();
@@ -42,8 +44,9 @@ export function generateStaticParams() {
 }
 
 // Generate metadata for SEO
-export function generateMetadata({ params }: BlogPostPageProps) {
-  const blog = mockBlogs.find(b => b.slug === params.slug && b.isPublished);
+export async function generateMetadata({ params }: BlogPostPageProps) {
+  const { slug } = await params;
+  const blog = mockBlogs.find(b => b.slug === slug && b.isPublished);
   
   if (!blog) {
     return {

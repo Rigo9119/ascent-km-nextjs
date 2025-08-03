@@ -14,14 +14,14 @@ export default function BlogNotFound() {
               <div className="space-y-2">
                 <h1 className="text-4xl font-bold text-gray-900">Article Not Found</h1>
                 <p className="text-lg text-gray-600">
-                  The blog post you're looking for doesn't exist or has been moved.
+                  The blog post you are looking for does nott exist or has been moved.
                 </p>
               </div>
 
               <div className="bg-gray-50 rounded-lg p-6">
                 <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-500">
-                  This could happen if the article was unpublished, the URL was mistyped, 
+                  This could happen if the article was unpublished, the URL was mistyped,
                   or the content has been relocated.
                 </p>
               </div>

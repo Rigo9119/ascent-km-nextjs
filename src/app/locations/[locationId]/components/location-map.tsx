@@ -34,11 +34,11 @@ export default function LocationMap({ location }: LocationMapProps) {
   const defaultZoom = 15; // Closer zoom for individual location
 
   // Use location coordinates or fallback to South Korea center
-  const mapCenter: [number, number] = location.latitude && location.longitude 
-    ? [location.latitude, location.longitude]
+  const mapCenter: [number, number] = location.lat && location.lng 
+    ? [location.lat, location.lng]
     : defaultCenter;
 
-  const mapZoom = location.latitude && location.longitude ? defaultZoom : 7;
+  const mapZoom = location.lat && location.lng ? defaultZoom : 7;
 
   return (
     <MapContainer
@@ -52,9 +52,9 @@ export default function LocationMap({ location }: LocationMapProps) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       
-      {location.latitude && location.longitude && (
+      {location.lat && location.lng && (
         <Marker
-          position={[location.latitude, location.longitude]}
+          position={[location.lat, location.lng]}
           icon={locationIcon}
         >
           <Popup className="custom-popup" minWidth={280}>
@@ -88,9 +88,9 @@ export default function LocationMap({ location }: LocationMapProps) {
                     <StarIcon className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                     <span className="text-sm font-medium">{location.rating}</span>
                   </div>
-                  {location.category && (
+                  {location.price && (
                     <Badge variant="secondary" className="text-xs">
-                      {location.category}
+                      {location.price}
                     </Badge>
                   )}
                 </div>
@@ -105,7 +105,7 @@ export default function LocationMap({ location }: LocationMapProps) {
                   <Button 
                     size="sm" 
                     variant="outline"
-                    onClick={() => window.open(location.website, '_blank')}
+                    onClick={() => window.open(location.website!, '_blank')}
                     className="px-3"
                   >
                     <ExternalLinkIcon className="w-3 h-3" />

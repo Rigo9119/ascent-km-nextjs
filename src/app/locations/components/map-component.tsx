@@ -46,7 +46,7 @@ export default function MapComponent({ locations }: MapComponentProps) {
 
   // Filter locations that have valid coordinates
   const validLocations = locations.filter(
-    (location) => location.latitude && location.longitude
+    (location) => location.lat && location.lng
   );
 
   const mapCenter = southKoreaCenter;
@@ -66,7 +66,7 @@ export default function MapComponent({ locations }: MapComponentProps) {
       {validLocations.map((location) => (
         <Marker
           key={location.id}
-          position={[location.latitude!, location.longitude!]}
+          position={[location.lat!, location.lng!]}
           icon={location.is_featured ? featuredIcon : defaultIcon}
         >
           <Popup className="custom-popup" minWidth={250}>
@@ -110,7 +110,7 @@ export default function MapComponent({ locations }: MapComponentProps) {
                   <Button 
                     size="sm" 
                     variant="outline"
-                    onClick={() => window.open(location.website, '_blank')}
+                    onClick={() => window.open(location.website!, '_blank')}
                   >
                     Visit Website
                   </Button>
