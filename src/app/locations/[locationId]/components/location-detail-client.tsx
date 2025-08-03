@@ -7,6 +7,7 @@ import { MapPinIcon, StarIcon, ExternalLinkIcon, PhoneIcon, ClockIcon, GlobeIcon
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { Tables } from "@/lib/types/supabase";
+import { openMaps } from "@/lib/maps-utils";
 
 // Dynamically import the map to avoid SSR issues
 const LocationMap = dynamic(() => import("./location-map"), {
@@ -65,7 +66,7 @@ export default function LocationDetailClient({ location }: LocationDetailClientP
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">
-            <Button size="lg" className="bg-emerald-500 hover:bg-emerald-600">
+            <Button size="lg" className="bg-emerald-500 hover:bg-emerald-600" onClick={() => openMaps(location)}>
               <MapPinIcon className="w-4 h-4 mr-2" />
               Get Directions
             </Button>
@@ -266,7 +267,7 @@ export default function LocationDetailClient({ location }: LocationDetailClientP
                 <h3 className="font-semibold text-emerald-800">
                   Plan Your Visit
                 </h3>
-                <Button size="lg" className="w-full bg-emerald-500 hover:bg-emerald-600">
+                <Button size="lg" className="w-full bg-emerald-500 hover:bg-emerald-600" onClick={() => openMaps(location)}>
                   <MapPinIcon className="w-4 h-4 mr-2" />
                   Get Directions
                 </Button>

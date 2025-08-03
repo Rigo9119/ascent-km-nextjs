@@ -8,6 +8,7 @@ import { MapPinIcon, StarIcon, ExternalLinkIcon } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from "react";
 import { createLocationIcon } from "@/lib/leaflet-fix";
+import { openMaps } from "@/lib/maps-utils";
 
 interface LocationMapProps {
   location: Tables<"locations">;
@@ -106,7 +107,11 @@ export default function LocationMap({ location }: LocationMapProps) {
               )}
 
               <div className="flex gap-2 pt-2">
-                <Button size="sm" className="bg-emerald-500 hover:bg-emerald-600">
+                <Button
+                  size="sm"
+                  className="bg-emerald-500 hover:bg-emerald-600"
+                  onClick={() => openMaps(location)}
+                >
                   <MapPinIcon className="w-3 h-3 mr-1" />
                   Directions
                 </Button>
