@@ -6,40 +6,38 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPinIcon, StarIcon } from "lucide-react";
 import "leaflet/dist/leaflet.css";
-
-// Fix for default markers in React Leaflet
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
-
-// Default marker icon
-const defaultIcon = new Icon({
-  iconUrl: markerIcon.src,
-  iconRetinaUrl: markerIcon2x.src,
-  shadowUrl: markerShadow.src,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
-
-// Featured location icon (custom styling)
-const featuredIcon = new Icon({
-  iconUrl: markerIcon.src,
-  iconRetinaUrl: markerIcon2x.src,
-  shadowUrl: markerShadow.src,
-  iconSize: [35, 57],
-  iconAnchor: [17, 57],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-  className: "featured-marker",
-});
+import { useEffect, useState } from "react";
+import { createDefaultIcon, createFeaturedIcon } from "@/lib/leaflet-fix";
 
 interface MapComponentProps {
   locations: Tables<"locations">[];
 }
 
 export default function MapComponent({ locations }: MapComponentProps) {
+  const [iconsReady, setIconsReady] = useState(false);
+  const [icons, setIcons] = useState<{ default: Icon | null; featured: Icon | null }>({
+    default: null,
+    featured: null
+  });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const defaultIcon = createDefaultIcon();
+        const featuredIcon = createFeaturedIcon();
+        
+        if (defaultIcon && featuredIcon) {
+          setIcons({ default: defaultIcon, featured: featuredIcon });
+          setIconsReady(true);
+        }
+      } catch (error) {
+        console.error('Error creating leaflet icons:', error);
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   // South Korea center coordinates
   const southKoreaCenter: [number, number] = [35.9078, 127.7669]; // Center of South Korea
   const southKoreaZoom = 7; // Zoom level to show entire country
@@ -50,6 +48,14 @@ export default function MapComponent({ locations }: MapComponentProps) {
   );
 
   const mapCenter = southKoreaCenter;
+
+  if (!iconsReady || !icons.default || !icons.featured) {
+    return (
+      <div className="h-96 w-full bg-gray-100 rounded-lg flex items-center justify-center">
+        <p className="text-gray-500">Loading map...</p>
+      </div>
+    );
+  }
 
   return (
     <MapContainer
@@ -67,7 +73,7 @@ export default function MapComponent({ locations }: MapComponentProps) {
         <Marker
           key={location.id}
           position={[location.lat!, location.lng!]}
-          icon={location.is_featured ? featuredIcon : defaultIcon}
+          icon={location.is_featured && icons.featured ? icons.featured : icons.default || undefined}
         >
           <Popup className="custom-popup" minWidth={250}>
             <div className="p-2 space-y-3">

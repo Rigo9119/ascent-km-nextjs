@@ -6,29 +6,31 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPinIcon, StarIcon, ExternalLinkIcon } from "lucide-react";
 import "leaflet/dist/leaflet.css";
-
-// Fix for default markers in React Leaflet
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
-
-// Custom marker icon for the location
-const locationIcon = new Icon({
-  iconUrl: markerIcon.src,
-  iconRetinaUrl: markerIcon2x.src,
-  shadowUrl: markerShadow.src,
-  iconSize: [35, 57],
-  iconAnchor: [17, 57],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-  className: "location-detail-marker",
-});
+import { useEffect, useState } from "react";
+import { createLocationIcon } from "@/lib/leaflet-fix";
 
 interface LocationMapProps {
   location: Tables<"locations">;
 }
 
 export default function LocationMap({ location }: LocationMapProps) {
+  const [locationIcon, setLocationIcon] = useState<Icon | null>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const icon = createLocationIcon();
+        if (icon) {
+          setLocationIcon(icon);
+        }
+      } catch (error) {
+        console.error('Error creating location icon:', error);
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   // South Korea bounds for fallback
   const defaultCenter: [number, number] = [35.9078, 127.7669];
   const defaultZoom = 15; // Closer zoom for individual location
@@ -39,6 +41,14 @@ export default function LocationMap({ location }: LocationMapProps) {
     : defaultCenter;
 
   const mapZoom = location.lat && location.lng ? defaultZoom : 7;
+
+  if (!locationIcon) {
+    return (
+      <div className="h-64 w-full bg-gray-100 rounded-lg flex items-center justify-center">
+        <p className="text-gray-500">Loading map...</p>
+      </div>
+    );
+  }
 
   return (
     <MapContainer
@@ -55,7 +65,7 @@ export default function LocationMap({ location }: LocationMapProps) {
       {location.lat && location.lng && (
         <Marker
           position={[location.lat, location.lng]}
-          icon={locationIcon}
+          icon={locationIcon || undefined}
         >
           <Popup className="custom-popup" minWidth={280}>
             <div className="p-3 space-y-3">
