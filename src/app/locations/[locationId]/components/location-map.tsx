@@ -36,7 +36,7 @@ export default function LocationMap({ location }: LocationMapProps) {
   const defaultZoom = 15; // Closer zoom for individual location
 
   // Use location coordinates or fallback to South Korea center
-  const mapCenter: [number, number] = location.lat && location.lng 
+  const mapCenter: [number, number] = location.lat && location.lng
     ? [location.lat, location.lng]
     : defaultCenter;
 
@@ -61,7 +61,6 @@ export default function LocationMap({ location }: LocationMapProps) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      
       {location.lat && location.lng && (
         <Marker
           position={[location.lat, location.lng]}
@@ -80,18 +79,18 @@ export default function LocationMap({ location }: LocationMapProps) {
                   </Badge>
                 )}
               </div>
-              
+
               <div className="flex items-center gap-2 text-sm text-gray-500">
                 <MapPinIcon className="w-4 h-4" />
                 <span>{location.address}</span>
               </div>
-              
+
               {location.description && (
                 <p className="text-gray-600 text-sm leading-relaxed">
                   {location.description}
                 </p>
               )}
-              
+
               {location.rating && (
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1">
@@ -105,15 +104,15 @@ export default function LocationMap({ location }: LocationMapProps) {
                   )}
                 </div>
               )}
-              
+
               <div className="flex gap-2 pt-2">
                 <Button size="sm" className="bg-emerald-500 hover:bg-emerald-600">
                   <MapPinIcon className="w-3 h-3 mr-1" />
                   Directions
                 </Button>
                 {location.website && (
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     variant="outline"
                     onClick={() => window.open(location.website!, '_blank')}
                     className="px-3"

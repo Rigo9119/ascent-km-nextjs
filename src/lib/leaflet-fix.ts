@@ -1,10 +1,8 @@
-// Import dynamic to avoid SSR issues
 import { Icon } from "leaflet";
 
-// Define icon URLs as strings to avoid Next.js asset processing issues
 const iconUrls = {
   iconUrl: "/leaflet/marker-icon.png",
-  iconRetinaUrl: "/leaflet/marker-icon-2x.png", 
+  iconRetinaUrl: "/leaflet/marker-icon-2x.png",
   shadowUrl: "/leaflet/marker-shadow.png"
 };
 
@@ -12,25 +10,25 @@ let isFixed = false;
 
 export function fixLeafletIcons() {
   if (typeof window === 'undefined' || isFixed) return;
-  
+
   // Delete the _getIconUrl method to prevent conflicts
   delete (Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
-  
+
   // Set the default icon options
   Icon.Default.mergeOptions({
     iconUrl: iconUrls.iconUrl,
     iconRetinaUrl: iconUrls.iconRetinaUrl,
     shadowUrl: iconUrls.shadowUrl,
   });
-  
+
   isFixed = true;
 }
 
 export function createLocationIcon() {
   if (typeof window === 'undefined') return null;
-  
+
   fixLeafletIcons();
-  
+
   return new Icon({
     iconUrl: iconUrls.iconUrl,
     iconRetinaUrl: iconUrls.iconRetinaUrl,
@@ -45,9 +43,9 @@ export function createLocationIcon() {
 
 export function createDefaultIcon() {
   if (typeof window === 'undefined') return null;
-  
+
   fixLeafletIcons();
-  
+
   return new Icon({
     iconUrl: iconUrls.iconUrl,
     iconRetinaUrl: iconUrls.iconRetinaUrl,
@@ -61,9 +59,9 @@ export function createDefaultIcon() {
 
 export function createFeaturedIcon() {
   if (typeof window === 'undefined') return null;
-  
+
   fixLeafletIcons();
-  
+
   return new Icon({
     iconUrl: iconUrls.iconUrl,
     iconRetinaUrl: iconUrls.iconRetinaUrl,

@@ -205,32 +205,30 @@ export default function LocationDetailClient({ location }: LocationDetailClientP
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Rating Card */}
-          {location.rating && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Rating & Reviews</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <StarIcon
-                        key={i}
-                        className={`w-5 h-5 ${i < Math.floor(location.rating!)
-                            ? 'fill-yellow-400 text-yellow-400'
-                            : 'text-gray-300'
-                          }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="text-2xl font-bold">{location.rating}</span>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Rating & Reviews</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <StarIcon
+                      key={i}
+                      className={`w-5 h-5 ${i < Math.floor(location.rating!)
+                        ? 'fill-yellow-400 text-yellow-400'
+                        : 'text-gray-300'
+                        }`}
+                    />
+                  ))}
                 </div>
-                {location.review_count && (
-                  <p className="text-gray-600">Based on {location.review_count} reviews</p>
-                )}
-              </CardContent>
-            </Card>
-          )}
+                <span className="text-2xl font-bold">{location.rating}</span>
+              </div>
+              <p className="text-gray-600">Based on {location.review_count} reviews</p>
+            </CardContent>
+          </Card>
+
 
           {/* Quick Info */}
           <Card>
