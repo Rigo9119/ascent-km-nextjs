@@ -18,6 +18,9 @@ interface FormFileInputProps {
 export default function FormFileInput({ label, src, alt, name, id, onChange, value }: FormFileInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  
+  // Use value as the image source since that's what the form is managing
+  const imageSource = value || src;
 
   const handleFileSelect = () => {
     fileInputRef.current?.click();
@@ -26,11 +29,33 @@ export default function FormFileInput({ label, src, alt, name, id, onChange, val
   const handleRemove = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
-      // Create a synthetic event to trigger onChange
+      // Create a synthetic event to trigger onChange with empty value
       const event = {
-        target: fileInputRef.current
+        target: { ...fileInputRef.current, value: '' }
       } as React.ChangeEvent<HTMLInputElement>;
       onChange(event);
+    }
+  };
+
+  const processFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      if (fileInputRef.current) {
+        // Create a synthetic event with the base64 data
+        const event = {
+          target: { ...fileInputRef.current, value: result }
+        } as React.ChangeEvent<HTMLInputElement>;
+        onChange(event);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processFile(file);
     }
   };
 
@@ -49,11 +74,11 @@ export default function FormFileInput({ label, src, alt, name, id, onChange, val
     setIsDragOver(false);
     
     const files = e.dataTransfer.files;
-    if (files.length > 0 && fileInputRef.current) {
-      fileInputRef.current.files = files;
-      onChange({
-        target: fileInputRef.current
-      } as React.ChangeEvent<HTMLInputElement>);
+    if (files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        processFile(file);
+      }
     }
   };
 
@@ -65,14 +90,14 @@ export default function FormFileInput({ label, src, alt, name, id, onChange, val
         {/* Avatar Preview */}
         <div className="relative group">
           <Avatar className="size-32 ring-4 ring-emerald-100 shadow-lg">
-            <AvatarImage src={src} alt={alt} className="object-cover" />
+            <AvatarImage src={imageSource} alt={alt} className="object-cover" />
             <AvatarFallback className="bg-emerald-50 text-emerald-600 text-2xl">
               <User className="w-12 h-12" />
             </AvatarFallback>
           </Avatar>
           
           {/* Remove button (only show if there's an image) */}
-          {src && (
+          {imageSource && (
             <Button
               type="button"
               size="sm"
@@ -129,7 +154,7 @@ export default function FormFileInput({ label, src, alt, name, id, onChange, val
           type="file"
           name={name}
           id={id}
-          onChange={onChange}
+          onChange={handleFileChange}
           accept="image/*"
           className="hidden"
         />

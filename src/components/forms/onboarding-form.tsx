@@ -235,7 +235,7 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
                     name={field.name}
                     placeholder="Enter your phone number"
                     value={field.state.value}
-                    onChange={(value) => field.handleChange(value || '')}
+                    onChange={(value) => field.handleChange(value || "")}
                   />
                 )}
               </onboardingForm.Field>
