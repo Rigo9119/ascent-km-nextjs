@@ -14,7 +14,7 @@ export function fixLeafletIcons() {
   if (typeof window === 'undefined' || isFixed) return;
   
   // Delete the _getIconUrl method to prevent conflicts
-  delete (Icon.Default.prototype as any)._getIconUrl;
+  delete (Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
   
   // Set the default icon options
   Icon.Default.mergeOptions({
