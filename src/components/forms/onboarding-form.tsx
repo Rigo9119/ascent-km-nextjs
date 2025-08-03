@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { AnyFieldApi, useForm } from "@tanstack/react-form";
@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
 import { FormInput } from "./form-components/form-input";
 import FormSelect from "./form-components/form-select";
 import FormFileInput from "./form-components/form-file-input";
 import { X } from "lucide-react";
 import { useState, ChangeEvent } from "react";
+import FormTextarea from "./form-components/form-textarea";
+import FormPhoneInput from "./form-components/form-phone-input";
 
 interface OnboardingFormProps {
   user: User;
@@ -25,8 +26,20 @@ const socialTypes = [
 ];
 
 const availableInterests = [
-  "Hiking", "Photography", "Travel", "Food", "Culture", "Nature", "Adventure",
-  "Art", "Music", "Sports", "Technology", "History", "Shopping", "Nightlife"
+  "Hiking",
+  "Photography",
+  "Travel",
+  "Food",
+  "Culture",
+  "Nature",
+  "Adventure",
+  "Art",
+  "Music",
+  "Sports",
+  "Technology",
+  "History",
+  "Shopping",
+  "Nightlife",
 ];
 
 const countryOptions = [
@@ -59,7 +72,7 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
   const router = useRouter();
   const supabase = createSupabaseClient();
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-  const [socialLinks, setSocialLinks] = useState<Array<{ type: string, url: string }>>([]);
+  const [socialLinks, setSocialLinks] = useState<Array<{ type: string; url: string }>>([]);
   const onboardingForm = useForm({
     defaultValues: {
       username: "",
@@ -132,24 +145,19 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
   };
 
   const toggleInterest = (interest: string) => {
-    setSelectedInterests(prev =>
-      prev.includes(interest)
-        ? prev.filter(i => i !== interest)
-        : [...prev, interest]
+    setSelectedInterests((prev) =>
+      prev.includes(interest) ? prev.filter((i) => i !== interest) : [...prev, interest],
     );
   };
 
   const addSocialLink = (type: string, url: string) => {
     if (url.trim()) {
-      setSocialLinks(prev => [
-        ...prev.filter(link => link.type !== type),
-        { type, url: url.trim() }
-      ]);
+      setSocialLinks((prev) => [...prev.filter((link) => link.type !== type), { type, url: url.trim() }]);
     }
   };
 
   const removeSocialLink = (type: string) => {
-    setSocialLinks(prev => prev.filter(link => link.type !== type));
+    setSocialLinks((prev) => prev.filter((link) => link.type !== type));
   };
 
   return (
@@ -221,14 +229,13 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <onboardingForm.Field name="phone_number">
                 {(field: AnyFieldApi) => (
-                  <FormInput
+                  <FormPhoneInput
                     field={field}
                     label="Phone Number"
                     name={field.name}
-                    type="tel"
-                    placeholder="+1234567890"
+                    placeholder="Enter your phone number"
                     value={field.state.value}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => field.handleChange(event.target.value)}
+                    onChange={(value) => field.handleChange(value || '')}
                   />
                 )}
               </onboardingForm.Field>
@@ -249,15 +256,14 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
 
             <onboardingForm.Field name="bio">
               {(field: AnyFieldApi) => (
-                <div className="w-full">
-                  <label className="block text-sm font-medium mb-2">Bio</label>
-                  <Textarea
-                    placeholder="Tell us about yourself..."
-                    value={field.state.value}
-                    onChange={(event) => field.handleChange(event.target.value)}
-                    rows={3}
-                  />
-                </div>
+                <FormTextarea
+                  label="Bio"
+                  placeholder="Tell us about yourself..."
+                  value={field.state.value}
+                  name={field.name}
+                  onChange={(event) => field.handleChange(event.target.value)}
+                  rows={4}
+                />
               )}
             </onboardingForm.Field>
           </CardContent>
@@ -279,11 +285,13 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
                       name="city"
                       type="text"
                       placeholder="Seoul"
-                      value={field.state.value?.city || ''}
-                      onChange={(e) => field.handleChange({
-                        ...field.state.value,
-                        city: e.target.value
-                      })}
+                      value={field.state.value?.city || ""}
+                      onChange={(e) =>
+                        field.handleChange({
+                          ...field.state.value,
+                          city: e.target.value,
+                        })
+                      }
                     />
                     <FormInput
                       field={field}
@@ -291,11 +299,13 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
                       name="country"
                       type="text"
                       placeholder="South Korea"
-                      value={field.state.value?.country || ''}
-                      onChange={(e) => field.handleChange({
-                        ...field.state.value,
-                        country: e.target.value
-                      })}
+                      value={field.state.value?.country || ""}
+                      onChange={(e) =>
+                        field.handleChange({
+                          ...field.state.value,
+                          country: e.target.value,
+                        })
+                      }
                     />
                   </>
                 )}
@@ -316,9 +326,7 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
                 <Badge
                   key={interest}
                   variant={selectedInterests.includes(interest) ? "default" : "outline"}
-                  className={`cursor-pointer transition-colors ${selectedInterests.includes(interest)
-                      ? "bg-emerald-500 hover:bg-emerald-600"
-                      : "hover:bg-emerald-50"
+                  className={`cursor-pointer transition-colors ${selectedInterests.includes(interest) ? "bg-emerald-500 hover:bg-emerald-600" : "hover:bg-emerald-50"
                     }`}
                   onClick={() => toggleInterest(interest)}
                 >
@@ -337,7 +345,7 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
           </CardHeader>
           <CardContent className="space-y-4">
             {socialTypes.map((social) => {
-              const existingLink = socialLinks.find(link => link.type === social.type);
+              const existingLink = socialLinks.find((link) => link.type === social.type);
               return (
                 <div key={social.type} className="flex items-center gap-2">
                   <div className="flex-1">
@@ -347,7 +355,7 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
                       name={social.type}
                       type="url"
                       placeholder={social.placeholder}
-                      value={existingLink?.url || ''}
+                      value={existingLink?.url || ""}
                       onChange={(e) => {
                         if (e.target.value.trim()) {
                           addSocialLink(social.type, e.target.value);
@@ -389,4 +397,4 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
       </form>
     </div>
   );
-};
+}
