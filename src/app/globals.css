@@ -1,6 +1,32 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Leaflet map custom styles */
+.featured-marker {
+  filter: hue-rotate(120deg) saturate(1.5);
+}
+
+.location-detail-marker {
+  filter: hue-rotate(240deg) saturate(1.8) brightness(1.1);
+}
+
+.custom-popup .leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.custom-popup .leaflet-popup-tip {
+  background: white;
+}
+
+/* Line clamp utility for text truncation */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

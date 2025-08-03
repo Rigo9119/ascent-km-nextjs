@@ -1,8 +1,32 @@
-export default function LocationPage() {
+import { PageContainer } from "@/components/page-container";
+import { LocationsService } from "@/services/locations-service";
+import { createSupabaseClient } from "@/lib/supabase/client";
+import LocationsPageCmp from "./components/locations-page";
+
+const getPageData = async () => {
+  const supabase = createSupabaseClient();
+  const locationsService = new LocationsService(supabase);
+
+  const [allLocations, featuredLocations] = await Promise.all([
+    locationsService.getAllLocations(),
+    locationsService.getFeaturedLocations(),
+  ]);
+
+  return {
+    allLocations,
+    featuredLocations,
+  };
+};
+
+export default async function LocationPage() {
+  const { allLocations, featuredLocations } = await getPageData();
+
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold">Location</h1>
-      <p>Location page content</p>
-    </div>
-  )
+    <PageContainer>
+      <LocationsPageCmp 
+        locations={allLocations || []} 
+        featuredLocations={featuredLocations || []}
+      />
+    </PageContainer>
+  );
 }

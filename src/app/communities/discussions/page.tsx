@@ -1,8 +1,34 @@
-export default function DiscussionsPage() {
+import { PageContainer } from "@/components/page-container";
+import { DiscussionsService } from "@/services/discussions-service";
+import { CommunitiesService } from "@/services/communities-service";
+import { createSupabaseClient } from "@/lib/supabase/client";
+import DiscussionsPageCmp from "./components/discussions-page";
+
+const getPageData = async () => {
+  const supabase = createSupabaseClient();
+  const discussionsService = new DiscussionsService(supabase);
+  const communitiesService = new CommunitiesService(supabase);
+
+  const [discussions, communities] = await Promise.all([
+    discussionsService.getAllDiscussions(),
+    communitiesService.getPublicCommunities(),
+  ]);
+
+  return {
+    discussions,
+    communities,
+  };
+};
+
+export default async function DiscussionsPage() {
+  const { discussions, communities } = await getPageData();
+
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold">Discussions</h1>
-      <p>Community discussions page content</p>
-    </div>
-  )
+    <PageContainer>
+      <DiscussionsPageCmp 
+        discussions={discussions || []} 
+        communities={communities || []}
+      />
+    </PageContainer>
+  );
 }

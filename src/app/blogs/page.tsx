@@ -1,8 +1,18 @@
+import { PageContainer } from "@/components/page-container";
+import { mockBlogs, mockBlogCategories } from "@/data/mockBlogs";
+import BlogsPageCmp from "./components/blogs-page";
+
 export default function BlogPage() {
+  // In a real implementation, this would fetch from Sanity CMS
+  const blogs = mockBlogs.filter(blog => blog.isPublished);
+  const categories = mockBlogCategories;
+
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold">Blog</h1>
-      <p>Blog page content</p>
-    </div>
-  )
+    <PageContainer>
+      <BlogsPageCmp 
+        blogs={blogs} 
+        categories={categories}
+      />
+    </PageContainer>
+  );
 }

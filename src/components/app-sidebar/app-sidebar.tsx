@@ -77,8 +77,8 @@ export function AppSidebar() {
       icon: FileSearch
     },
     {
-      title: 'Blog',
-      url: '/blog',
+      title: 'Blogs',
+      url: '/blogs',
       icon: BookOpen
     }
   ]
