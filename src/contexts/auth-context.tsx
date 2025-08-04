@@ -62,20 +62,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
           const isRecentUser = userCreatedAt > fiveMinutesAgo
           const hasNewUserMetadata = session?.user?.user_metadata?.is_new_user
-          
-          console.log('SIGNED_IN event:', {
-            userEmail: session?.user?.email,
-            userCreatedAt,
-            isRecentUser,
-            hasNewUserMetadata,
-            metadata: session?.user?.user_metadata
-          })
-          
+
           if (hasNewUserMetadata || isRecentUser) {
-            console.log('Redirecting to onboarding')
             router.push('/auth/onboarding')
           } else {
-            console.log('Redirecting to home')
             router.push('/')
           }
         } else if (event === 'SIGNED_OUT') {
@@ -146,19 +136,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
 
       if (error) throw error
-      
+
       // Check if email confirmation is required
       if (data.user && !data.session) {
         // User was created but needs to confirm email
-        console.log('Email confirmation required for user:', data.user.email)
         setError('Please check your email and click the confirmation link to complete signup.')
         return
       }
-      
-      // If signup is successful and user is immediately signed in, redirect will happen via auth state change
-      if (data.session?.user) {
-        console.log('User signed up and session created immediately:', data.session.user.email)
-      }
+
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred'
       setError(message)

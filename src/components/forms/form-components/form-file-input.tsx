@@ -90,7 +90,7 @@ export default function FormFileInput({ label, src, alt, name, id, onChange, val
         {/* Avatar Preview */}
         <div className="relative group">
           <Avatar className="size-32 ring-4 ring-emerald-100 shadow-lg">
-            <AvatarImage src={imageSource} alt={alt} className="object-cover" />
+            {imageSource && <AvatarImage src={imageSource} alt={alt} className="object-cover" />}
             <AvatarFallback className="bg-emerald-50 text-emerald-600 text-2xl">
               <User className="w-12 h-12" />
             </AvatarFallback>

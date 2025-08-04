@@ -1,42 +1,45 @@
-'use client'
-
-import OnboardingForm from "@/components/forms/onboarding-form";
 import { PageContainer } from "@/components/page-container";
-import { useAuth } from "@/hooks/use-auth";
+import { PreferencesService } from "@/services/preferences-service";
+import { redirect } from "next/navigation";
+import { createSupabaseClient } from "@/lib/supabase/server";
+import { SupabaseClient, User } from "@supabase/supabase-js";
+import OnboardingPageContainer from "./components/OnboardingPageContainer";
+import { InterestService } from "@/services/interests-service";
+import { Interest, Preference } from "@/components/forms/onboarding-form";
 
-export default function OnboardingPage() {
-  const { user, isLoading } = useAuth();
+async function getOnboardingPageData(supabase: SupabaseClient) {
+  const preferencesService = new PreferencesService(supabase);
+  const interestsService = new InterestService(supabase);
 
-  console.log('OnboardingPage rendered:', { user: user?.email, isLoading });
+  const [preferences, interests] = await Promise.all([
+    preferencesService.getAllPreferenceTypes(),
+    interestsService.getAllInterestsTypes(),
+  ]);
 
-  if (isLoading) {
-    return (
-      <PageContainer>
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading...</p>
-          </div>
-        </div>
-      </PageContainer>
-    );
-  }
+  return {
+    preferences,
+    interests,
+  };
+}
+
+export default async function OnboardingPage() {
+  const supabase = await createSupabaseClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { preferences, interests } = await getOnboardingPageData(supabase);
 
   if (!user) {
-    return (
-      <PageContainer>
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-center">
-            <p className="text-gray-600">Please sign in to continue</p>
-          </div>
-        </div>
-      </PageContainer>
-    );
+    redirect("/auth");
   }
 
   return (
     <PageContainer>
-      <OnboardingForm user={user} />
+      <OnboardingPageContainer
+        user={user as unknown as User}
+        preferenceTypes={preferences as Preference[]}
+        interestsTypes={interests as Interest[]}
+      />
     </PageContainer>
   );
 }

@@ -4,6 +4,7 @@ import "./globals.css";
 import { SidebarLayout } from "@/components/app-sidebar/sidebar-layout";
 import { AuthProvider } from "@/contexts/auth-context";
 import { NextFontWithVariable } from "next/dist/compiled/@next/font";
+import { Toaster } from "sonner";
 
 
 const geistSans: NextFontWithVariable = Geist({
@@ -40,6 +41,7 @@ export default async function RootLayout({
           <SidebarLayout>
             {children}
           </SidebarLayout>
+          <Toaster />
         </AuthProvider>
       </body>
     </html>
