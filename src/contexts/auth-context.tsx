@@ -57,8 +57,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (event === 'SIGNED_IN') {
           setError(null)
-          // Check if this is a new user (signup) by checking metadata
-          if (session?.user?.user_metadata?.is_new_user) {
+          // Check if this is a new user (signup) by checking metadata or recent creation
+          const userCreatedAt = new Date(session?.user?.created_at || '')
+          const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
+          const isRecentUser = userCreatedAt > fiveMinutesAgo
+          const hasNewUserMetadata = session?.user?.user_metadata?.is_new_user
+          
+          if (hasNewUserMetadata || isRecentUser) {
             router.push('/auth/onboarding')
           } else {
             router.push('/')
@@ -119,10 +124,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(true)
       setError(null)
 
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: {
             is_new_user: true
           }
@@ -131,7 +137,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (error) throw error
       
-      // If signup is successful, redirect will happen via auth state change
+      // Check if email confirmation is required
+      if (data.user && !data.session) {
+        // User was created but needs to confirm email
+        setError('Please check your email and click the confirmation link to complete signup.')
+        return
+      }
+      
+      // If signup is successful and user is immediately signed in, redirect will happen via auth state change
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred'
       setError(message)

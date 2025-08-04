@@ -44,7 +44,7 @@ export async function middleware(request: NextRequest) {
 
   // Auth routes - redirect to dashboard if already authenticated
   if (request.nextUrl.pathname.startsWith('/auth') && user) {
-    const url = new URL('/dashboard', request.url)
+    const url = new URL('/', request.url)
     return NextResponse.redirect(url)
   }
 
