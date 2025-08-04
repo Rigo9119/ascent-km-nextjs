@@ -175,4 +175,45 @@ export class DiscussionsService {
 			throw new Error(`searchDiscussions-service-error: ${error}`);
 		}
 	}
+
+	async getUserDiscussions(userId: string) {
+		try {
+			const { data: discussions, error: sbError } = await this.supabase
+				.from('discussions')
+				.select(`
+					*,
+					communities(id, name, image_url),
+					profiles(id, full_name, username, avatar_url)
+				`)
+				.eq('user_id', userId)
+				.order('created_at', { ascending: false });
+
+			if (sbError) throw new Error(`getUserDiscussions error: ${sbError.message}`);
+			return discussions;
+		} catch (error) {
+			throw new Error(`getUserDiscussions-service-error: ${error}`);
+		}
+	}
+
+	async getUserParticipatedDiscussions(userId: string) {
+		try {
+			// Get discussions where user has commented
+			const { data: discussions, error: sbError } = await this.supabase
+				.from('discussions')
+				.select(`
+					*,
+					communities(id, name, image_url),
+					profiles(id, full_name, username, avatar_url),
+					comments!inner(user_id)
+				`)
+				.eq('comments.user_id', userId)
+				.neq('user_id', userId) // Exclude discussions created by the user
+				.order('created_at', { ascending: false });
+
+			if (sbError) throw new Error(`getUserParticipatedDiscussions error: ${sbError.message}`);
+			return discussions;
+		} catch (error) {
+			throw new Error(`getUserParticipatedDiscussions-service-error: ${error}`);
+		}
+	}
 }
