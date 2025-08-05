@@ -2,8 +2,8 @@
 import { useState, useMemo, Context } from "react";
 import { Tables } from "@/lib/types/supabase";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { PlusIcon } from "lucide-react";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { PlusIcon, X } from "lucide-react";
 import EventsFilters, { FilterState } from "./events-filters";
 import EventsList from "./events-list";
 import CreateEventForm from "@/components/forms/create-event-form";
@@ -79,7 +79,7 @@ export default function EventsPageCmp({ categories, locations, events }: EventsP
                   Fill out the form below to create a new event.
                 </SheetDescription>
               </SheetHeader>
-              <div className="mt-6">
+              <div className="mt-2 overflow-y-auto">
                 <CreateEventForm user={user as User} />
               </div>
             </SheetContent>

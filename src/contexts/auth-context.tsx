@@ -57,16 +57,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (event === 'SIGNED_IN') {
           setError(null)
-          // Check if this is a new user (signup) by checking metadata or recent creation
-          const userCreatedAt = new Date(session?.user?.created_at || '')
-          const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
-          const isRecentUser = userCreatedAt > fiveMinutesAgo
-          const hasNewUserMetadata = session?.user?.user_metadata?.is_new_user
+          
+          // Check if user has completed onboarding by checking if they have a profile
+          if (session?.user) {
+            try {
+              const { data: profile } = await supabase
+                .from('profiles')
+                .select('username')
+                .eq('id', session.user.id)
+                .single()
 
-          if (hasNewUserMetadata || isRecentUser) {
-            router.push('/auth/onboarding')
-          } else {
-            router.push('/')
+              // If no profile exists or username is empty, redirect to onboarding
+              if (!profile || !profile.username) {
+                router.push('/auth/onboarding')
+              } else {
+                router.push('/')
+              }
+            } catch (error) {
+              // If error fetching profile (likely doesn't exist), go to onboarding
+              router.push('/auth/onboarding')
+            }
           }
         } else if (event === 'SIGNED_OUT') {
           setError(null)

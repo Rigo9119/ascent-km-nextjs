@@ -42,21 +42,28 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Auth routes - redirect to dashboard if already authenticated (except onboarding for new users)
+  // Auth routes - redirect to dashboard if already authenticated (except onboarding for users without profiles)
   if (request.nextUrl.pathname.startsWith('/auth') && user) {
-    // Allow access to onboarding page for new users (created within last 5 minutes or has is_new_user metadata)
+    // Allow access to onboarding page for users who haven't completed their profile
     if (request.nextUrl.pathname === '/auth/onboarding') {
-      const userCreatedAt = new Date(user.created_at)
-      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
-      const isRecentUser = userCreatedAt > fiveMinutesAgo
-      const hasNewUserMetadata = user.user_metadata?.is_new_user
-      
-      if (hasNewUserMetadata || isRecentUser) {
-        return response // Allow access to onboarding
+      try {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('id', user.id)
+          .single()
+
+        // Allow onboarding if no profile exists or username is empty
+        if (!profile || !profile.username) {
+          return response // Allow access to onboarding
+        }
+      } catch (error) {
+        // If error fetching profile (likely doesn't exist), allow onboarding
+        return response
       }
     }
     
-    // For all other auth routes or non-new users trying to access onboarding
+    // For all other auth routes or users with completed profiles trying to access onboarding
     const url = new URL('/', request.url)
     return NextResponse.redirect(url)
   }
