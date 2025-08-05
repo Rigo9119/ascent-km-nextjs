@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
 // Read-only client for Server Components (like layout.tsx)
-export async function createSupabaseClient() {
+export async function createSupabaseServerClient() {
   const cookieStore = await cookies()
 
   return createServerClient(
@@ -49,7 +49,7 @@ export async function createSupabaseServerAction() {
 
 // Helper function to get user (read-only)
 export async function getUser() {
-  const supabase = await createSupabaseClient()
+  const supabase = await createSupabaseServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   return user
 }

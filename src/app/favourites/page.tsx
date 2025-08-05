@@ -2,7 +2,7 @@ import { createSupabaseClient } from "@/lib/supabase/server";
 import { FavoritesService } from "@/services/favorites-service";
 import { redirect } from "next/navigation";
 import { PageContainer } from "@/components/page-container";
-import FavoritesContent from "./components/FavoritesContent";
+import FavoritesContent from "./components/favourites-page";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 async function getUserFavoritesData(supabase: SupabaseClient, userId: string) {

@@ -3,7 +3,7 @@ import { CommunitiesService } from "@/services/communities-service";
 import { DiscussionsService } from "@/services/discussions-service";
 import { redirect } from "next/navigation";
 import { PageContainer } from "@/components/page-container";
-import MyCommunitiesContent from "./components/MyCommunitiesContent";
+import MyCommunitiesContent from "./components/my-communities-page";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 async function getUserCommunitiesData(supabase: SupabaseClient, userId: string) {

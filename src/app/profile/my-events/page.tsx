@@ -2,7 +2,7 @@ import { createSupabaseClient } from "@/lib/supabase/server";
 import { EventsService } from "@/services/events-service";
 import { redirect } from "next/navigation";
 import { PageContainer } from "@/components/page-container";
-import MyEventsContent from "./components/MyEventsContent";
+import MyEventsContent from "./components/my-events-page";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 async function getUserEventsData(supabase: SupabaseClient, userId: string) {

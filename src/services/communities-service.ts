@@ -139,4 +139,75 @@ export class CommunitiesService {
 			throw new Error(`getAllCommunityTypes-service-error: ${error}`);
 		}
 	}
+
+	async getCommunityMembers(communityId: string) {
+		try {
+			const { data: members, error: sbError } = await this.supabase
+				.from('community_members')
+				.select(`
+					*,
+					profiles(id, full_name, username, avatar_url)
+				`)
+				.eq('community_id', communityId)
+				.order('joined_at', { ascending: false });
+
+			if (sbError) throw new Error(`getCommunityMembers error: ${sbError.message}`);
+			return members;
+		} catch (error) {
+			throw new Error(`getCommunityMembers-service-error: ${error}`);
+		}
+	}
+
+	async joinCommunity(communityId: string, userId: string) {
+		try {
+			const { data: membership, error: sbError } = await this.supabase
+				.from('community_members')
+				.insert({
+					community_id: communityId,
+					user_id: userId,
+					joined_at: new Date().toISOString()
+				})
+				.select()
+				.single();
+
+			if (sbError) throw new Error(`joinCommunity error: ${sbError.message}`);
+			return membership;
+		} catch (error) {
+			throw new Error(`joinCommunity-service-error: ${error}`);
+		}
+	}
+
+	async leaveCommunity(communityId: string, userId: string) {
+		try {
+			const { error: sbError } = await this.supabase
+				.from('community_members')
+				.delete()
+				.eq('community_id', communityId)
+				.eq('user_id', userId);
+
+			if (sbError) throw new Error(`leaveCommunity error: ${sbError.message}`);
+			return { success: true };
+		} catch (error) {
+			throw new Error(`leaveCommunity-service-error: ${error}`);
+		}
+	}
+
+	async checkUserMembership(communityId: string, userId: string) {
+		try {
+			const { data: membership, error: sbError } = await this.supabase
+				.from('community_members')
+				.select('*')
+				.eq('community_id', communityId)
+				.eq('user_id', userId)
+				.single();
+
+			if (sbError && sbError.code !== 'PGRST116') {
+				throw new Error(`checkUserMembership error: ${sbError.message}`);
+			}
+
+			return !!membership;
+		} catch (error) {
+			throw new Error(`checkUserMembership-service-error: ${error}`);
+		}
+	}
 }
