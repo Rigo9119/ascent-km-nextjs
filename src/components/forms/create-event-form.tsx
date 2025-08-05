@@ -26,6 +26,7 @@ import {
   Save,
   X
 } from "lucide-react";
+import { FormTimeInput } from "./form-components/form-time-input";
 
 interface CreateEventFormProps {
   user: User;
@@ -42,10 +43,9 @@ export default function CreateEventForm({
   categories = [],
   eventTypes = [],
   onSuccess,
-  onCancel
 }: CreateEventFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  console.log(user)
+
   const form = useForm({
     defaultValues: {
       title: '',
@@ -223,15 +223,11 @@ export default function CreateEventForm({
 
             <form.Field name="time">
               {(field) => (
-                <FormInput
-                  field={field}
-                  label="Event Time"
+                <FormTimeInput field={field}
+                  label={'Select a time'}
                   name={field.name}
-                  type="time"
-                  placeholder="Select event time"
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  onBlur={field.handleBlur}
+                  onChange={(event) => field.handleChange(event.target.value)}
                 />
               )}
             </form.Field>

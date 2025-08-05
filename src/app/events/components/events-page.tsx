@@ -1,9 +1,9 @@
 "use client";
-import { useState, useMemo, Context } from "react";
+import { useState, useMemo } from "react";
 import { Tables } from "@/lib/types/supabase";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { PlusIcon, X } from "lucide-react";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { PlusIcon } from "lucide-react";
 import EventsFilters, { FilterState } from "./events-filters";
 import EventsList from "./events-list";
 import CreateEventForm from "@/components/forms/create-event-form";
@@ -18,7 +18,7 @@ interface EventsPageCmpProps {
 }
 
 export default function EventsPageCmp({ categories, locations, events }: EventsPageCmpProps) {
-  const { user } = useAuth()
+  const { user } = useAuth();
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     category: "all",
@@ -75,9 +75,7 @@ export default function EventsPageCmp({ categories, locations, events }: EventsP
             <SheetContent>
               <SheetHeader>
                 <SheetTitle>Create New Event</SheetTitle>
-                <SheetDescription>
-                  Fill out the form below to create a new event.
-                </SheetDescription>
+                <SheetDescription>Fill out the form below to create a new event.</SheetDescription>
               </SheetHeader>
               <div className="mt-2 overflow-y-auto">
                 <CreateEventForm user={user as User} />
@@ -88,12 +86,7 @@ export default function EventsPageCmp({ categories, locations, events }: EventsP
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <EventsFilters
-          categories={categories}
-          locations={locations}
-          filters={filters}
-          onFiltersChange={setFilters}
-        />
+        <EventsFilters categories={categories} locations={locations} filters={filters} onFiltersChange={setFilters} />
 
         <EventsList events={filteredEvents} />
       </div>
