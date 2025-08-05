@@ -59,10 +59,11 @@ export async function middleware(request: NextRequest) {
         }
       } catch (error) {
         // If error fetching profile (likely doesn't exist), allow onboarding
+        console.log(error)
         return response
       }
     }
-    
+
     // For all other auth routes or users with completed profiles trying to access onboarding
     const url = new URL('/', request.url)
     return NextResponse.redirect(url)

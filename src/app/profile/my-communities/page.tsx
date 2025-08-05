@@ -4,61 +4,45 @@ import { DiscussionsService } from "@/services/discussions-service";
 import { redirect } from "next/navigation";
 import { PageContainer } from "@/components/page-container";
 import MyCommunitiesContent from "./components/MyCommunitiesContent";
+import { SupabaseClient } from "@supabase/supabase-js";
 
-async function getUserCommunitiesData(supabase: any, userId: string) {
+async function getUserCommunitiesData(supabase: SupabaseClient, userId: string) {
   const communitiesService = new CommunitiesService(supabase);
   const discussionsService = new DiscussionsService(supabase);
 
   const [userCommunities, userDiscussions, participatedDiscussions] = await Promise.all([
     communitiesService.getUserCommunities(userId),
     discussionsService.getUserDiscussions(userId),
-    discussionsService.getUserParticipatedDiscussions(userId)
+    discussionsService.getUserParticipatedDiscussions(userId),
   ]);
 
   return {
     communities: userCommunities || [],
     createdDiscussions: userDiscussions || [],
-    participatedDiscussions: participatedDiscussions || []
+    participatedDiscussions: participatedDiscussions || [],
   };
 }
 
 export default async function MyCommunitiesPage() {
   const supabase = await createSupabaseClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { communities, createdDiscussions, participatedDiscussions } = await getUserCommunitiesData(supabase, user?.id as unknown as string);
 
   if (!user) {
-    redirect('/auth');
+    redirect("/auth");
   }
 
-  try {
-    const { communities, createdDiscussions, participatedDiscussions } = await getUserCommunitiesData(supabase, user.id);
 
-    return (
-      <PageContainer>
-        <MyCommunitiesContent 
-          communities={communities}
-          createdDiscussions={createdDiscussions}
-          participatedDiscussions={participatedDiscussions}
-          userId={user.id}
-        />
-      </PageContainer>
-    );
-  } catch (error) {
-    return (
-      <PageContainer>
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Unable to Load Communities</h1>
-            <p className="text-gray-600 mb-4">There was an error loading your communities and discussions.</p>
-            <a 
-              href="/profile" 
-              className="inline-flex items-center px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600"
-            >
-              Back to Profile
-            </a>
-          </div>
-        </div>
-      </PageContainer>
-    );
-  }
+  return (
+    <PageContainer>
+      <MyCommunitiesContent
+        communities={communities}
+        createdDiscussions={createdDiscussions}
+        participatedDiscussions={participatedDiscussions}
+        userId={user.id}
+      />
+    </PageContainer>
+  );
 }

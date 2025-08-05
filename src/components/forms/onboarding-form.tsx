@@ -15,12 +15,14 @@ import FormPhoneInput from "./form-components/form-phone-input";
 import { toast } from "sonner";
 
 export type Preference = {
-  id: number;
+  id: string;
+  name?: string | undefined;
   description: string | null;
 };
 
 export type Interest = {
-  id: number;
+  id: string;
+  name: string;
   description: string | null;
 };
 
@@ -54,9 +56,9 @@ export function dataURLtoBlob(dataurl: string) {
 export default function OnboardingForm({ user, preferenceTypes, interestsTypes }: OnboardingFormProps) {
   const router = useRouter();
   const supabase = createSupabaseClient();
-  const [selectedInterests, setSelectedInterests] = useState<number[]>([]);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [socialLinks, setSocialLinks] = useState<Array<{ type: string; url: string }>>([]);
-  const [selectedPreferences, setSelectedPreferences] = useState<number[]>([]);
+  const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
   const [phoneCountryCode, setPhoneCountryCode] = useState<string>("");
   const onboardingForm = useForm({
     defaultValues: {
@@ -203,6 +205,7 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
           <onboardingForm.Field name="avatar_url">
             {(field: AnyFieldApi) => (
               <FormFileInput
+                field={field}
                 label="Avatar"
                 id={field.name}
                 name={field.name}
@@ -272,11 +275,13 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
           <onboardingForm.Field name="bio">
             {(field: AnyFieldApi) => (
               <FormTextarea
+                field={field}
                 label="Bio"
                 placeholder="Tell us about yourself..."
                 value={field.state.value}
                 name={field.name}
                 onChange={(event) => field.handleChange(event.target.value)}
+                onBlur={field.handleBlur}
                 rows={4}
               />
             )}

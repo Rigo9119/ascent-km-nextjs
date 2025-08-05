@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import FormSelect from "@/components/forms/form-components/form-select";
 import { ExternalLink, FileText, Star, Globe, BookOpen } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { AnyFieldApi } from "@tanstack/react-form";
 
 export type FilterState = {
@@ -26,7 +25,6 @@ export default function ResourcesPageCmp({
   resources,
   categories,
 }: ResourcesPageProps) {
-  const router = useRouter();
   const [filteredResources, setFilteredResources] = useState(resources);
   const [filters, setFilters] = useState<FilterState>({
     search: "",
@@ -36,9 +34,9 @@ export default function ResourcesPageCmp({
   // Transform categories to options format
   const categoryOptions = [
     { value: "all", label: "All Categories" },
-    ...(categories || []).map((category) => ({ 
-      value: category, 
-      label: category.charAt(0).toUpperCase() + category.slice(1) 
+    ...(categories || []).map((category) => ({
+      value: category,
+      label: category.charAt(0).toUpperCase() + category.slice(1)
     })),
   ];
 
@@ -202,7 +200,7 @@ export default function ResourcesPageCmp({
               </p>
             </div>
           </div>
-          
+
           <div className="space-y-4">
             {filteredResources.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
@@ -246,7 +244,7 @@ function ResourceCard({ resource, featured = false }: ResourceCardProps) {
   if (featured) {
     // Featured resource card (grid layout)
     const Icon = getIconForCategory(resource.category);
-    
+
     return (
       <Card className="group hover:shadow-lg transition-shadow duration-200 overflow-hidden">
         <CardContent className="p-6">
@@ -292,7 +290,7 @@ function ResourceCard({ resource, featured = false }: ResourceCardProps) {
 
   // Regular resource card (list layout)
   const Icon = getIconForCategory(resource.category);
-  
+
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-6">

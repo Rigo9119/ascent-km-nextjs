@@ -13,6 +13,7 @@ import {
   Utensils,
   Wifi,
   CreditCard,
+  Heart,
   type LucideIcon
 } from 'lucide-react'
 
@@ -31,7 +32,8 @@ export const iconMap = {
   Camera,
   Utensils,
   Wifi,
-  CreditCard
+  CreditCard,
+  Heart
 } as const
 
 // Function to get icon component by name
@@ -46,7 +48,7 @@ interface IconProps {
   className?: string
 }
 
-export function Icon({ name, size = 24, className }: IconProps) {
+export default function Icon({ name, size = 24, className }: IconProps) {
   const IconComponent = getIconComponent(name)
   return <IconComponent size={size} className={className} />
 }

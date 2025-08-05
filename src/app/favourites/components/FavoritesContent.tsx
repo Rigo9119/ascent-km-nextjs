@@ -1,22 +1,21 @@
 'use client'
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { 
-  Heart, 
-  Calendar, 
-  MapPin, 
-  Users, 
-  Search, 
+import {
+  Heart,
+  Calendar,
+  MapPin,
+  Users,
+  Search,
   HeartOff,
   ExternalLink,
   Star
 } from "lucide-react";
+import Icon from "@/components/ui/icon";
 
 interface FavoriteEvent {
   event_id: string;
@@ -47,14 +46,12 @@ interface FavoritesContentProps {
   events: FavoriteEvent[];
   communities: FavoriteCommunity[];
   locations: FavoriteLocation[];
-  userId: string;
 }
 
-export default function FavoritesContent({ 
-  events, 
-  communities, 
-  locations, 
-  userId 
+export default function FavoritesContent({
+  events,
+  communities,
+  locations,
 }: FavoritesContentProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("events");
@@ -79,8 +76,8 @@ export default function FavoritesContent({
   );
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', { 
-      month: 'short', 
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
       day: 'numeric',
       year: 'numeric'
     });
@@ -109,7 +106,7 @@ export default function FavoritesContent({
         </div>
 
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">{event.event_description}</p>
-        
+
         <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center gap-2">
             <Heart className="w-4 h-4 text-red-500" />
@@ -143,7 +140,7 @@ export default function FavoritesContent({
         </div>
 
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">{community.community_description}</p>
-        
+
         <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center gap-2">
             <Heart className="w-4 h-4 text-red-500" />
@@ -183,7 +180,7 @@ export default function FavoritesContent({
         </div>
 
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">{location.location_description}</p>
-        
+
         <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center gap-2">
             <Heart className="w-4 h-4 text-red-500" />
@@ -194,14 +191,14 @@ export default function FavoritesContent({
     </Card>
   );
 
-  const EmptyState = ({ title, description, icon: Icon }: {
+  const EmptyState = ({ title, description, iconName }: {
     title: string;
     description: string;
-    icon: React.ComponentType<any>;
+    iconName: string
   }) => (
     <Card>
       <CardContent className="p-12 text-center">
-        <Icon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <Icon name={iconName} className="w-12 h-12 text-gray-400 mx-auto mb-4" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">{title}</h3>
         <p className="text-gray-500 mb-4">{description}</p>
         <Button className="bg-emerald-500 hover:bg-emerald-600">
@@ -282,10 +279,10 @@ export default function FavoritesContent({
               ))}
             </div>
           ) : (
-            <EmptyState 
+            <EmptyState
               title="No Favorite Events"
               description={searchTerm ? "No events match your search." : "You haven't favorited any events yet. Explore events and add them to your favorites!"}
-              icon={Calendar}
+              iconName={'Calendar'}
             />
           )}
         </TabsContent>
@@ -299,10 +296,10 @@ export default function FavoritesContent({
               ))}
             </div>
           ) : (
-            <EmptyState 
+            <EmptyState
               title="No Favorite Communities"
               description={searchTerm ? "No communities match your search." : "You haven't favorited any communities yet. Discover communities and save your favorites!"}
-              icon={Users}
+              iconName={'Users'}
             />
           )}
         </TabsContent>
@@ -316,10 +313,10 @@ export default function FavoritesContent({
               ))}
             </div>
           ) : (
-            <EmptyState 
+            <EmptyState
               title="No Favorite Locations"
               description={searchTerm ? "No locations match your search." : "You haven't favorited any locations yet. Explore locations and bookmark your favorites!"}
-              icon={MapPin}
+              iconName={'MapPin'}
             />
           )}
         </TabsContent>

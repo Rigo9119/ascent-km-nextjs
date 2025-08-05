@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (event === 'SIGNED_IN') {
           setError(null)
-          
+
           // Check if user has completed onboarding by checking if they have a profile
           if (session?.user) {
             try {
@@ -75,6 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               }
             } catch (error) {
               // If error fetching profile (likely doesn't exist), go to onboarding
+              console.log(error)
               router.push('/auth/onboarding')
             }
           }
@@ -88,7 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     )
 
     return () => subscription.unsubscribe()
-  }, [supabase.auth, router])
+  }, [supabase.auth, router, supabase])
 
   const signInWithProvider = async (provider: 'google' | 'kakao') => {
     try {

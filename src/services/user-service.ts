@@ -1,4 +1,7 @@
+import { Tables } from '@/lib/types/supabase';
 import type { SupabaseClient, User } from '@supabase/supabase-js';
+
+export type ProfileData = Tables<'profiles'>
 
 export class UserService {
   constructor(private supabase: SupabaseClient) { }
@@ -33,7 +36,7 @@ export class UserService {
     }
   }
 
-  async updateUserProfile(userId: string, profileData: any) {
+  async updateUserProfile(userId: string, profileData: ProfileData) {
     try {
       const { data: profile, error: sbError } = await this.supabase
         .from('profiles')

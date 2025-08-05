@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Save, Shield, Eye, EyeOff, Lock, Key, Download, Trash2 } from "lucide-react";
+import { Save, Shield, Eye, EyeOff, Lock, Key, Download } from "lucide-react";
 import { toast } from "sonner";
 
 interface UserSettings {
@@ -26,7 +26,7 @@ export default function PrivacySettings({ userId, userSettings }: PrivacySetting
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   const [privacySettings, setPrivacySettings] = useState({
     profile_visibility: 'public', // public, friends, private
     contact_visibility: 'friends', // public, friends, private
@@ -78,6 +78,7 @@ export default function PrivacySettings({ userId, userSettings }: PrivacySetting
         }
       });
     } catch (error) {
+      console.log(error)
       toast.error('Failed to update privacy settings.', {
         style: {
           background: '#ef4444',
@@ -123,7 +124,7 @@ export default function PrivacySettings({ userId, userSettings }: PrivacySetting
       }
 
       setPasswordData({ current_password: '', new_password: '', confirm_password: '' });
-      
+
       toast.success('Password updated successfully!', {
         style: {
           background: '#10b981',
@@ -131,6 +132,7 @@ export default function PrivacySettings({ userId, userSettings }: PrivacySetting
         }
       });
     } catch (error) {
+      console.log(error)
       toast.error('Failed to update password. Please check your current password.', {
         style: {
           background: '#ef4444',
@@ -146,7 +148,7 @@ export default function PrivacySettings({ userId, userSettings }: PrivacySetting
     try {
       const response = await fetch(`/api/settings/export-data?userId=${userId}`);
       const blob = await response.blob();
-      
+
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -160,6 +162,7 @@ export default function PrivacySettings({ userId, userSettings }: PrivacySetting
         style: { background: '#10b981', color: 'white' }
       });
     } catch (error) {
+      console.log(error)
       toast.error('Failed to export data.', {
         style: { background: '#ef4444', color: 'white' }
       });
@@ -180,8 +183,8 @@ export default function PrivacySettings({ userId, userSettings }: PrivacySetting
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="profile_visibility">Profile Visibility</Label>
-              <Select 
-                value={privacySettings.profile_visibility} 
+              <Select
+                value={privacySettings.profile_visibility}
                 onValueChange={(value) => handlePrivacyChange('profile_visibility', value)}
               >
                 <SelectTrigger>
@@ -197,8 +200,8 @@ export default function PrivacySettings({ userId, userSettings }: PrivacySetting
 
             <div>
               <Label htmlFor="contact_visibility">Contact Info Visibility</Label>
-              <Select 
-                value={privacySettings.contact_visibility} 
+              <Select
+                value={privacySettings.contact_visibility}
                 onValueChange={(value) => handlePrivacyChange('contact_visibility', value)}
               >
                 <SelectTrigger>
@@ -364,8 +367,8 @@ export default function PrivacySettings({ userId, userSettings }: PrivacySetting
               </div>
             </div>
 
-            <Button 
-              onClick={handlePasswordUpdate} 
+            <Button
+              onClick={handlePasswordUpdate}
               disabled={isLoading || !passwordData.current_password || !passwordData.new_password}
               className="w-full bg-blue-500 hover:bg-blue-600"
             >
@@ -414,8 +417,8 @@ export default function PrivacySettings({ userId, userSettings }: PrivacySetting
 
       {/* Save Buttons */}
       <div className="flex justify-end">
-        <Button 
-          onClick={handleSavePrivacy} 
+        <Button
+          onClick={handleSavePrivacy}
           disabled={isLoading}
           className="bg-emerald-500 hover:bg-emerald-600"
         >

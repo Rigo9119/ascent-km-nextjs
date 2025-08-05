@@ -30,7 +30,6 @@ export default function CommunitiesPageCmp({
   featuredCommunities,
   communityTypes,
 }: CommunitiesPageProps) {
-  const router = useRouter();
   const [filteredCommunities, setFilteredCommunities] = useState(communities);
   const [filters, setFilters] = useState<FilterState>({
     search: "",
@@ -156,7 +155,7 @@ export default function CommunitiesPageCmp({
               </p>
             </div>
           </div>
-          
+
           <div className="space-y-4">
             {filteredCommunities.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
@@ -185,7 +184,7 @@ function CommunityCard({ community, featured = false }: CommunityCardProps) {
   // Helper function to format location
   const formatLocation = (location: string | null) => {
     if (!location) return null;
-    
+
     try {
       // If it's a JSON string, parse it
       if (typeof location === 'string' && location.startsWith('{')) {
@@ -202,6 +201,7 @@ function CommunityCard({ community, featured = false }: CommunityCardProps) {
       return location;
     } catch (error) {
       // If parsing fails, return the original string
+      console.log(error)
       return location;
     }
   };
@@ -312,9 +312,9 @@ function CommunityCard({ community, featured = false }: CommunityCardProps) {
             <Button className="bg-emerald-500 hover:bg-emerald-600" size="sm">
               Join Community
             </Button>
-            <Button 
-              className="border-emerald-500 text-emerald-500 hover:text-emerald-500" 
-              variant="outline" 
+            <Button
+              className="border-emerald-500 text-emerald-500 hover:text-emerald-500"
+              variant="outline"
               size="sm"
               onClick={() => router.push(`/communities/${community.id}`)}
             >

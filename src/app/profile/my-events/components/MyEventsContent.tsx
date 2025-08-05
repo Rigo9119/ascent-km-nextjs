@@ -1,23 +1,13 @@
-'use client'
+"use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
-import { 
-  Calendar, 
-  MapPin, 
-  Users, 
-  Clock, 
-  Search, 
-  Filter, 
-  Plus,
-  Edit,
-  Trash2,
-  Eye
-} from "lucide-react";
+
+import { Calendar, MapPin, Users, Search, Plus, Edit, Trash2, Eye } from "lucide-react";
+import Image from "next/image";
 
 interface Event {
   id: string;
@@ -42,16 +32,17 @@ interface MyEventsContentProps {
   userId: string;
 }
 
-export default function MyEventsContent({ events, userId }: MyEventsContentProps) {
+export default function MyEventsContent({ events }: MyEventsContentProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [sortBy, setSortBy] = useState("date");
 
   // Filter and sort events
   const filteredEvents = events
-    .filter(event => {
-      const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           event.description.toLowerCase().includes(searchTerm.toLowerCase());
+    .filter((event) => {
+      const matchesSearch =
+        event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        event.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = filterStatus === "all" || event.status === filterStatus;
       return matchesSearch && matchesStatus;
     })
@@ -69,34 +60,35 @@ export default function MyEventsContent({ events, userId }: MyEventsContentProps
     });
 
   // Categorize events
-  const upcomingEvents = filteredEvents.filter(event => 
-    new Date(event.date) >= new Date() && event.status === 'active'
+  const upcomingEvents = filteredEvents.filter(
+    (event) => new Date(event.date) >= new Date() && event.status === "active",
   );
-  const pastEvents = filteredEvents.filter(event => 
-    new Date(event.date) < new Date()
-  );
-  const draftEvents = filteredEvents.filter(event => 
-    event.status === 'draft'
-  );
+  const pastEvents = filteredEvents.filter((event) => new Date(event.date) < new Date());
+  const draftEvents = filteredEvents.filter((event) => event.status === "draft");
 
   const formatDate = (dateString: string, timeString?: string) => {
     const date = new Date(dateString);
-    const dateStr = date.toLocaleDateString('en-US', { 
-      weekday: 'short', 
-      month: 'short', 
-      day: 'numeric',
-      year: 'numeric'
+    const dateStr = date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     });
     return timeString ? `${dateStr} at ${timeString}` : dateStr;
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'draft': return 'bg-gray-100 text-gray-800';
-      case 'cancelled': return 'bg-red-100 text-red-800';
-      case 'completed': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "active":
+        return "bg-green-100 text-green-800";
+      case "draft":
+        return "bg-gray-100 text-gray-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
+      case "completed":
+        return "bg-blue-100 text-blue-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -105,11 +97,7 @@ export default function MyEventsContent({ events, userId }: MyEventsContentProps
       <CardContent className="p-0">
         {event.image_url && (
           <div className="h-48 w-full overflow-hidden rounded-t-lg">
-            <img 
-              src={event.image_url} 
-              alt={event.title}
-              className="h-full w-full object-cover"
-            />
+            <Image src={event.image_url} alt={event.title} className="h-full w-full object-cover" width={300} height={200} />
           </div>
         )}
         <div className="p-6">
@@ -140,17 +128,19 @@ export default function MyEventsContent({ events, userId }: MyEventsContentProps
               <Calendar className="w-4 h-4" />
               <span>{formatDate(event.date, event.time)}</span>
             </div>
-            
+
             {event.locations && (
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4" />
                 <span>{event.locations.name}</span>
               </div>
             )}
-            
+
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4" />
-              <span>{event.current_participants} / {event.max_participants} participants</span>
+              <span>
+                {event.current_participants} / {event.max_participants} participants
+              </span>
             </div>
 
             <div className="flex items-center justify-between mt-4">
@@ -180,11 +170,7 @@ export default function MyEventsContent({ events, userId }: MyEventsContentProps
     </Card>
   );
 
-  const EventSection = ({ title, events, emptyMessage }: { 
-    title: string; 
-    events: Event[]; 
-    emptyMessage: string;
-  }) => (
+  const EventSection = ({ title, events, emptyMessage }: { title: string; events: Event[]; emptyMessage: string }) => (
     <div className="mb-8">
       <h2 className="text-xl font-semibold text-gray-900 mb-4">
         {title} ({events.length})
@@ -289,23 +275,15 @@ export default function MyEventsContent({ events, userId }: MyEventsContentProps
       </Card>
 
       {/* Events Sections */}
-      <EventSection 
-        title="Upcoming Events" 
-        events={upcomingEvents} 
+      <EventSection
+        title="Upcoming Events"
+        events={upcomingEvents}
         emptyMessage="No upcoming events. Create your first event to get started!"
       />
-      
-      <EventSection 
-        title="Draft Events" 
-        events={draftEvents} 
-        emptyMessage="No draft events."
-      />
-      
-      <EventSection 
-        title="Past Events" 
-        events={pastEvents} 
-        emptyMessage="No past events."
-      />
+
+      <EventSection title="Draft Events" events={draftEvents} emptyMessage="No draft events." />
+
+      <EventSection title="Past Events" events={pastEvents} emptyMessage="No past events." />
     </div>
   );
 }

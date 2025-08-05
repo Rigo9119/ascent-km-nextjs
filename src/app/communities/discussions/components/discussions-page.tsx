@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import FormSelect from "@/components/forms/form-components/form-select";
-import { MessageSquare, Users, Clock, Search, Plus } from "lucide-react";
+import { MessageSquare, Users, Clock, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { AnyFieldApi } from "@tanstack/react-form";
@@ -28,7 +28,6 @@ export default function DiscussionsPageCmp({
   discussions,
   communities,
 }: DiscussionsPageProps) {
-  const router = useRouter();
   const [filteredDiscussions, setFilteredDiscussions] = useState(discussions);
   const [filters, setFilters] = useState<FilterState>({
     search: "",
@@ -80,18 +79,18 @@ export default function DiscussionsPageCmp({
     setFilteredDiscussions(filtered);
   };
 
-  const formatTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  // const formatTimeAgo = (dateString: string) => {
+  //   const date = new Date(dateString);
+  //   const now = new Date();
+  //   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return 'Just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-    
-    return date.toLocaleDateString();
-  };
+  //   if (diffInSeconds < 60) return 'Just now';
+  //   if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+  //   if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+  //   if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+
+  //   return date.toLocaleDateString();
+  // };
 
   return (
     <div className="space-y-8">
@@ -154,7 +153,7 @@ export default function DiscussionsPageCmp({
               </p>
             </div>
           </div>
-          
+
           <div className="space-y-4">
             {filteredDiscussions.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
@@ -188,7 +187,7 @@ function DiscussionCard({ discussion }: DiscussionCardProps) {
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
     if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-    
+
     return date.toLocaleDateString();
   };
 
@@ -217,7 +216,7 @@ function DiscussionCard({ discussion }: DiscussionCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center space-x-2">
-                <h3 
+                <h3
                   className="text-lg font-semibold text-gray-900 hover:text-emerald-600 cursor-pointer transition-colors"
                   onClick={() => router.push(`/communities/discussions/${discussion.id}`)}
                 >

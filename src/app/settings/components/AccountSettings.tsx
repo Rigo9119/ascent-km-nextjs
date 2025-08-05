@@ -7,15 +7,15 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Save, 
-  CreditCard, 
-  AlertTriangle, 
-  Trash2, 
-  Mail, 
+import {
+  Save,
+  CreditCard,
+  AlertTriangle,
+  Trash2,
+  Mail,
   Calendar,
   Download,
-  RefreshCw,
+
   ExternalLink
 } from "lucide-react";
 import { toast } from "sonner";
@@ -39,7 +39,7 @@ export default function AccountSettings({ userId, userEmail, userSettings }: Acc
   const [newEmail, setNewEmail] = useState(userEmail);
   const [confirmationText, setConfirmationText] = useState('');
   const [showDeactivateConfirm, setShowDeactivateConfirm] = useState(false);
-  
+
   const handleEmailUpdate = async () => {
     if (newEmail === userEmail) {
       toast.error('Please enter a different email address.', {
@@ -72,6 +72,7 @@ export default function AccountSettings({ userId, userEmail, userSettings }: Acc
         }
       });
     } catch (error) {
+      console.log(error)
       toast.error('Failed to update email. Please try again.', {
         style: {
           background: '#ef4444',
@@ -120,6 +121,7 @@ export default function AccountSettings({ userId, userEmail, userSettings }: Acc
         window.location.href = '/';
       }, 2000);
     } catch (error) {
+      console.log(error)
       toast.error('Failed to deactivate account. Please try again.', {
         style: {
           background: '#ef4444',
@@ -135,7 +137,7 @@ export default function AccountSettings({ userId, userEmail, userSettings }: Acc
     try {
       const response = await fetch(`/api/settings/export?userId=${userId}`);
       const blob = await response.blob();
-      
+
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -149,6 +151,7 @@ export default function AccountSettings({ userId, userEmail, userSettings }: Acc
         style: { background: '#10b981', color: 'white' }
       });
     } catch (error) {
+      console.log(error)
       toast.error('Failed to export account data.', {
         style: { background: '#ef4444', color: 'white' }
       });
@@ -156,10 +159,10 @@ export default function AccountSettings({ userId, userEmail, userSettings }: Acc
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   };
 
@@ -183,7 +186,7 @@ export default function AccountSettings({ userId, userEmail, userSettings }: Acc
               </div>
               <p className="text-sm text-gray-500 mt-1">Username cannot be changed</p>
             </div>
-            
+
             <div>
               <Label>Member Since</Label>
               <div className="flex items-center gap-2">
@@ -203,8 +206,8 @@ export default function AccountSettings({ userId, userEmail, userSettings }: Acc
                 onChange={(e) => setNewEmail(e.target.value)}
                 placeholder="Enter new email address"
               />
-              <Button 
-                onClick={handleEmailUpdate} 
+              <Button
+                onClick={handleEmailUpdate}
                 disabled={isLoading || newEmail === userEmail}
                 variant="outline"
               >
@@ -213,7 +216,7 @@ export default function AccountSettings({ userId, userEmail, userSettings }: Acc
               </Button>
             </div>
             <p className="text-sm text-gray-500 mt-1">
-              You'll receive a confirmation email at your new address
+              You will receive a confirmation email at your new address
             </p>
           </div>
         </CardContent>
@@ -299,8 +302,8 @@ export default function AccountSettings({ userId, userEmail, userSettings }: Acc
           </Alert>
 
           {!showDeactivateConfirm ? (
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="border-red-200 text-red-600 hover:bg-red-50"
               onClick={() => setShowDeactivateConfirm(true)}
             >
@@ -311,9 +314,9 @@ export default function AccountSettings({ userId, userEmail, userSettings }: Acc
             <div className="space-y-4 p-4 border border-red-200 rounded-lg bg-red-50">
               <h4 className="font-medium text-red-800">Confirm Account Deactivation</h4>
               <p className="text-sm text-red-700">
-                This action cannot be undone. Type your username "<strong>{userSettings.username}</strong>" to confirm:
+                This action cannot be undone. Type your username - <strong>{userSettings.username}</strong> - to confirm:
               </p>
-              
+
               <Input
                 value={confirmationText}
                 onChange={(e) => setConfirmationText(e.target.value)}

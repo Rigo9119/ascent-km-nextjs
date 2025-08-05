@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Save, Bell, Mail, MessageSquare, Calendar, Users } from "lucide-react";
+import { Save, Bell, Mail, Calendar, Users } from "lucide-react";
 import { toast } from "sonner";
 
 interface NotificationSettingsProps {
@@ -22,17 +22,17 @@ export default function NotificationSettings({ userId }: NotificationSettingsPro
     email_discussions: true,
     email_marketing: false,
     email_security: true,
-    
+
     // Push Notifications
     push_events: true,
     push_communities: true,
     push_discussions: true,
     push_messages: true,
-    
+
     // Frequency Settings
     digest_frequency: 'weekly', // daily, weekly, monthly, never
     event_reminders: '1_day', // 1_hour, 1_day, 1_week, never
-    
+
     // Privacy
     activity_visibility: 'public', // public, friends, private
     online_status: true
@@ -71,6 +71,7 @@ export default function NotificationSettings({ userId }: NotificationSettingsPro
         }
       });
     } catch (error) {
+      console.error(error);
       toast.error('Failed to update settings. Please try again.', {
         style: {
           background: '#ef4444',
@@ -226,8 +227,8 @@ export default function NotificationSettings({ userId }: NotificationSettingsPro
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="digest_frequency">Email Digest Frequency</Label>
-              <Select 
-                value={settings.digest_frequency} 
+              <Select
+                value={settings.digest_frequency}
                 onValueChange={(value) => handleSelectChange('digest_frequency', value)}
               >
                 <SelectTrigger>
@@ -244,8 +245,8 @@ export default function NotificationSettings({ userId }: NotificationSettingsPro
 
             <div>
               <Label htmlFor="event_reminders">Event Reminder Timing</Label>
-              <Select 
-                value={settings.event_reminders} 
+              <Select
+                value={settings.event_reminders}
                 onValueChange={(value) => handleSelectChange('event_reminders', value)}
               >
                 <SelectTrigger>
@@ -274,8 +275,8 @@ export default function NotificationSettings({ userId }: NotificationSettingsPro
         <CardContent className="space-y-4">
           <div>
             <Label htmlFor="activity_visibility">Activity Visibility</Label>
-            <Select 
-              value={settings.activity_visibility} 
+            <Select
+              value={settings.activity_visibility}
               onValueChange={(value) => handleSelectChange('activity_visibility', value)}
             >
               <SelectTrigger>
@@ -292,7 +293,7 @@ export default function NotificationSettings({ userId }: NotificationSettingsPro
           <div className="flex items-center justify-between">
             <div>
               <Label htmlFor="online_status">Show Online Status</Label>
-              <p className="text-sm text-gray-500">Let others see when you're online</p>
+              <p className="text-sm text-gray-500">Let others see when you are online</p>
             </div>
             <Switch
               id="online_status"
@@ -305,8 +306,8 @@ export default function NotificationSettings({ userId }: NotificationSettingsPro
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <Button 
-          onClick={handleSave} 
+        <Button
+          onClick={handleSave}
           disabled={isLoading}
           className="bg-emerald-500 hover:bg-emerald-600"
         >

@@ -16,20 +16,20 @@ interface FormPhoneInputProps {
   countryCode?: string;
 }
 
-export default function FormPhoneInput({ 
-  field, 
-  label, 
-  name, 
-  placeholder = "Enter phone number", 
-  value, 
+export default function FormPhoneInput({
+  field,
+  label,
+  name,
+  placeholder = "Enter phone number",
+  value,
   onChange,
   onCountryChange,
   countryCode
 }: FormPhoneInputProps) {
-  
+
   // Reconstruct full E.164 phone number for PhoneInput component
   const displayValue = value && countryCode ? `+${countryCode}${value}` : value;
-  
+
   const handlePhoneChange = (newValue: string | undefined) => {
     // Extract numeric country calling code and local phone number
     if (newValue && onCountryChange) {
@@ -38,13 +38,14 @@ export default function FormPhoneInput({
         if (phoneNumber && phoneNumber.country) {
           const callingCode = getCountryCallingCode(phoneNumber.country);
           const localNumber = phoneNumber.nationalNumber; // Gets number without country code
-          
+
           onCountryChange(callingCode);
           onChange(localNumber); // Pass local number to form
         } else {
           onChange(newValue); // Fallback to original value if parsing fails
         }
       } catch (error) {
+        console.log(error)
         onChange(newValue); // Fallback to original value if parsing fails
       }
     } else {
@@ -57,6 +58,7 @@ export default function FormPhoneInput({
       <PhoneInput
         placeholder={placeholder}
         value={displayValue}
+        name={name}
         onChange={handlePhoneChange}
         defaultCountry="KR"
         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"

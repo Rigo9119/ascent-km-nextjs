@@ -5,8 +5,10 @@ import { InterestService } from "@/services/interests-service";
 import { redirect } from "next/navigation";
 import { PageContainer } from "@/components/page-container";
 import SettingsContent from "./components/SettingsContent";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { Interest, Preference } from "@/components/forms/onboarding-form";
 
-async function getUserSettingsData(supabase: any, userId: string) {
+async function getUserSettingsData(supabase: SupabaseClient, userId: string) {
   try {
     const settingsService = new SettingsService(supabase);
     const preferencesService = new PreferencesService(supabase);
@@ -14,17 +16,17 @@ async function getUserSettingsData(supabase: any, userId: string) {
 
     // Get user settings first (most critical)
     const userSettings = await settingsService.getUserSettings(userId);
-    
+
     // Try to get preferences and interests, but don't fail if they don't exist
-    let allPreferences = [];
-    let allInterests = [];
-    
+    let allPreferences: Preference[] = [];
+    let allInterests: Interest[] = [];
+
     try {
       allPreferences = await preferencesService.getAllPreferenceTypes();
     } catch (error) {
       console.warn('Could not load preferences:', error);
     }
-    
+
     try {
       allInterests = await interestsService.getAllInterestsTypes();
     } catch (error) {
@@ -55,7 +57,7 @@ export default async function SettingsPage() {
 
     return (
       <PageContainer>
-        <SettingsContent 
+        <SettingsContent
           userSettings={userSettings}
           allPreferences={allPreferences}
           allInterests={allInterests}
@@ -73,8 +75,8 @@ export default async function SettingsPage() {
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Unable to Load Settings</h1>
             <p className="text-gray-600 mb-4">There was an error loading your settings.</p>
             <p className="text-sm text-gray-500 mb-4">Error: {error instanceof Error ? error.message : 'Unknown error'}</p>
-            <a 
-              href="/profile" 
+            <a
+              href="/profile"
               className="inline-flex items-center px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600"
             >
               Back to Profile

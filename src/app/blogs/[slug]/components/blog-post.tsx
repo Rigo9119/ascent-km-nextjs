@@ -4,15 +4,14 @@ import { Blog } from "@/types/blog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Calendar, 
-  Clock, 
-  User, 
-  Tag, 
-  ArrowLeft, 
-  Share2, 
-  Twitter, 
-  Facebook, 
+import {
+  Calendar,
+  Clock,
+  User,
+  Tag,
+  ArrowLeft,
+  Twitter,
+  Facebook,
   Linkedin,
   Copy,
   Check
@@ -42,10 +41,10 @@ export default function BlogPostCmp({ blog, relatedPosts }: BlogPostProps) {
   const handleShare = (platform: string) => {
     const url = encodeURIComponent(window.location.href);
     const title = encodeURIComponent(blog.title);
-    const text = encodeURIComponent(blog.excerpt);
+    //const text = encodeURIComponent(blog.excerpt);
 
     let shareUrl = '';
-    
+
     switch (platform) {
       case 'twitter':
         shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;

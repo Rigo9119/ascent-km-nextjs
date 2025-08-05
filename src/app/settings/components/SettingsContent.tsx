@@ -2,24 +2,20 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  User, 
-  Bell, 
-  Shield, 
-  CreditCard, 
-  Trash2, 
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import {
+  User,
+  Bell,
+  Shield,
+  CreditCard,
   Settings as SettingsIcon,
-  Save,
-  Eye,
-  EyeOff
 } from "lucide-react";
 import ProfileSettings from "./ProfileSettings";
 import NotificationSettings from "./NotificationSettings";
 import PrivacySettings from "./PrivacySettings";
 import AccountSettings from "./AccountSettings";
+import { Interest, Preference } from "@/components/forms/onboarding-form";
 
 interface UserSettings {
   id: string;
@@ -44,18 +40,6 @@ interface UserSettings {
   }>;
 }
 
-interface Preference {
-  id: string;
-  name: string;
-  description: string | null;
-}
-
-interface Interest {
-  id: string;
-  name: string;
-  description: string | null;
-}
-
 interface SettingsContentProps {
   userSettings: UserSettings;
   allPreferences: Preference[];
@@ -64,15 +48,15 @@ interface SettingsContentProps {
   userEmail: string;
 }
 
-export default function SettingsContent({ 
-  userSettings, 
-  allPreferences, 
-  allInterests, 
-  userId, 
-  userEmail 
+export default function SettingsContent({
+  userSettings,
+  allPreferences,
+  allInterests,
+  userId,
+  userEmail
 }: SettingsContentProps) {
   const [activeTab, setActiveTab] = useState("profile");
-  const [isSaving, setIsSaving] = useState(false);
+  //const [isSaving, setIsSaving] = useState(false);
 
   const settingsNav = [
     {
@@ -164,14 +148,13 @@ export default function SettingsContent({
                   {settingsNav.map((item) => {
                     const Icon = item.icon;
                     const isActive = activeTab === item.id;
-                    
+
                     return (
                       <button
                         key={item.id}
                         onClick={() => setActiveTab(item.id)}
-                        className={`w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors ${
-                          isActive ? 'bg-emerald-50 border-r-2 border-emerald-500 text-emerald-700' : 'text-gray-700'
-                        }`}
+                        className={`w-full text-left px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors ${isActive ? 'bg-emerald-50 border-r-2 border-emerald-500 text-emerald-700' : 'text-gray-700'
+                          }`}
                       >
                         <Icon className={`w-5 h-5 ${isActive ? 'text-emerald-600' : 'text-gray-500'}`} />
                         <div className="flex-1">
@@ -191,7 +174,7 @@ export default function SettingsContent({
           {/* Main Content */}
           <div className="lg:col-span-3">
             <TabsContent value="profile" className="mt-0">
-              <ProfileSettings 
+              <ProfileSettings
                 userSettings={userSettings}
                 allPreferences={allPreferences}
                 allInterests={allInterests}
@@ -200,20 +183,20 @@ export default function SettingsContent({
             </TabsContent>
 
             <TabsContent value="notifications" className="mt-0">
-              <NotificationSettings 
+              <NotificationSettings
                 userId={userId}
               />
             </TabsContent>
 
             <TabsContent value="privacy" className="mt-0">
-              <PrivacySettings 
+              <PrivacySettings
                 userId={userId}
                 userSettings={userSettings}
               />
             </TabsContent>
 
             <TabsContent value="account" className="mt-0">
-              <AccountSettings 
+              <AccountSettings
                 userId={userId}
                 userEmail={userEmail}
                 userSettings={userSettings}

@@ -28,7 +28,6 @@ export default function BlogsPageCmp({
   blogs,
   categories,
 }: BlogsPageProps) {
-  const router = useRouter();
   const [filteredBlogs, setFilteredBlogs] = useState(blogs);
   const [filters, setFilters] = useState<FilterState>({
     search: "",
@@ -42,8 +41,8 @@ export default function BlogsPageCmp({
   // Transform categories to options format
   const categoryOptions = [
     { value: "all", label: "All Categories" },
-    ...(categories || []).map((category) => ({ 
-      value: category.name, 
+    ...(categories || []).map((category) => ({
+      value: category.name,
       label: category.name
     })),
   ];
@@ -51,8 +50,8 @@ export default function BlogsPageCmp({
   // Transform tags to options format
   const tagOptions = [
     { value: "all", label: "All Tags" },
-    ...allTags.map((tag) => ({ 
-      value: tag, 
+    ...allTags.map((tag) => ({
+      value: tag,
       label: tag.charAt(0).toUpperCase() + tag.slice(1)
     })),
   ];
@@ -102,14 +101,14 @@ export default function BlogsPageCmp({
     setFilteredBlogs(filtered);
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
+  // const formatDate = (dateString: string) => {
+  //   const date = new Date(dateString);
+  //   return date.toLocaleDateString('en-US', {
+  //     year: 'numeric',
+  //     month: 'long',
+  //     day: 'numeric'
+  //   });
+  // };
 
   // Featured blogs
   const featuredBlogs = blogs.filter(blog => blog.isFeatured).slice(0, 3);
@@ -220,7 +219,7 @@ export default function BlogsPageCmp({
               </p>
             </div>
           </div>
-          
+
           <div className="space-y-6">
             {filteredBlogs.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
@@ -250,7 +249,7 @@ function BlogCard({ blog, featured = false }: BlogCardProps) {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
-      month: 'long', 
+      month: 'long',
       day: 'numeric'
     });
   };
@@ -287,7 +286,7 @@ function BlogCard({ blog, featured = false }: BlogCardProps) {
               <Badge variant="secondary" className="mb-2 text-xs">
                 {blog.category}
               </Badge>
-              <h3 
+              <h3
                 className="font-semibold text-lg text-gray-900 group-hover:text-emerald-600 transition-colors cursor-pointer line-clamp-2"
                 onClick={handleReadMore}
               >
@@ -375,7 +374,7 @@ function BlogCard({ blog, featured = false }: BlogCardProps) {
                     {blog.readTime} min read
                   </div>
                 </div>
-                <h3 
+                <h3
                   className="text-xl font-semibold text-gray-900 hover:text-emerald-600 transition-colors cursor-pointer line-clamp-2"
                   onClick={handleReadMore}
                 >

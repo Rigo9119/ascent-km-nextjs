@@ -1,17 +1,17 @@
 'use client'
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { 
-  Users, 
-  MessageSquare, 
-  Calendar, 
-  Search, 
+import {
+  Users,
+  MessageSquare,
+  Calendar,
+  Search,
   Plus,
   Edit,
   Trash2,
@@ -19,6 +19,7 @@ import {
   ExternalLink,
   User as UserIcon
 } from "lucide-react";
+import Image from "next/image";
 
 interface Community {
   id: string;
@@ -60,11 +61,11 @@ interface MyCommunitiesContentProps {
   userId: string;
 }
 
-export default function MyCommunitiesContent({ 
-  communities, 
-  createdDiscussions, 
-  participatedDiscussions, 
-  userId 
+export default function MyCommunitiesContent({
+  communities,
+  createdDiscussions,
+  participatedDiscussions,
+  userId
 }: MyCommunitiesContentProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("communities");
@@ -87,8 +88,8 @@ export default function MyCommunitiesContent({
   );
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', { 
-      month: 'short', 
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
       day: 'numeric',
       year: 'numeric'
     });
@@ -100,8 +101,10 @@ export default function MyCommunitiesContent({
       <CardContent className="p-0">
         {community.image_url && (
           <div className="h-48 w-full overflow-hidden rounded-t-lg">
-            <img 
-              src={community.image_url} 
+            <Image
+              width={300}
+              height={200}
+              src={community.image_url}
               alt={community.name}
               className="h-full w-full object-cover"
             />
@@ -134,7 +137,7 @@ export default function MyCommunitiesContent({
           </div>
 
           <p className="text-gray-600 text-sm mb-4 line-clamp-2">{community.description}</p>
-          
+
           <div className="flex items-center justify-between text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4" />
@@ -156,8 +159,8 @@ export default function MyCommunitiesContent({
   );
 
   // Discussion Card Component
-  const DiscussionCard = ({ discussion, showCommunity = true }: { 
-    discussion: Discussion; 
+  const DiscussionCard = ({ discussion, showCommunity = true }: {
+    discussion: Discussion;
     showCommunity?: boolean;
   }) => (
     <Card className="hover:shadow-md transition-shadow">
@@ -195,7 +198,7 @@ export default function MyCommunitiesContent({
         </div>
 
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">{discussion.content}</p>
-        
+
         <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center gap-4">
             {discussion.profiles && (
@@ -310,7 +313,7 @@ export default function MyCommunitiesContent({
               ))}
             </div>
           ) : (
-            <EmptyState 
+            <EmptyState
               title="No Communities Found"
               description={searchTerm ? "No communities match your search." : "You haven't created any communities yet."}
               action={!searchTerm && (
@@ -332,7 +335,7 @@ export default function MyCommunitiesContent({
               ))}
             </div>
           ) : (
-            <EmptyState 
+            <EmptyState
               title="No Discussions Found"
               description={searchTerm ? "No discussions match your search." : "You haven't started any discussions yet."}
               action={!searchTerm && (
@@ -354,7 +357,7 @@ export default function MyCommunitiesContent({
               ))}
             </div>
           ) : (
-            <EmptyState 
+            <EmptyState
               title="No Participated Discussions"
               description={searchTerm ? "No discussions match your search." : "You haven't participated in any discussions yet."}
               action={!searchTerm && (
