@@ -1,11 +1,15 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, Context } from "react";
 import { Tables } from "@/lib/types/supabase";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { PlusIcon } from "lucide-react";
 import EventsFilters, { FilterState } from "./events-filters";
 import EventsList from "./events-list";
+import CreateEventForm from "@/components/forms/create-event-form";
+
+import { useAuth } from "@/hooks/use-auth";
+import { User } from "@supabase/supabase-js";
 
 interface EventsPageCmpProps {
   categories: Tables<"categories">[];
@@ -14,6 +18,7 @@ interface EventsPageCmpProps {
 }
 
 export default function EventsPageCmp({ categories, locations, events }: EventsPageCmpProps) {
+  const { user } = useAuth()
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     category: "all",
@@ -59,26 +64,27 @@ export default function EventsPageCmp({ categories, locations, events }: EventsP
           <h1 className="text-3xl font-bold text-emerald-500">Events</h1>
           <p className="text-muted-foreground">Discover and join exciting events in your area</p>
         </div>
-        
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button className="bg-emerald-500 hover:bg-emerald-600">
-              <PlusIcon className="w-4 h-4 mr-2" />
-              Create Event
-            </Button>
-          </SheetTrigger>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Create New Event</SheetTitle>
-              <SheetDescription>
-                Fill out the form below to create a new event.
-              </SheetDescription>
-            </SheetHeader>
-            <div className="mt-6">
-              {/* create-event-form component will go here */}
-            </div>
-          </SheetContent>
-        </Sheet>
+        {user && (
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button className="bg-emerald-500 hover:bg-emerald-600">
+                <PlusIcon className="w-4 h-4 mr-2" />
+                Create Event
+              </Button>
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Create New Event</SheetTitle>
+                <SheetDescription>
+                  Fill out the form below to create a new event.
+                </SheetDescription>
+              </SheetHeader>
+              <div className="mt-6">
+                <CreateEventForm user={user as User} />
+              </div>
+            </SheetContent>
+          </Sheet>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
