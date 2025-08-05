@@ -14,7 +14,7 @@ interface ContentCardProps {
 export function ContentCard({ id, title, description, image, href, className }: ContentCardProps) {
   return (
     <Link id={id} href={href} className="group block">
-      <Card className={`overflow-hidden transition-all hover:shadow-lg hover:scale-[1.02] p-0 ${className}`}>
+      <Card className={`overflow-hidden transition-all hover:shadow-lg hover:scale-[1.02] p-0 pb-5 ${className}`}>
         <div className="aspect-video relative overflow-hidden">
           <Image
             src={image}

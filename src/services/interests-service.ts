@@ -6,7 +6,7 @@ export class InterestService {
   async getAllInterestsTypes() {
     try {
       const { data: interestsTypes, error: sbError } = await this.supabase
-        .from("interests")
+        .from("interest_types")
         .select("id, name, description")
         .order("name");
       if (sbError) {

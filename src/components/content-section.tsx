@@ -2,7 +2,7 @@ import Link from "next/link"
 import { ContentCard } from "./content-card"
 import { Button } from "./ui/button"
 
-interface ContentItem {
+export type ContentItem = {
   id: string
   title: string
   description: string
