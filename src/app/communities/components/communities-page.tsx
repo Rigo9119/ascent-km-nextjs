@@ -13,6 +13,7 @@ import { Users, MapPin, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { AnyFieldApi } from "@tanstack/react-form";
+import { User } from "@supabase/supabase-js";
 
 export type FilterState = {
   search: string;
@@ -23,13 +24,20 @@ interface CommunitiesPageProps {
   communities: Community[];
   featuredCommunities: Community[];
   communityTypes: CommunityType[];
+  userMemberships?: string[];
+  currentUser?: User | null;
 }
 
 export default function CommunitiesPageCmp({
   communities,
   featuredCommunities,
   communityTypes,
+  userMemberships = [],
+  currentUser,
 }: CommunitiesPageProps) {
+  // Debug logging
+  console.log('User memberships:', userMemberships);
+  console.log('Current user in component:', currentUser?.id);
   const [filteredCommunities, setFilteredCommunities] = useState(communities);
   const [filters, setFilters] = useState<FilterState>({
     search: "",
@@ -101,7 +109,13 @@ export default function CommunitiesPageCmp({
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {featuredCommunities.map((community) => (
-              <CommunityCard key={community.id} community={community} featured />
+              <CommunityCard 
+                key={community.id} 
+                community={community} 
+                featured 
+                isMember={userMemberships.includes(community.id)}
+                currentUser={currentUser}
+              />
             ))}
           </div>
         </div>
@@ -163,7 +177,12 @@ export default function CommunitiesPageCmp({
               </div>
             ) : (
               filteredCommunities.map((community) => (
-                <CommunityCard key={community.id} community={community} />
+                <CommunityCard 
+                  key={community.id} 
+                  community={community} 
+                  isMember={userMemberships.includes(community.id)}
+                  currentUser={currentUser}
+                />
               ))
             )}
           </div>
@@ -176,10 +195,17 @@ export default function CommunitiesPageCmp({
 interface CommunityCardProps {
   community: Community;
   featured?: boolean;
+  isMember?: boolean;
+  currentUser?: User | null;
 }
 
-function CommunityCard({ community, featured = false }: CommunityCardProps) {
+function CommunityCard({ community, featured = false, isMember = false, currentUser }: CommunityCardProps) {
   const router = useRouter();
+  
+  // Debug logging
+  console.log('Community:', community.name, 'ID:', community.id);
+  console.log('Is member:', isMember);
+  console.log('Current user:', currentUser?.id);
 
   // Helper function to format location
   const formatLocation = (location: string | null) => {
@@ -272,7 +298,7 @@ function CommunityCard({ community, featured = false }: CommunityCardProps) {
               className="flex-1 bg-emerald-500 hover:bg-emerald-600"
               onClick={() => router.push(`/communities/${community.id}`)}
             >
-              View Community
+              {isMember ? 'View Community' : 'Learn More'}
             </Button>
           </div>
         </div>
@@ -309,9 +335,11 @@ function CommunityCard({ community, featured = false }: CommunityCardProps) {
         )}
         <div className="flex justify-between items-center">
           <div className="flex gap-2">
-            <Button className="bg-emerald-500 hover:bg-emerald-600" size="sm">
-              Join Community
-            </Button>
+            {!isMember && currentUser && (
+              <Button className="bg-emerald-500 hover:bg-emerald-600" size="sm">
+                Join Community
+              </Button>
+            )}
             <Button
               className="border-emerald-500 text-emerald-500 hover:text-emerald-500"
               variant="outline"
