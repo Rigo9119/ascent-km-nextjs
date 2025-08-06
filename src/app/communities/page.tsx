@@ -18,13 +18,21 @@ const getPageData = async () => {
   let userMemberships: string[] = [];
   if (user) {
     try {
+      console.log('Fetching memberships for user ID:', user.id);
       // Get all communities the user is a member of
-      const { data: memberships } = await supabase
+      const { data: memberships, error } = await supabase
         .from('community_members')
         .select('community_id')
         .eq('user_id', user.id);
       
+      console.log('Membership query result:', { data: memberships, error });
+      
+      if (error) {
+        console.error('Supabase error fetching memberships:', error);
+      }
+      
       userMemberships = memberships?.map(m => m.community_id) || [];
+      console.log('Final userMemberships array:', userMemberships);
     } catch (error) {
       console.log('Error fetching user memberships:', error);
     }
