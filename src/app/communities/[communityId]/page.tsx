@@ -1,23 +1,25 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSupabaseServerAction, createSupabaseServerClient } from '@/lib/supabase/server';
 import { CommunitiesService } from '@/services/communities-service';
 import { DiscussionsService } from '@/services/discussions-service';
 import CommunityHeader from '@/components/communities/community-header';
 import CommunityTabs from '@/components/communities/community-tabs';
+import { SupabaseClient } from '@supabase/supabase-js';
+import { PageContainer } from '@/components/page-container';
 
 interface CommunityPageProps {
-  params: {
+  params: Promise<{
     communityId: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: CommunityPageProps): Promise<Metadata> {
   const supabase = await createSupabaseServerClient();
   const communitiesService = new CommunitiesService(supabase);
+  const { communityId } = await params;
 
   try {
-    const community = await communitiesService.getCommunityById(params.communityId);
+    const community = await communitiesService.getCommunityById(communityId);
 
     return {
       title: community.name,
@@ -31,29 +33,28 @@ export async function generateMetadata({ params }: CommunityPageProps): Promise<
   }
 }
 
-export default async function CommunityPage({ params }: CommunityPageProps) {
-  const supabase = await createSupabaseServerClient();
+async function getCommunityPageData(supabase: SupabaseClient, communityId: string) {
   const communitiesService = new CommunitiesService(supabase);
   const discussionsService = new DiscussionsService(supabase);
 
-  try {
-    // Get current user
-    const { data: { user } } = await supabase.auth.getUser();
+  const [community, members, discussions] = await Promise.all([
+    communitiesService.getCommunityById(communityId),
+    communitiesService.getCommunityMembers(communityId),
+    discussionsService.getDiscussionsByCommunity(communityId)
+  ]);
 
-    // Fetch community data
-    const [community, members, discussions] = await Promise.all([
-      communitiesService.getCommunityById(params.communityId),
-      communitiesService.getCommunityMembers(params.communityId),
-      discussionsService.getDiscussionsByCommunity(params.communityId)
-    ]);
+  return { community, members, discussions }
+}
+export default async function CommunityPage({ params }: CommunityPageProps) {
+  const { communityId } = await params
+  const supabase = await createSupabaseServerAction()
+  const communityService = new CommunitiesService(supabase);
+  const { data: { user } } = await supabase.auth.getUser();
+  const { community, members, discussions } = await getCommunityPageData(supabase, communityId);
+  const isMember = await communityService.checkUserMembership(communityId, user?.id as unknown as string);
 
-    // Check if user is a member (if logged in)
-    let isMember = false;
-    if (user) {
-      isMember = await communitiesService.checkUserMembership(params.communityId, user.id);
-    }
-
-    return (
+  return (
+    <PageContainer>
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <CommunityHeader
@@ -74,9 +75,6 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
           </div>
         </div>
       </div>
-    );
-  } catch (error) {
-    console.error('Error loading community:', error);
-    notFound();
-  }
+    </PageContainer>
+  );
 }
