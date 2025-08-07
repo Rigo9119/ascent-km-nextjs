@@ -7,13 +7,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import AuthRequiredModal from '@/components/auth-required-modal';
+import EmojiPicker from '@/components/emoji-picker';
 import { 
   MessageSquare, 
   Send, 
   Reply, 
   Heart,
   Clock,
-  MoreHorizontal
+  MoreHorizontal,
+  Smile
 } from 'lucide-react';
 import { CommentWithProfile } from '@/types/discussion';
 import { User as SupabaseUser } from '@supabase/supabase-js';
@@ -26,10 +28,14 @@ interface CommentSectionProps {
 }
 
 interface CommentItemProps {
-  comment: CommentWithProfile;
+  comment: CommentTreeNode;
   currentUser: SupabaseUser | null;
   onReply: (commentId: string) => void;
   depth?: number;
+}
+
+interface CommentTreeNode extends CommentWithProfile {
+  replies: CommentTreeNode[];
 }
 
 function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemProps) {
@@ -53,58 +59,153 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
     setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
   };
 
+  // Calculate indentation based on depth, with max depth limit for readability
+  const maxDepth = 6;
+  const effectiveDepth = Math.min(depth, maxDepth);
+  const indentation = effectiveDepth * 32; // 32px per level
+
   return (
-    <div className={`${depth > 0 ? 'ml-8 pl-4 border-l-2 border-gray-100' : ''}`}>
-      <div className="flex space-x-3">
-        <Avatar className="h-8 w-8 flex-shrink-0">
-          <img
-            src={comment.profiles?.avatar_url || '/default-avatar.svg'}
-            alt={comment.profiles?.full_name || comment.profiles?.username || 'User'}
-            className="rounded-full"
-          />
-        </Avatar>
-        
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center space-x-2 mb-1">
-            <p className="font-medium text-gray-900 text-sm">
-              {comment.profiles?.full_name || comment.profiles?.username || 'Anonymous'}
-            </p>
-            <span className="text-xs text-gray-500">
-              {comment.created_at && formatDate(comment.created_at)}
-            </span>
-          </div>
+    <div>
+      <div className={`${depth > 0 ? 'pl-4 border-l-2 border-gray-100' : ''}`} 
+           style={{ marginLeft: depth > 0 ? `${indentation}px` : '0' }}>
+        <div className="flex space-x-3">
+          <Avatar className={`${depth > 3 ? 'h-6 w-6' : 'h-8 w-8'} flex-shrink-0`}>
+            <img
+              src={comment.profiles?.avatar_url || '/default-avatar.svg'}
+              alt={comment.profiles?.full_name || comment.profiles?.username || 'User'}
+              className="rounded-full"
+            />
+          </Avatar>
           
-          <div className="text-gray-700 text-sm leading-relaxed mb-2 whitespace-pre-wrap">
-            {comment.content}
-          </div>
-          
-          <div className="flex items-center space-x-4 text-xs text-gray-500">
-            <button
-              onClick={handleLike}
-              className={`flex items-center space-x-1 hover:text-red-500 ${
-                isLiked ? 'text-red-500' : ''
-              }`}
-            >
-              <Heart className={`w-3 h-3 ${isLiked ? 'fill-current' : ''}`} />
-              <span>{likeCount || 'Like'}</span>
-            </button>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center space-x-2 mb-1">
+              <p className={`font-medium text-gray-900 ${depth > 3 ? 'text-xs' : 'text-sm'}`}>
+                {comment.profiles?.full_name || comment.profiles?.username || 'Anonymous'}
+              </p>
+              <span className="text-xs text-gray-500">
+                {comment.created_at && formatDate(comment.created_at)}
+              </span>
+            </div>
             
-            <button
-              onClick={() => onReply(comment.id)}
-              className="flex items-center space-x-1 hover:text-emerald-600"
-            >
-              <Reply className="w-3 h-3" />
-              <span>Reply</span>
-            </button>
+            <div className={`text-gray-700 leading-relaxed mb-2 whitespace-pre-wrap ${
+              depth > 3 ? 'text-xs' : 'text-sm'
+            }`}>
+              {comment.content}
+            </div>
             
-            <button className="hover:text-gray-700">
-              <MoreHorizontal className="w-3 h-3" />
-            </button>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4 text-xs text-gray-500">
+                <button
+                  onClick={handleLike}
+                  className={`flex items-center space-x-1 hover:text-red-500 ${
+                    isLiked ? 'text-red-500' : ''
+                  }`}
+                >
+                  <Heart className={`w-3 h-3 ${isLiked ? 'fill-current' : ''}`} />
+                  <span>{likeCount || 'Like'}</span>
+                </button>
+                
+                <button
+                  onClick={() => onReply(comment.id)}
+                  className="flex items-center space-x-1 hover:text-emerald-600"
+                >
+                  <Reply className="w-3 h-3" />
+                  <span>Reply</span>
+                </button>
+                
+                {depth < maxDepth && (
+                  <button className="hover:text-gray-700">
+                    <MoreHorizontal className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+
+              {/* Quick Emoji Reactions */}
+              {currentUser && (
+                <div className="flex items-center space-x-1">
+                  <EmojiPicker onEmojiSelect={(emoji) => {
+                    // TODO: Add emoji reaction to comment
+                    console.log('React to comment', comment.id, 'with', emoji);
+                  }}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600"
+                    >
+                      <Smile className="w-3 h-3" />
+                    </Button>
+                  </EmojiPicker>
+
+                  {/* Common quick reactions */}
+                  <div className="flex space-x-1 ml-2">
+                    {['👍', '❤️', '😄', '😮'].map((emoji) => (
+                      <button
+                        key={emoji}
+                        className="text-sm hover:scale-125 transition-transform opacity-60 hover:opacity-100"
+                        onClick={() => {
+                          // TODO: Add emoji reaction to comment
+                          console.log('React to comment', comment.id, 'with', emoji);
+                        }}
+                        title={`React with ${emoji}`}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Render nested replies */}
+      {comment.replies.length > 0 && (
+        <div className="mt-3">
+          {comment.replies.map((reply) => (
+            <div key={reply.id} className="mb-3">
+              <CommentItem
+                comment={reply}
+                currentUser={currentUser}
+                onReply={onReply}
+                depth={depth + 1}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
+}
+
+// Function to build comment tree structure
+function buildCommentTree(comments: CommentWithProfile[]): CommentTreeNode[] {
+  const commentMap = new Map<string, CommentTreeNode>();
+  const rootComments: CommentTreeNode[] = [];
+
+  // First pass: Create all comment nodes
+  comments.forEach(comment => {
+    commentMap.set(comment.id, { ...comment, replies: [] });
+  });
+
+  // Second pass: Build the tree structure
+  comments.forEach(comment => {
+    const commentNode = commentMap.get(comment.id)!;
+    
+    if (comment.parent_comment_id) {
+      const parent = commentMap.get(comment.parent_comment_id);
+      if (parent) {
+        parent.replies.push(commentNode);
+      } else {
+        // If parent not found, treat as root comment
+        rootComments.push(commentNode);
+      }
+    } else {
+      rootComments.push(commentNode);
+    }
+  });
+
+  return rootComments;
 }
 
 export default function CommentSection({
@@ -117,9 +218,8 @@ export default function CommentSection({
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [replyTo, setReplyTo] = useState<string | null>(null);
 
-  // Group comments by parent (for threading)
-  const topLevelComments = comments.filter(comment => !comment.parent_comment_id);
-  const commentReplies = comments.filter(comment => comment.parent_comment_id);
+  // Build comment tree structure
+  const commentTree = buildCommentTree(comments);
 
   const handleSubmitComment = async () => {
     if (!currentUser) {
@@ -177,6 +277,10 @@ export default function CommentSection({
     setReplyTo(null);
   };
 
+  const handleEmojiSelect = (emoji: string) => {
+    setNewComment(prev => prev + emoji);
+  };
+
   return (
     <>
       <Card>
@@ -218,17 +322,35 @@ export default function CommentSection({
               )}
               
               <div className="flex-1">
-                <Textarea
-                  placeholder={
-                    currentUser 
-                      ? (replyTo ? 'Write a reply...' : 'Share your thoughts...')
-                      : 'Sign in to join the discussion...'
-                  }
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  className="min-h-[80px] resize-none"
-                  disabled={!currentUser}
-                />
+                <div className="relative">
+                  <Textarea
+                    placeholder={
+                      currentUser 
+                        ? (replyTo ? 'Write a reply...' : 'Share your thoughts...')
+                        : 'Sign in to join the discussion...'
+                    }
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    className="min-h-[80px] resize-none pr-12"
+                    disabled={!currentUser}
+                  />
+                  
+                  {/* Emoji Picker Button */}
+                  {currentUser && (
+                    <div className="absolute bottom-2 right-2">
+                      <EmojiPicker onEmojiSelect={handleEmojiSelect}>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-gray-500 hover:text-emerald-600"
+                        >
+                          <Smile className="w-4 h-4" />
+                        </Button>
+                      </EmojiPicker>
+                    </div>
+                  )}
+                </div>
                 
                 <div className="flex justify-between items-center mt-2">
                   <span className="text-xs text-gray-500">
@@ -258,32 +380,20 @@ export default function CommentSection({
 
           {/* Comments List */}
           <div className="space-y-4">
-            {topLevelComments.length === 0 && comments.length === 0 ? (
+            {commentTree.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <MessageSquare className="w-12 h-12 mx-auto mb-3 opacity-50" />
                 <p>No comments yet. Be the first to share your thoughts!</p>
               </div>
             ) : (
-              topLevelComments.map((comment) => (
-                <div key={comment.id} className="space-y-3">
+              commentTree.map((comment) => (
+                <div key={comment.id} className="mb-6">
                   <CommentItem
                     comment={comment}
                     currentUser={currentUser}
                     onReply={handleReply}
+                    depth={0}
                   />
-                  
-                  {/* Render replies */}
-                  {commentReplies
-                    .filter(reply => reply.parent_comment_id === comment.id)
-                    .map((reply) => (
-                      <CommentItem
-                        key={reply.id}
-                        comment={reply}
-                        currentUser={currentUser}
-                        onReply={handleReply}
-                        depth={1}
-                      />
-                    ))}
                 </div>
               ))
             )}
