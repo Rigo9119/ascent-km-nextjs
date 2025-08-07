@@ -18,13 +18,7 @@ export default function EventJoinButton({
   className = "bg-emerald-500 hover:bg-emerald-600",
   children 
 }: EventJoinButtonProps) {
-  const { showAuthModal, handleJoinEvent, closeAuthModal, isAuthenticated } = useJoinEvent({
-    onJoin: async (eventId) => {
-      // TODO: Implement actual join event logic here
-      console.log('User is joining event:', eventId)
-      // You can add API call to join event here
-    }
-  })
+  const { showAuthModal, handleJoinEvent, closeAuthModal, isAuthenticated, isLoading } = useJoinEvent()
 
   const handleClick = () => {
     handleJoinEvent(eventId)
@@ -36,9 +30,10 @@ export default function EventJoinButton({
         size={size} 
         className={className}
         onClick={handleClick}
+        disabled={isLoading}
       >
         <UsersIcon className="w-4 h-4 mr-2" />
-        {children || (isAuthenticated ? "Join Event" : "Join Event")}
+        {children || (isLoading ? "Joining..." : "Join Event")}
       </Button>
 
       <AuthRequiredModal

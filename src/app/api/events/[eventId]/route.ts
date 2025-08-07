@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server'
 import { createSupabaseServerAction } from '@/lib/supabase/server'
 import { EventsService } from '@/services/events-service'
 
-export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(request: Request, { params }: { params: Promise<{ eventId: string }> }) {
   try {
-    const { id } = await params;
+    const { eventId: id } = await params;
     const supabase = await createSupabaseServerAction()
     const eventsService = new EventsService(supabase)
 

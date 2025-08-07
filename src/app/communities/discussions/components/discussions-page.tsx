@@ -9,10 +9,12 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import FormSelect from "@/components/forms/form-components/form-select";
+import AuthRequiredModal from "@/components/auth-required-modal";
 import { MessageSquare, Users, Clock, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { AnyFieldApi } from "@tanstack/react-form";
+import { User } from "@supabase/supabase-js";
 
 export type FilterState = {
   search: string;
@@ -22,13 +24,16 @@ export type FilterState = {
 interface DiscussionsPageProps {
   discussions: DiscussionWithDetails[];
   communities: Community[];
+  currentUser: User | null;
 }
 
 export default function DiscussionsPageCmp({
   discussions,
   communities,
+  currentUser,
 }: DiscussionsPageProps) {
   const [filteredDiscussions, setFilteredDiscussions] = useState(discussions);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     community: "all",
@@ -59,6 +64,15 @@ export default function DiscussionsPageCmp({
       community: "all",
     };
     handleFiltersChange(clearedFilters);
+  };
+
+  const handleStartDiscussion = () => {
+    if (!currentUser) {
+      setShowAuthModal(true);
+      return;
+    }
+    // TODO: Navigate to create discussion page or open modal
+    console.log('Start new discussion');
   };
 
   const filterDiscussions = (currentFilters: FilterState) => {
@@ -99,10 +113,15 @@ export default function DiscussionsPageCmp({
           <h1 className="text-3xl font-bold text-emerald-500">Community Discussions</h1>
           <p className="text-muted-foreground">Join conversations and share ideas with the community</p>
         </div>
-        <Button className="bg-emerald-500 hover:bg-emerald-600">
-          <Plus className="w-4 h-4 mr-2" />
-          Start Discussion
-        </Button>
+        {currentUser && (
+          <Button 
+            className="bg-emerald-500 hover:bg-emerald-600"
+            onClick={handleStartDiscussion}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Start Discussion
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -167,6 +186,13 @@ export default function DiscussionsPageCmp({
           </div>
         </div>
       </div>
+
+      <AuthRequiredModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        title="Start Discussion"
+        description="Create an account to start discussions and engage with the community."
+      />
     </div>
   );
 }

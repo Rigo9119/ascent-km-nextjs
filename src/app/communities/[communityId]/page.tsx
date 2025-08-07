@@ -51,7 +51,7 @@ export default async function CommunityPage({ params }: CommunityPageProps) {
   const communityService = new CommunitiesService(supabase);
   const { data: { user } } = await supabase.auth.getUser();
   const { community, members, discussions } = await getCommunityPageData(supabase, communityId);
-  const isMember = await communityService.checkUserMembership(communityId, user?.id as unknown as string);
+  const isMember = user?.id ? await communityService.checkUserMembership(communityId, user.id) : false;
 
   return (
     <PageContainer>
