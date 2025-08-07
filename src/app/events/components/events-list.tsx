@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tables } from "@/lib/types/supabase";
 import { useRouter } from "next/navigation";
+import { useJoinEvent } from "@/hooks/use-join-event";
+import AuthRequiredModal from "@/components/auth-required-modal";
 
 interface EventsListProps {
   events: Tables<"events_with_details_v2">[];
@@ -12,6 +14,12 @@ interface EventsListProps {
 
 export default function EventsList({ events, loading = false }: EventsListProps) {
   const router = useRouter();
+  const { showAuthModal, handleJoinEvent, closeAuthModal } = useJoinEvent({
+    onJoin: async (eventId) => {
+      // TODO: Implement actual join event logic here
+      console.log('User is joining event:', eventId);
+    }
+  });
 
   if (loading) {
     return (
@@ -55,7 +63,11 @@ export default function EventsList({ events, loading = false }: EventsListProps)
                 <p className="text-muted-foreground mb-4">{event.event_description}</p>
                 <div className="flex justify-between items-center">
                   <div className="flex gap-2">
-                    <Button className="bg-emerald-500 hover:bg-emerald-600" size="sm">
+                    <Button 
+                      className="bg-emerald-500 hover:bg-emerald-600" 
+                      size="sm"
+                      onClick={() => handleJoinEvent(event.event_id || '')}
+                    >
                       Join Event
                     </Button>
                     <Button 
@@ -73,6 +85,13 @@ export default function EventsList({ events, loading = false }: EventsListProps)
           ))
         )}
       </div>
+
+      <AuthRequiredModal
+        isOpen={showAuthModal}
+        onClose={closeAuthModal}
+        title="Join Event"
+        description="Create an account to join events and connect with the community."
+      />
     </div>
   );
 }

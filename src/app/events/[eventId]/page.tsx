@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon, DollarSignIcon, StarIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import EventJoinButton from "./components/event-join-button";
 
 interface EventDetailPageProps {
   params: Promise<{
@@ -82,10 +83,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3">
-              <Button size="lg" className="bg-emerald-500 hover:bg-emerald-600">
-                <UsersIcon className="w-4 h-4 mr-2" />
-                Join Event
-              </Button>
+              <EventJoinButton eventId={eventId} />
               <Button variant="outline" size="lg">
                 Share Event
               </Button>
@@ -271,10 +269,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                   <h3 className="font-semibold text-emerald-800">
                     Ready to join this event?
                   </h3>
-                  <Button size="lg" className="w-full bg-emerald-500 hover:bg-emerald-600">
-                    <UsersIcon className="w-4 h-4 mr-2" />
-                    Join Now
-                  </Button>
+                  <EventJoinButton eventId={eventId} size="lg" className="w-full" />
                   <p className="text-sm text-emerald-700">
                     {event.is_free ? "This event is free to attend" : "Registration required"}
                   </p>
