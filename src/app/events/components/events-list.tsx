@@ -6,6 +6,8 @@ import { Tables } from "@/lib/types/supabase";
 import { useRouter } from "next/navigation";
 import { useJoinEvent } from "@/hooks/use-join-event";
 import AuthRequiredModal from "@/components/auth-required-modal";
+import ShareButton from "@/components/share-button";
+import { Share2 } from "lucide-react";
 
 interface EventsListProps {
   events: Tables<"events_with_details_v2">[];
@@ -79,6 +81,14 @@ export default function EventsList({ events, loading = false }: EventsListProps)
                       Learn More
                     </Button>
                   </div>
+                  <ShareButton
+                    url={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/events/${event.event_id}`}
+                    title={event.event_name || ''}
+                    description={event.event_description || ''}
+                    size="sm"
+                    variant="ghost"
+                    className="text-gray-500 hover:text-gray-700"
+                  />
                 </div>
               </CardContent>
             </Card>

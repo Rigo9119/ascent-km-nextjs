@@ -8,6 +8,7 @@ import { CalendarIcon, MapPinIcon, UsersIcon, ClockIcon, DollarSignIcon, StarIco
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import EventJoinButton from "./components/event-join-button";
+import ShareButton from "@/components/share-button";
 
 interface EventDetailPageProps {
   params: Promise<{
@@ -84,9 +85,13 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
 
             <div className="flex flex-col sm:flex-row gap-3">
               <EventJoinButton eventId={eventId} />
-              <Button variant="outline" size="lg">
-                Share Event
-              </Button>
+              <ShareButton
+                url={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/events/${eventId}`}
+                title={event.name}
+                description={event.description || ''}
+                size="lg"
+                variant="outline"
+              />
             </div>
           </div>
         </div>
@@ -269,7 +274,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
                   <h3 className="font-semibold text-emerald-800">
                     Ready to join this event?
                   </h3>
-                  <EventJoinButton eventId={eventId} size="lg" className="w-full" />
+                  <EventJoinButton eventId={eventId} size="lg" className="w-full bg-emerald-600" />
                   <p className="text-sm text-emerald-700">
                     {event.is_free ? "This event is free to attend" : "Registration required"}
                   </p>
