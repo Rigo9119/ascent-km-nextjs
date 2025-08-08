@@ -1,7 +1,7 @@
 import { PageContainer } from "@/components/page-container";
 import { PreferencesService } from "@/services/preferences-service";
 import { redirect } from "next/navigation";
-import { createSupabaseClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import OnboardingPageContainer from "./components/OnboardingPageContainer";
 import { InterestService } from "@/services/interests-service";
@@ -23,7 +23,7 @@ async function getOnboardingPageData(supabase: SupabaseClient) {
 }
 
 export default async function OnboardingPage() {
-  const supabase = await createSupabaseClient();
+  const supabase = await createSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

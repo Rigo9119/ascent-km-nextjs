@@ -11,15 +11,15 @@ export default function DiscussionNotFound() {
           <div className="mb-8">
             <MessageSquare className="w-24 h-24 mx-auto text-gray-300" />
           </div>
-          
+
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
             Discussion Not Found
           </h1>
-          
+
           <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
-            The discussion you're looking for doesn't exist or may have been removed.
+            The discussion you are looking for does not exist or may have been removed.
           </p>
-          
+
           <div className="space-x-4">
             <Button asChild variant="outline">
               <Link href="/communities/discussions">
@@ -27,7 +27,7 @@ export default function DiscussionNotFound() {
                 Back to Discussions
               </Link>
             </Button>
-            
+
             <Button asChild className="bg-emerald-500 hover:bg-emerald-600">
               <Link href="/communities">
                 Explore Communities

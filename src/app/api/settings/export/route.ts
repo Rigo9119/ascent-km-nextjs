@@ -1,9 +1,9 @@
-import { createSupabaseClient } from '@/lib/supabase/server';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createSupabaseClient();
+    const supabase = await createSupabaseServerClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
       preferences,
       interests,
       events,
-      communities, 
+      communities,
       discussions,
       favorites: {
         events: favoriteEvents,

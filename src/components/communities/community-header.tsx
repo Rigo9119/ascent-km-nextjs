@@ -5,11 +5,11 @@ import { User } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { 
-  Users, 
-  Calendar, 
-  MapPin, 
-  Globe, 
+import {
+  Users,
+  Calendar,
+  MapPin,
+  Globe,
   Lock,
   UserPlus,
   UserMinus,
@@ -19,19 +19,31 @@ import {
 import { toast } from 'sonner';
 import { createSupabaseClient } from '@/lib/supabase/client';
 import { CommunitiesService } from '@/services/communities-service';
+import { Community } from '@/types/community';
+import Image from 'next/image';
+import { Tables } from '@/lib/types/supabase';
+
+export type CommunityMember = Tables<'community_members'> & {
+  profiles: {
+    id: string;
+    full_name: string | null;
+    username: string | null;
+    avatar_url: string | null;
+  } | null;
+}
 
 interface CommunityHeaderProps {
-  community: any;
-  members: any[];
+  community: Community;
+  members: CommunityMember[];
   isMember: boolean;
   currentUser: User | null;
 }
 
-export default function CommunityHeader({ 
-  community, 
-  members, 
-  isMember: initialIsMember, 
-  currentUser 
+export default function CommunityHeader({
+  community,
+  members,
+  isMember: initialIsMember,
+  currentUser
 }: CommunityHeaderProps) {
   const [isMember, setIsMember] = useState(initialIsMember);
   const [isLoading, setIsLoading] = useState(false);
@@ -62,6 +74,7 @@ export default function CommunityHeader({
         });
       }
     } catch (error) {
+      console.error('Failed to update membership:', error)
       toast.error('Failed to update membership', {
         style: { background: '#ef4444', color: 'white' }
       });
@@ -75,10 +88,10 @@ export default function CommunityHeader({
       try {
         await navigator.share({
           title: community.name,
-          text: community.description,
+          text: community.description || '',
           url: window.location.href,
         });
-      } catch (error) {
+      } catch {
         // User cancelled sharing
       }
     } else {
@@ -95,10 +108,12 @@ export default function CommunityHeader({
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       {/* Cover Image */}
-      {community.cover_image_url && (
+      {community.image_url && (
         <div className="h-48 bg-gradient-to-r from-emerald-400 to-emerald-600 relative">
-          <img 
-            src={community.cover_image_url} 
+          <Image
+            height={192}
+            width={800}
+            src={community.image_url || ''}
             alt={`${community.name} cover`}
             className="w-full h-full object-cover"
           />
@@ -110,7 +125,7 @@ export default function CommunityHeader({
           {/* Community Info */}
           <div className="flex items-start gap-4">
             <Avatar className="w-20 h-20 ring-4 ring-white shadow-lg">
-              <AvatarImage src={community.image_url} alt={community.name} />
+              <AvatarImage src={community.image_url || undefined} alt={community.name} />
               <AvatarFallback className="bg-emerald-100 text-emerald-600 text-xl font-semibold">
                 {community.name.slice(0, 2).toUpperCase()}
               </AvatarFallback>
@@ -122,9 +137,9 @@ export default function CommunityHeader({
                   {community.name}
                 </h1>
                 {community.is_public ? (
-                  <Globe className="w-5 h-5 text-emerald-600" title="Public community" />
+                  <Globe className="w-5 h-5 text-emerald-600" />
                 ) : (
-                  <Lock className="w-5 h-5 text-gray-600" title="Private community" />
+                  <Lock className="w-5 h-5 text-gray-600" />
                 )}
                 {community.is_featured && (
                   <Badge variant="secondary" className="bg-emerald-100 text-emerald-700">
@@ -145,7 +160,7 @@ export default function CommunityHeader({
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
-                  <span>Created {new Date(community.created_at).toLocaleDateString()}</span>
+                  <span>Created {community.created_at ? new Date(community.created_at).toLocaleDateString() : 'Unknown'}</span>
                 </div>
                 {community.location && (
                   <div className="flex items-center gap-1">
@@ -184,11 +199,10 @@ export default function CommunityHeader({
               <Button
                 onClick={handleJoinLeave}
                 disabled={isLoading}
-                className={`gap-2 ${
-                  isMember 
-                    ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' 
-                    : 'bg-emerald-500 hover:bg-emerald-600 text-white'
-                }`}
+                className={`gap-2 ${isMember
+                  ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  : 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                  }`}
                 variant={isMember ? "outline" : "default"}
               >
                 {isMember ? (

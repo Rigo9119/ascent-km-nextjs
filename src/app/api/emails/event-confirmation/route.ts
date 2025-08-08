@@ -1,3 +1,4 @@
+import { Tables } from '@/lib/types/supabase'
 import { NextResponse } from 'next/server'
 
 // For now, we'll use a simple email service
@@ -5,18 +6,18 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   try {
-    const { event, user, registration } = await request.json()
+    const { event, user } = await request.json()
 
     // Email service configuration (you'll need to set up your preferred service)
     const emailData = {
       to: user.email,
       subject: `Event Registration Confirmation: ${event.name}`,
-      html: generateEventConfirmationEmail(event, user, registration)
+      html: generateEventConfirmationEmail(event, user)
     }
 
     // TODO: Replace with your preferred email service
     // Example services you can use:
-    
+
     // 1. RESEND (Recommended for Next.js)
     // const { Resend } = require('resend')
     // const resend = new Resend(process.env.RESEND_API_KEY)
@@ -38,9 +39,9 @@ export async function POST(request: Request) {
     console.log('Subject:', emailData.subject)
     console.log('Content:', emailData.html)
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
-      message: 'Confirmation email sent' 
+      message: 'Confirmation email sent'
     })
 
   } catch (error) {
@@ -52,7 +53,7 @@ export async function POST(request: Request) {
   }
 }
 
-function generateEventConfirmationEmail(event: any, user: any, registration: any) {
+function generateEventConfirmationEmail(event: Tables<'events'>, user: Tables<'profiles'>) {
   const eventDate = new Date(event.date).toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
@@ -84,56 +85,49 @@ function generateEventConfirmationEmail(event: any, user: any, registration: any
             <h1>🎉 You're Registered!</h1>
             <p>Thank you for joining our event</p>
         </div>
-        
+
         <div class="content">
             <h2>Hi ${user.full_name || user.username || 'there'}!</h2>
-            
+
             <p>Great news! You've successfully registered for <strong>${event.name}</strong>. We're excited to see you there!</p>
-            
+
             <div class="event-details">
                 <h3>📅 Event Details</h3>
-                
+
                 <div class="detail-row">
                     <span class="detail-label">Event Name:</span>
                     <span class="detail-value">${event.name}</span>
                 </div>
-                
+
                 <div class="detail-row">
                     <span class="detail-label">Date:</span>
                     <span class="detail-value">${eventDate}</span>
                 </div>
-                
+
                 ${event.time ? `
                 <div class="detail-row">
                     <span class="detail-label">Time:</span>
                     <span class="detail-value">${event.time}</span>
                 </div>
                 ` : ''}
-                
+
                 <div class="detail-row">
                     <span class="detail-label">Location:</span>
-                    <span class="detail-value">${event.locations?.name || 'TBD'}</span>
+                    <span class="detail-value">TBD</span>
                 </div>
-                
-                ${event.locations?.address ? `
-                <div class="detail-row">
-                    <span class="detail-label">Address:</span>
-                    <span class="detail-value">${event.locations.address}</span>
-                </div>
-                ` : ''}
-                
+
                 <div class="detail-row">
                     <span class="detail-label">Price:</span>
                     <span class="detail-value">${event.is_free ? 'Free' : event.price || 'Contact organizer'}</span>
                 </div>
-                
+
                 ${event.organizer ? `
                 <div class="detail-row">
                     <span class="detail-label">Organizer:</span>
                     <span class="detail-value">${event.organizer}</span>
                 </div>
                 ` : ''}
-                
+
                 ${event.contact ? `
                 <div class="detail-row">
                     <span class="detail-label">Contact:</span>
@@ -141,7 +135,7 @@ function generateEventConfirmationEmail(event: any, user: any, registration: any
                 </div>
                 ` : ''}
             </div>
-            
+
             ${event.requirements && event.requirements.length > 0 ? `
             <div class="event-details">
                 <h3>📋 Requirements</h3>
@@ -150,16 +144,16 @@ function generateEventConfirmationEmail(event: any, user: any, registration: any
                 </ul>
             </div>
             ` : ''}
-            
+
             <p>If you need to make any changes to your registration or have questions about the event, please contact the organizer.</p>
-            
+
             <div style="text-align: center;">
                 <a href="${process.env.NEXT_PUBLIC_SITE_URL}/events/${event.id}" class="cta-button">
                     View Event Details
                 </a>
             </div>
         </div>
-        
+
         <div class="footer">
             <p>This email was sent because you registered for an event on NextRoots.</p>
             <p>If you have any questions, please contact us.</p>

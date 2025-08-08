@@ -1,4 +1,4 @@
-import { createSupabaseClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { FavoritesService } from "@/services/favorites-service";
 import { redirect } from "next/navigation";
 import { PageContainer } from "@/components/page-container";
@@ -22,7 +22,7 @@ async function getUserFavoritesData(supabase: SupabaseClient, userId: string) {
 }
 
 export default async function FavouritesPage() {
-  const supabase = await createSupabaseClient();
+  const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   const { events, communities, locations } = await getUserFavoritesData(supabase, user?.id as unknown as string);
 

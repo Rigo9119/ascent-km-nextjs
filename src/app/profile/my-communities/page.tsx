@@ -1,4 +1,4 @@
-import { createSupabaseClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { CommunitiesService } from "@/services/communities-service";
 import { DiscussionsService } from "@/services/discussions-service";
 import { redirect } from "next/navigation";
@@ -24,7 +24,7 @@ async function getUserCommunitiesData(supabase: SupabaseClient, userId: string) 
 }
 
 export default async function MyCommunitiesPage() {
-  const supabase = await createSupabaseClient();
+  const supabase = await createSupabaseServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

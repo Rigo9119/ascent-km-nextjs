@@ -1,4 +1,4 @@
-import { createSupabaseClient } from "@/lib/supabase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { SettingsService } from "@/services/settings-service";
 import { PreferencesService } from "@/services/preferences-service";
 import { InterestService } from "@/services/interests-service";
@@ -45,7 +45,7 @@ async function getUserSettingsData(supabase: SupabaseClient, userId: string) {
 }
 
 export default async function SettingsPage() {
-  const supabase = await createSupabaseClient();
+  const supabase = await createSupabaseServerClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {

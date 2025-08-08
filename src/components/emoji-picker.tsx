@@ -14,7 +14,13 @@ interface EmojiPickerProps {
   children: React.ReactNode
 }
 
-const emojiCategories = {
+interface EmojiCategory {
+  name: string;
+  icon: React.ReactNode;
+  emojis: string[];
+}
+
+const emojiCategories: Record<string, EmojiCategory> = {
   reactions: {
     name: "Reactions",
     icon: <ThumbsUp className="w-4 h-4" />,

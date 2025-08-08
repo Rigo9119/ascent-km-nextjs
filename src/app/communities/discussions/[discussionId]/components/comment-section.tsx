@@ -8,18 +8,18 @@ import { Avatar } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import AuthRequiredModal from '@/components/auth-required-modal';
 import EmojiPicker from '@/components/emoji-picker';
-import { 
-  MessageSquare, 
-  Send, 
-  Reply, 
+import {
+  MessageSquare,
+  Send,
+  Reply,
   Heart,
-  Clock,
   MoreHorizontal,
   Smile
 } from 'lucide-react';
 import { CommentWithProfile } from '@/types/discussion';
 import { User as SupabaseUser } from '@supabase/supabase-js';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 interface CommentSectionProps {
   discussionId: string;
@@ -53,7 +53,7 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
 
   const handleLike = async () => {
     if (!currentUser) return;
-    
+
     // TODO: Implement comment like functionality
     setIsLiked(!isLiked);
     setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
@@ -66,17 +66,19 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
 
   return (
     <div>
-      <div className={`${depth > 0 ? 'pl-4 border-l-2 border-gray-100' : ''}`} 
-           style={{ marginLeft: depth > 0 ? `${indentation}px` : '0' }}>
+      <div className={`${depth > 0 ? 'pl-4 border-l-2 border-gray-100' : ''}`}
+        style={{ marginLeft: depth > 0 ? `${indentation}px` : '0' }}>
         <div className="flex space-x-3">
           <Avatar className={`${depth > 3 ? 'h-6 w-6' : 'h-8 w-8'} flex-shrink-0`}>
-            <img
+            <Image
+              height={48}
+              width={48}
               src={comment.profiles?.avatar_url || '/default-avatar.svg'}
               alt={comment.profiles?.full_name || comment.profiles?.username || 'User'}
               className="rounded-full"
             />
           </Avatar>
-          
+
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2 mb-1">
               <p className={`font-medium text-gray-900 ${depth > 3 ? 'text-xs' : 'text-sm'}`}>
@@ -86,25 +88,23 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
                 {comment.created_at && formatDate(comment.created_at)}
               </span>
             </div>
-            
-            <div className={`text-gray-700 leading-relaxed mb-2 whitespace-pre-wrap ${
-              depth > 3 ? 'text-xs' : 'text-sm'
-            }`}>
+
+            <div className={`text-gray-700 leading-relaxed mb-2 whitespace-pre-wrap ${depth > 3 ? 'text-xs' : 'text-sm'
+              }`}>
               {comment.content}
             </div>
-            
+
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4 text-xs text-gray-500">
                 <button
                   onClick={handleLike}
-                  className={`flex items-center space-x-1 hover:text-red-500 ${
-                    isLiked ? 'text-red-500' : ''
-                  }`}
+                  className={`flex items-center space-x-1 hover:text-red-500 ${isLiked ? 'text-red-500' : ''
+                    }`}
                 >
                   <Heart className={`w-3 h-3 ${isLiked ? 'fill-current' : ''}`} />
                   <span>{likeCount || 'Like'}</span>
                 </button>
-                
+
                 <button
                   onClick={() => onReply(comment.id)}
                   className="flex items-center space-x-1 hover:text-emerald-600"
@@ -112,7 +112,7 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
                   <Reply className="w-3 h-3" />
                   <span>Reply</span>
                 </button>
-                
+
                 {depth < maxDepth && (
                   <button className="hover:text-gray-700">
                     <MoreHorizontal className="w-3 h-3" />
@@ -191,7 +191,7 @@ function buildCommentTree(comments: CommentWithProfile[]): CommentTreeNode[] {
   // Second pass: Build the tree structure
   comments.forEach(comment => {
     const commentNode = commentMap.get(comment.id)!;
-    
+
     if (comment.parent_comment_id) {
       const parent = commentMap.get(comment.parent_comment_id);
       if (parent) {
@@ -253,7 +253,7 @@ export default function CommentSection({
       setNewComment('');
       setReplyTo(null);
       toast.success('Comment posted successfully!');
-      
+
       // Refresh the page to show new comment
       window.location.reload();
     } catch (error) {
@@ -309,23 +309,25 @@ export default function CommentSection({
                 </Button>
               </div>
             )}
-            
+
             <div className="flex space-x-3">
               {currentUser && (
                 <Avatar className="h-8 w-8 flex-shrink-0">
-                  <img
+                  <Image
+                    height={48}
+                    width={48}
                     src="/default-avatar.svg"
                     alt="Your avatar"
                     className="rounded-full"
                   />
                 </Avatar>
               )}
-              
+
               <div className="flex-1">
                 <div className="relative">
                   <Textarea
                     placeholder={
-                      currentUser 
+                      currentUser
                         ? (replyTo ? 'Write a reply...' : 'Share your thoughts...')
                         : 'Sign in to join the discussion...'
                     }
@@ -334,7 +336,7 @@ export default function CommentSection({
                     className="min-h-[80px] resize-none pr-12"
                     disabled={!currentUser}
                   />
-                  
+
                   {/* Emoji Picker Button */}
                   {currentUser && (
                     <div className="absolute bottom-2 right-2">
@@ -351,12 +353,12 @@ export default function CommentSection({
                     </div>
                   )}
                 </div>
-                
+
                 <div className="flex justify-between items-center mt-2">
                   <span className="text-xs text-gray-500">
                     {newComment.length}/1000 characters
                   </span>
-                  
+
                   <Button
                     onClick={handleSubmitComment}
                     disabled={!currentUser || !newComment.trim() || isSubmitting}
