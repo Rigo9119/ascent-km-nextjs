@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DiscussionWithDetails } from "@/types/discussion";
 import { Community } from "@/types/community";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { AnyFieldApi } from "@tanstack/react-form";
 import { User } from "@supabase/supabase-js";
+import { useAuth } from "@/hooks/use-auth";
 
 export type FilterState = {
   search: string;
@@ -38,6 +39,13 @@ export default function DiscussionsPageCmp({
     search: "",
     community: "all",
   });
+
+  // Use client-side auth context to ensure consistency with sidebar
+  const { user: clientUser } = useAuth();
+  
+  // Use client-side user if available, otherwise fallback to server-side user
+  const effectiveUser = clientUser || currentUser;
+
 
   // Transform communities to options format
   const communityOptions = [
@@ -67,12 +75,11 @@ export default function DiscussionsPageCmp({
   };
 
   const handleStartDiscussion = () => {
-    if (!currentUser) {
+    if (!effectiveUser) {
       setShowAuthModal(true);
       return;
     }
     // TODO: Navigate to create discussion page or open modal
-    console.log('Start new discussion');
   };
 
   const filterDiscussions = (currentFilters: FilterState) => {
@@ -113,7 +120,7 @@ export default function DiscussionsPageCmp({
           <h1 className="text-3xl font-bold text-emerald-500">Community Discussions</h1>
           <p className="text-muted-foreground">Join conversations and share ideas with the community</p>
         </div>
-        {currentUser && (
+        {effectiveUser && (
           <Button 
             className="bg-emerald-500 hover:bg-emerald-600"
             onClick={handleStartDiscussion}

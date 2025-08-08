@@ -39,7 +39,11 @@ export function AppSidebar() {
   const { signOut, user, isLoading } = useAuth()
 
   const handleLogout = async () => {
-    await signOut()
+    try {
+      await signOut()
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
   }
 
   // Menu items

@@ -166,11 +166,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     try {
       setError(null)
-      const { error } = await supabase.auth.signOut()
-      if (error) throw error
+      setIsLoading(true)
+      
+      // Force immediate state update
+      setUser(null)
+      setSession(null)
+      
+      // Try to sign out from Supabase with timeout
+      try {
+        const signOutPromise = supabase.auth.signOut({ scope: 'local' })
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('SignOut timeout')), 5000)
+        })
+        
+        await Promise.race([signOutPromise, timeoutPromise])
+      } catch (supabaseError) {
+        // Continue with local logout even if Supabase fails
+      }
+      
+      // Navigate to auth page
+      router.push('/auth')
+      
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred'
       setError(message)
+      
+      // Force clear state and navigate anyway
+      setUser(null)
+      setSession(null)
+      router.push('/auth')
+    } finally {
+      setIsLoading(false)
     }
   }
 
