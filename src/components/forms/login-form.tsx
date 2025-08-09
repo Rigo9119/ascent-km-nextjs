@@ -1,5 +1,5 @@
 import { AnyFieldApi, useForm } from "@tanstack/react-form";
-import { FormInput } from "./form-components/form-input";
+import FormInput from "./form-components/form-input";
 import { ChangeEvent } from "react";
 import { Button } from "../ui/button";
 import { useAuth } from "@/hooks/use-auth";

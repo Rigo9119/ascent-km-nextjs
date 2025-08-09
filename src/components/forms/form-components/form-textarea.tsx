@@ -17,7 +17,7 @@ interface FormTextareaProps {
 export default function FormTextarea({ field, label, placeholder, value, rows = 3, onChange, onBlur, name }: FormTextareaProps) {
   return (
     <div className="w-full">
-      <Label>{label}</Label>
+      <Label className="mb-4">{label}</Label>
       <Textarea placeholder={placeholder} value={value} onChange={onChange} rows={rows} name={name} onBlur={onBlur} />
       <FieldInfo field={field} />
     </div>

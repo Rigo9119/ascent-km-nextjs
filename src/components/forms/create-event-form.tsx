@@ -6,7 +6,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 // Form Components
-import { FormInput } from "./form-components/form-input";
+import FormInput from "./form-components/form-input";
 import FormTextarea from "./form-components/form-textarea";
 import { FormDatePicker } from "./form-components/form-date-picker";
 import FormSelect from "./form-components/form-select";

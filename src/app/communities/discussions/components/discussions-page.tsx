@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { DiscussionWithDetails } from "@/types/discussion";
 import { Community } from "@/types/community";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,6 +33,7 @@ export default function DiscussionsPageCmp({
   communities,
   currentUser,
 }: DiscussionsPageProps) {
+  const router = useRouter();
   const [filteredDiscussions, setFilteredDiscussions] = useState(discussions);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
@@ -42,7 +43,7 @@ export default function DiscussionsPageCmp({
 
   // Use client-side auth context to ensure consistency with sidebar
   const { user: clientUser } = useAuth();
-  
+
   // Use client-side user if available, otherwise fallback to server-side user
   const effectiveUser = clientUser || currentUser;
 
@@ -79,7 +80,7 @@ export default function DiscussionsPageCmp({
       setShowAuthModal(true);
       return;
     }
-    // TODO: Navigate to create discussion page or open modal
+    router.push('/communities/discussions/create');
   };
 
   const filterDiscussions = (currentFilters: FilterState) => {
@@ -121,7 +122,7 @@ export default function DiscussionsPageCmp({
           <p className="text-muted-foreground">Join conversations and share ideas with the community</p>
         </div>
         {effectiveUser && (
-          <Button 
+          <Button
             className="bg-emerald-500 hover:bg-emerald-600"
             onClick={handleStartDiscussion}
           >
