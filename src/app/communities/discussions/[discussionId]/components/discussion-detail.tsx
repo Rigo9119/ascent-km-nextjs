@@ -9,16 +9,16 @@ import { Avatar } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import ShareButton from '@/components/share-button';
 import CommentSection from './comment-section';
-import { 
-  MessageSquare, 
-  Heart, 
-  Clock, 
-  User,
+import {
+  MessageSquare,
+  Heart,
+  Clock,
   ArrowLeft,
   MoreHorizontal
 } from 'lucide-react';
 import { DiscussionWithDetails, CommentWithProfile } from '@/types/discussion';
 import { User as SupabaseUser } from '@supabase/supabase-js';
+import Image from 'next/image';
 
 interface DiscussionDetailProps {
   discussion: DiscussionWithDetails;
@@ -60,7 +60,7 @@ export default function DiscussionDetail({
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back navigation */}
         <div className="mb-6">
-          <Link 
+          <Link
             href="/communities/discussions"
             className="inline-flex items-center text-emerald-600 hover:text-emerald-700 font-medium"
           >
@@ -75,12 +75,12 @@ export default function DiscussionDetail({
             {/* Community Badge */}
             {discussion.communities && (
               <div className="mb-4">
-                <Link 
+                <Link
                   href={`/communities/${discussion.communities.id}`}
                   className="inline-block"
                 >
-                  <Badge 
-                    variant="secondary" 
+                  <Badge
+                    variant="secondary"
                     className="text-emerald-600 bg-emerald-50 hover:bg-emerald-100 cursor-pointer"
                   >
                     {discussion.communities.name}
@@ -98,7 +98,9 @@ export default function DiscussionDetail({
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <Avatar className="h-10 w-10">
-                  <img
+                  <Image
+                    height={48}
+                    width={48}
                     src={discussion.profiles?.avatar_url || '/default-avatar.svg'}
                     alt={discussion.profiles?.full_name || discussion.profiles?.username || 'User'}
                     className="rounded-full"
@@ -166,7 +168,7 @@ export default function DiscussionDetail({
                   {likeCount} {likeCount === 1 ? 'like' : 'likes'}
                 </span>
               </div>
-              
+
               {discussion.updated_at !== discussion.created_at && (
                 <span>
                   Last updated: {discussion.updated_at && formatDate(discussion.updated_at)}
@@ -177,7 +179,7 @@ export default function DiscussionDetail({
         </Card>
 
         {/* Comments Section */}
-        <CommentSection 
+        <CommentSection
           discussionId={discussion.id}
           comments={comments}
           currentUser={currentUser}
