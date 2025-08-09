@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { FormInput } from "./form-components/form-input";
+import FormInput from "./form-components/form-input";
 import FormFileInput from "./form-components/form-file-input";
 import { X } from "lucide-react";
 import { useState, ChangeEvent } from "react";

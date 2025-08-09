@@ -163,16 +163,16 @@ export function AppSidebar() {
         ) : !user ? (
           <div className="flex flex-col gap-2">
             <Button
-              asChild
+              onClick={() => window.location.href = '/auth?mode=login'}
               className="bg-emerald-500 hover:bg-emerald-600"
             >
-              <Link href="/auth?mode=login">Log in</Link>
+              Log in
             </Button>
             <Button
-              asChild
+              onClick={() => window.location.href = '/auth?mode=sign-up'}
               className="bg-emerald-500 hover:bg-emerald-600"
             >
-              <Link href="/auth?mode=sign-up">Sign up</Link>
+              Sign up
             </Button>
           </div>
         ) : (

@@ -1,7 +1,7 @@
 'use client'
 import { useState } from "react";
 import { useForm } from "@tanstack/react-form";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -38,6 +38,8 @@ export default function CreateDiscussionForm({ communityId, userId, onCancel }: 
       setIsSubmitting(true);
 
       try {
+        console.log('Submitting discussion data:', value);
+
         const response = await fetch('/api/discussions', {
           method: 'POST',
           headers: {
@@ -47,16 +49,23 @@ export default function CreateDiscussionForm({ communityId, userId, onCancel }: 
         });
 
         if (!response.ok) {
-          throw new Error('Failed to create discussion');
+          const errorData = await response.json();
+          console.error('API Error Response:', errorData);
+          throw new Error(errorData.error || 'Failed to create discussion:', errorData.message);
         }
+
+        const result = await response.json();
+        console.log('Discussion created successfully:', result);
 
         toast.success('Discussion created successfully!', {
           style: { background: '#10b981', color: 'white' }
         });
 
-        router.push(`/communities/${communityId}/discussions`);
+        router.push(`/communities/discussions/${result.discussion.id}`);
       } catch (error) {
-        toast.error('Failed to create discussion. Please try again.', {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to create discussion. Please try again.';
+
+        toast.error(errorMessage, {
           style: { background: '#ef4444', color: 'white' }
         });
         console.error('Create discussion error:', error);

@@ -17,6 +17,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    optimizeCss: false,
+  },
+  // Disable font optimization for Vercel deployment
+  optimizeFonts: false,
 };
 
 export default nextConfig;
