@@ -201,7 +201,7 @@ export default function CreateEventForm({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-2">
             <form.Field
               name="date"
               validators={{
@@ -253,7 +253,7 @@ export default function CreateEventForm({
           <CardTitle>Categories & Type</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-4">
             <form.Field name="category_id">
               {(field) => (
                 <FormSelect
@@ -325,7 +325,7 @@ export default function CreateEventForm({
               {(field) => (
                 <FormInput
                   field={field}
-                  label="Maximum Participants"
+                  label="Max Participants"
                   name={field.name}
                   type="number"
                   placeholder="50"
@@ -345,7 +345,7 @@ export default function CreateEventForm({
           <CardTitle>Contact Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-4">
             <form.Field name="contact_email">
               {(field) => (
                 <FormInput

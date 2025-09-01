@@ -53,16 +53,16 @@ export function AppSidebar() {
       url: '/',
       icon: House
     },
-    {
-      title: 'Events',
-      url: '/events',
-      icon: Ticket
-    },
-    {
-      title: 'Locations',
-      url: '/locations',
-      icon: Map
-    },
+    // {
+    //   title: 'Events',
+    //   url: '/events',
+    //   icon: Ticket
+    // },
+    // {
+    //   title: 'Locations',
+    //   url: '/locations',
+    //   icon: Map
+    // },
     {
       title: 'Communities',
       url: '/communities',
@@ -80,11 +80,11 @@ export function AppSidebar() {
       url: '/resources',
       icon: FileSearch
     },
-    {
-      title: 'Blogs',
-      url: '/blogs',
-      icon: BookOpen
-    }
+    // {
+    //   title: 'Blogs',
+    //   url: '/blogs',
+    //   icon: BookOpen
+    // }
   ]
 
   // Protected menu items
