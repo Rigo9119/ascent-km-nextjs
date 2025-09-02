@@ -30,12 +30,12 @@ export default function EventsFilters({
 }: EventsFiltersProps) {
   // Transform data to the correct format for FormSelect
   const categoryOptions = [
-    { value: "all", label: "All Categories" },
+    { value: "all", label: "Todas las Categorías" },
     ...(categories || []).map((cat) => ({ value: cat.id, label: cat.name })),
   ];
 
   const locationOptions = [
-    { value: "all", label: "All Locations" },
+    { value: "all", label: "Todas las Ubicaciones" },
     ...(locations || []).map((loc) => ({ value: loc.location_id, label: loc.location_name })),
   ];
 
@@ -59,14 +59,14 @@ export default function EventsFilters({
     <div className="lg:col-span-1">
       <Card>
         <CardHeader>
-          <CardTitle>Filters</CardTitle>
+          <CardTitle>Filtros</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="search">Search Events</Label>
+            <Label htmlFor="search">Buscar Eventos</Label>
             <Input
               id="search"
-              placeholder="Search by title..."
+              placeholder="Buscar por título..."
               value={filters.search}
               onChange={(e) => handleFilterChange("search", e.target.value)}
             />
@@ -74,26 +74,26 @@ export default function EventsFilters({
 
           <FormSelect
             field={{} as AnyFieldApi}
-            label="Category"
+            label="Categoría"
             value={filters.category}
-            placeholder="Select category"
+            placeholder="Seleccionar categoría"
             options={categoryOptions}
             onValueChange={(value) => handleFilterChange("category", value)}
           />
 
           <FormSelect
             field={{} as AnyFieldApi}
-            label="Location"
+            label="Ubicación"
             value={filters.location}
-            placeholder="Select location"
+            placeholder="Seleccionar ubicación"
             options={locationOptions}
             onValueChange={(value) => handleFilterChange("location", value)}
           />
 
           <FormDatePicker
             field={{} as AnyFieldApi}
-            label="Date Range"
-            placeholder="Select event date"
+            label="Rango de Fechas"
+            placeholder="Seleccionar fecha del evento"
             value={filters.date}
             onChange={(date) => handleFilterChange("date", date)}
             className="w-full"
@@ -104,7 +104,7 @@ export default function EventsFilters({
             className="w-full mt-4 border-emerald-500 text-emerald-500 hover:text-emerald-500"
             onClick={handleClearAll}
           >
-            Clear All
+            Limpiar Todo
           </Button>
         </CardContent>
       </Card>

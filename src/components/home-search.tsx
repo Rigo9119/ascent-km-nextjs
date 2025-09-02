@@ -27,7 +27,7 @@ export function HomeSearch() {
   return (
     <SearchBar 
       onSearch={handleSearch}
-      placeholder="Search events, locations, communities..."
+      placeholder="Buscar eventos, ubicaciones, comunidades..."
       className="mb-0 max-w-md mx-auto"
     />
   )

@@ -16,9 +16,9 @@ export default function FeaturedLocations({ featuredLocations }: FeaturedLocatio
   if (!featuredLocations || featuredLocations.length === 0) {
     return (
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Featured Locations</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Ubicaciones Destacadas</h2>
         <div className="text-center py-8 text-gray-500">
-          No featured locations available
+          No hay ubicaciones destacadas disponibles
         </div>
       </div>
     );
@@ -28,11 +28,11 @@ export default function FeaturedLocations({ featuredLocations }: FeaturedLocatio
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Featured Locations</h2>
-          <p className="text-gray-600">Discover our most popular and highly-rated locations</p>
+          <h2 className="text-2xl font-bold text-gray-900">Ubicaciones Destacadas</h2>
+          <p className="text-gray-600">Descubre nuestras ubicaciones más populares y mejor valoradas</p>
         </div>
         <Badge variant="secondary" className="text-emerald-600 bg-emerald-50">
-          {featuredLocations.length} Featured
+          {featuredLocations.length} Destacadas
         </Badge>
       </div>
 
@@ -51,7 +51,7 @@ export default function FeaturedLocations({ featuredLocations }: FeaturedLocatio
                 <div className="absolute top-3 right-3">
                   <Badge className="bg-yellow-100 text-yellow-800">
                     <StarIcon className="w-3 h-3 mr-1" />
-                    Featured
+                    Destacado
                   </Badge>
                 </div>
               </div>
@@ -99,7 +99,7 @@ export default function FeaturedLocations({ featuredLocations }: FeaturedLocatio
                   className="flex-1 bg-emerald-500 hover:bg-emerald-600"
                   onClick={() => router.push(`/locations/${location.id}`)}
                 >
-                  View Details
+                  Ver Detalles
                 </Button>
               </div>
             </div>

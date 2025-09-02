@@ -110,7 +110,7 @@ export default function FavoritesContent({
         <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center gap-2">
             <Heart className="w-4 h-4 text-red-500" />
-            <span>Favorited {formatDate(event.favorited_at)}</span>
+            <span>Guardado en favoritos {formatDate(event.favorited_at)}</span>
           </div>
         </div>
       </CardContent>
@@ -126,7 +126,7 @@ export default function FavoritesContent({
             <h3 className="text-lg font-semibold text-gray-900 mb-2">{community.community_name}</h3>
             <div className="flex items-center gap-2 mb-2">
               <Users className="w-4 h-4 text-gray-500" />
-              <span className="text-sm text-gray-600">{community.community_member_count} members</span>
+              <span className="text-sm text-gray-600">{community.community_member_count} miembros</span>
             </div>
           </div>
           <div className="flex gap-2 ml-4">
@@ -144,7 +144,7 @@ export default function FavoritesContent({
         <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center gap-2">
             <Heart className="w-4 h-4 text-red-500" />
-            <span>Favorited {formatDate(community.favorited_at)}</span>
+            <span>Guardado en favoritos {formatDate(community.favorited_at)}</span>
           </div>
         </div>
       </CardContent>
@@ -184,7 +184,7 @@ export default function FavoritesContent({
         <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center gap-2">
             <Heart className="w-4 h-4 text-red-500" />
-            <span>Favorited {formatDate(location.favorited_at)}</span>
+            <span>Guardado en favoritos {formatDate(location.favorited_at)}</span>
           </div>
         </div>
       </CardContent>
@@ -203,7 +203,7 @@ export default function FavoritesContent({
         <p className="text-gray-500 mb-4">{description}</p>
         <Button className="bg-emerald-500 hover:bg-emerald-600">
           <ExternalLink className="w-4 h-4 mr-2" />
-          Explore Content
+          Explorar Contenido
         </Button>
       </CardContent>
     </Card>
@@ -214,8 +214,8 @@ export default function FavoritesContent({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">My Favorites</h1>
-          <p className="text-gray-600 mt-1">Your bookmarked events, communities, and locations</p>
+          <h1 className="text-3xl font-bold text-gray-900">Mis Favoritos</h1>
+          <p className="text-gray-600 mt-1">Tus eventos, comunidades y ubicaciones guardados</p>
         </div>
         <div className="flex items-center gap-2">
           <Heart className="w-6 h-6 text-red-500" />
@@ -230,19 +230,19 @@ export default function FavoritesContent({
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold text-blue-600">{events.length}</p>
-            <p className="text-sm text-gray-600">Favorite Events</p>
+            <p className="text-sm text-gray-600">Eventos Favoritos</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold text-purple-600">{communities.length}</p>
-            <p className="text-sm text-gray-600">Favorite Communities</p>
+            <p className="text-sm text-gray-600">Comunidades Favoritas</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold text-orange-600">{locations.length}</p>
-            <p className="text-sm text-gray-600">Favorite Locations</p>
+            <p className="text-sm text-gray-600">Ubicaciones Favoritas</p>
           </CardContent>
         </Card>
       </div>
@@ -253,7 +253,7 @@ export default function FavoritesContent({
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
-              placeholder="Search your favorites..."
+              placeholder="Buscar en tus favoritos..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -265,9 +265,9 @@ export default function FavoritesContent({
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="events">Events ({filteredEvents.length})</TabsTrigger>
-          <TabsTrigger value="communities">Communities ({filteredCommunities.length})</TabsTrigger>
-          <TabsTrigger value="locations">Locations ({filteredLocations.length})</TabsTrigger>
+          <TabsTrigger value="events">Eventos ({filteredEvents.length})</TabsTrigger>
+          <TabsTrigger value="communities">Comunidades ({filteredCommunities.length})</TabsTrigger>
+          <TabsTrigger value="locations">Ubicaciones ({filteredLocations.length})</TabsTrigger>
         </TabsList>
 
         {/* Events Tab */}
@@ -280,8 +280,8 @@ export default function FavoritesContent({
             </div>
           ) : (
             <EmptyState
-              title="No Favorite Events"
-              description={searchTerm ? "No events match your search." : "You haven't favorited any events yet. Explore events and add them to your favorites!"}
+              title="No hay Eventos Favoritos"
+              description={searchTerm ? "No hay eventos que coincidan con tu búsqueda." : "¡Aún no has guardado ningún evento en favoritos. Explora eventos y añádelos a tus favoritos!"}
               iconName={'Calendar'}
             />
           )}
@@ -297,8 +297,8 @@ export default function FavoritesContent({
             </div>
           ) : (
             <EmptyState
-              title="No Favorite Communities"
-              description={searchTerm ? "No communities match your search." : "You haven't favorited any communities yet. Discover communities and save your favorites!"}
+              title="No hay Comunidades Favoritas"
+              description={searchTerm ? "No hay comunidades que coincidan con tu búsqueda." : "¡Aún no has guardado ninguna comunidad en favoritos. Descubre comunidades y guarda tus favoritas!"}
               iconName={'Users'}
             />
           )}
@@ -314,8 +314,8 @@ export default function FavoritesContent({
             </div>
           ) : (
             <EmptyState
-              title="No Favorite Locations"
-              description={searchTerm ? "No locations match your search." : "You haven't favorited any locations yet. Explore locations and bookmark your favorites!"}
+              title="No hay Ubicaciones Favoritas"
+              description={searchTerm ? "No hay ubicaciones que coincidan con tu búsqueda." : "¡Aún no has guardado ninguna ubicación en favoritos. Explora ubicaciones y marca tus favoritas!"}
               iconName={'MapPin'}
             />
           )}

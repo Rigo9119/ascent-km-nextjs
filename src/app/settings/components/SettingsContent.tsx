@@ -61,27 +61,27 @@ export default function SettingsContent({
   const settingsNav = [
     {
       id: "profile",
-      label: "Profile",
+      label: "Perfil",
       icon: User,
-      description: "Manage your personal information and preferences"
+      description: "Gestiona tu información personal y preferencias"
     },
     {
       id: "notifications",
-      label: "Notifications",
+      label: "Notificaciones",
       icon: Bell,
-      description: "Control your notification preferences"
+      description: "Controla tus preferencias de notificaciones"
     },
     {
       id: "privacy",
-      label: "Privacy & Security",
+      label: "Privacidad y Seguridad",
       icon: Shield,
-      description: "Manage your privacy settings and security options"
+      description: "Gestiona tu configuración de privacidad y opciones de seguridad"
     },
     {
       id: "account",
-      label: "Account",
+      label: "Cuenta",
       icon: CreditCard,
-      description: "Account settings, billing, and danger zone"
+      description: "Configuración de cuenta, facturación y zona de peligro"
     }
   ];
 
@@ -90,8 +90,8 @@ export default function SettingsContent({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-          <p className="text-gray-600 mt-1">Manage your account settings and preferences</p>
+          <h1 className="text-3xl font-bold text-gray-900">Configuración</h1>
+          <p className="text-gray-600 mt-1">Gestiona la configuración de tu cuenta y preferencias</p>
         </div>
         <div className="flex items-center gap-2">
           <SettingsIcon className="w-6 h-6 text-gray-500" />
@@ -105,7 +105,7 @@ export default function SettingsContent({
             <p className="text-2xl font-bold text-emerald-600">
               {userSettings.user_preferences?.length || 0}
             </p>
-            <p className="text-sm text-gray-600">Preferences Set</p>
+            <p className="text-sm text-gray-600">Preferencias Establecidas</p>
           </CardContent>
         </Card>
         <Card>
@@ -113,7 +113,7 @@ export default function SettingsContent({
             <p className="text-2xl font-bold text-blue-600">
               {userSettings.user_interests?.length || 0}
             </p>
-            <p className="text-sm text-gray-600">Interests Selected</p>
+            <p className="text-sm text-gray-600">Intereses Seleccionados</p>
           </CardContent>
         </Card>
         <Card>
@@ -121,15 +121,15 @@ export default function SettingsContent({
             <p className="text-2xl font-bold text-purple-600">
               {userSettings.created_at ? new Date(userSettings.created_at).getFullYear() : 'N/A'}
             </p>
-            <p className="text-sm text-gray-600">Member Since</p>
+            <p className="text-sm text-gray-600">Miembro Desde</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <Badge variant="secondary" className="text-xs">
-              {userSettings.username ? 'Complete' : 'Incomplete'}
+              {userSettings.username ? 'Completo' : 'Incompleto'}
             </Badge>
-            <p className="text-sm text-gray-600 mt-1">Profile Status</p>
+            <p className="text-sm text-gray-600 mt-1">Estado del Perfil</p>
           </CardContent>
         </Card>
       </div>
@@ -141,7 +141,7 @@ export default function SettingsContent({
           <div className="lg:col-span-1">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Settings</CardTitle>
+                <CardTitle className="text-lg">Configuración</CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <nav className="space-y-1">

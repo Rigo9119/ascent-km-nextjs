@@ -33,7 +33,7 @@ export default function ResourcesPageCmp({
 
   // Transform categories to options format
   const categoryOptions = [
-    { value: "all", label: "All Categories" },
+    { value: "all", label: "Todas las Categorías" },
     ...(categories || []).map((category) => ({
       value: category,
       label: category.charAt(0).toUpperCase() + category.slice(1)
@@ -102,8 +102,8 @@ export default function ResourcesPageCmp({
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-emerald-500">Resources</h1>
-        <p className="text-muted-foreground">Discover useful tools, guides, and resources for the community</p>
+        <h1 className="text-3xl font-bold text-emerald-500">Recursos</h1>
+        <p className="text-muted-foreground">Descubre herramientas útiles, guías y recursos para la comunidad</p>
       </div>
 
       {/* Featured Resources */}
@@ -111,11 +111,11 @@ export default function ResourcesPageCmp({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Featured Resources</h2>
-              <p className="text-gray-600">Our most popular and recommended resources</p>
+              <h2 className="text-2xl font-bold text-gray-900">Recursos Destacados</h2>
+              <p className="text-gray-600">Nuestros recursos más populares y recomendados</p>
             </div>
             <Badge variant="secondary" className="text-emerald-600 bg-emerald-50">
-              {featuredResources.length} Featured
+              {featuredResources.length} Destacados
             </Badge>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -131,14 +131,14 @@ export default function ResourcesPageCmp({
         <div className="lg:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>Filters</CardTitle>
+              <CardTitle>Filtros</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="search">Search Resources</Label>
+                <Label htmlFor="search">Buscar Recursos</Label>
                 <Input
                   id="search"
-                  placeholder="Search by title or description..."
+                  placeholder="Buscar por título o descripción..."
                   value={filters.search}
                   onChange={(e) => handleFilterChange("search", e.target.value)}
                 />
@@ -146,9 +146,9 @@ export default function ResourcesPageCmp({
 
               <FormSelect
                 field={{} as AnyFieldApi}
-                label="Category"
+                label="Categoría"
                 value={filters.category}
-                placeholder="Select category"
+                placeholder="Seleccionar categoría"
                 options={categoryOptions}
                 onValueChange={(value) => handleFilterChange("category", value)}
               />
@@ -158,12 +158,12 @@ export default function ResourcesPageCmp({
                 className="w-full mt-4 border-emerald-500 text-emerald-500 hover:text-emerald-500"
                 onClick={handleClearAll}
               >
-                Clear All
+                Limpiar Todo
               </Button>
 
               {/* Category Quick Links */}
               <div className="pt-4 border-t">
-                <Label className="text-sm font-medium">Categories</Label>
+                <Label className="text-sm font-medium">Categorías</Label>
                 <div className="space-y-2 mt-2">
                   {categories.map((category) => {
                     const Icon = getIconForCategory(category);
@@ -194,9 +194,9 @@ export default function ResourcesPageCmp({
         <div className="lg:col-span-3">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold">All Resources</h2>
+              <h2 className="text-2xl font-bold">Todos los Recursos</h2>
               <p className="text-muted-foreground">
-                {filteredResources.length} resource{filteredResources.length !== 1 ? "s" : ""} found
+                {filteredResources.length} recurso{filteredResources.length !== 1 ? "s" : ""} encontrado{filteredResources.length !== 1 ? "s" : ""}
               </p>
             </div>
           </div>
@@ -204,7 +204,7 @@ export default function ResourcesPageCmp({
           <div className="space-y-4">
             {filteredResources.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                No resources found matching your criteria.
+                No se encontraron recursos que coincidan con tus criterios.
               </div>
             ) : (
               filteredResources.map((resource) => (
@@ -264,7 +264,7 @@ function ResourceCard({ resource, featured = false }: ResourceCardProps) {
             </div>
             <Badge className="bg-yellow-100 text-yellow-800">
               <Star className="w-3 h-3 mr-1" />
-              Featured
+              Destacado
             </Badge>
           </div>
 
@@ -280,7 +280,7 @@ function ResourceCard({ resource, featured = false }: ResourceCardProps) {
               onClick={openResource}
             >
               <ExternalLink className="w-4 h-4 mr-2" />
-              Visit Resource
+              Visitar Recurso
             </Button>
           </div>
         </CardContent>
@@ -338,7 +338,7 @@ function ResourceCard({ resource, featured = false }: ResourceCardProps) {
                   onClick={openResource}
                 >
                   <ExternalLink className="w-4 h-4 mr-2" />
-                  Visit
+                  Visitar
                 </Button>
               </div>
             </div>

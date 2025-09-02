@@ -50,26 +50,26 @@ export default function CommunityTabs({
       <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="discussions" className="gap-2">
           <MessageSquare className="w-4 h-4" />
-          Discussions ({discussions.length})
+          Discusiones ({discussions.length})
         </TabsTrigger>
         <TabsTrigger value="members" className="gap-2">
           <Users className="w-4 h-4" />
-          Members ({members.length})
+          Miembros ({members.length})
         </TabsTrigger>
         <TabsTrigger value="events" className="gap-2">
           <Calendar className="w-4 h-4" />
-          Events
+          Eventos
         </TabsTrigger>
       </TabsList>
 
       {/* Discussions Tab */}
       <TabsContent value="discussions" className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Recent Discussions</h2>
+          <h2 className="text-lg font-semibold">Discusiones Recientes</h2>
           {isMember && (
             <Button className="gap-2 bg-emerald-500 hover:bg-emerald-600">
               <Plus className="w-4 h-4" />
-              New Discussion
+              Nueva Discusión
             </Button>
           )}
         </div>
@@ -78,17 +78,17 @@ export default function CommunityTabs({
           <Card>
             <CardContent className="text-center py-12">
               <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No discussions yet</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Aún no hay discusiones</h3>
               <p className="text-gray-500 mb-4">
                 {isMember
-                  ? "Be the first to start a discussion in this community!"
-                  : "Join this community to participate in discussions."
+                  ? "¡Sé el primero en iniciar una discusión en esta comunidad!"
+                  : "Únete a esta comunidad para participar en discusiones."
                 }
               </p>
               {isMember && (
                 <Button className="bg-emerald-500 hover:bg-emerald-600">
                   <Plus className="w-4 h-4 mr-2" />
-                  Start Discussion
+                  Iniciar Discusión
                 </Button>
               )}
             </CardContent>
@@ -116,7 +116,7 @@ export default function CommunityTabs({
                             {discussion.title}
                           </Link>
                           {discussion.is_pinned && (
-                            <Badge variant="secondary" className="text-xs">Pinned</Badge>
+                            <Badge variant="secondary" className="text-xs">Fijado</Badge>
                           )}
                         </div>
 
@@ -132,11 +132,11 @@ export default function CommunityTabs({
                           </div>
                           <div className="flex items-center gap-1">
                             <MessageCircle className="w-3 h-3" />
-                            {discussion.comment_count || 0} replies
+                            {discussion.comment_count || 0} respuestas
                           </div>
                           <div className="flex items-center gap-1">
                             <Heart className="w-3 h-3" />
-                            {discussion.like_count || 0} likes
+                            {discussion.like_count || 0} me gusta
                           </div>
                         </div>
                       </div>
@@ -156,8 +156,8 @@ export default function CommunityTabs({
       {/* Members Tab */}
       <TabsContent value="members" className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Community Members</h2>
-          <p className="text-sm text-gray-500">{members.length} total members</p>
+          <h2 className="text-lg font-semibold">Miembros de la Comunidad</h2>
+          <p className="text-sm text-gray-500">{members.length} miembros en total</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -180,13 +180,13 @@ export default function CommunityTabs({
                       @{member.profiles?.username}
                     </p>
                     <p className="text-xs text-gray-400">
-                      Joined {member.joined_at ? new Date(member.joined_at).toLocaleDateString() : 'Unknown'}
+                      Se unió el {member.joined_at ? new Date(member.joined_at).toLocaleDateString() : 'Desconocido'}
                     </p>
                   </div>
 
                   {member.user_id === community.organizer_id && (
                     <Badge variant="secondary" className="text-xs">
-                      Owner
+                      Propietario
                     </Badge>
                   )}
                 </div>
@@ -199,11 +199,11 @@ export default function CommunityTabs({
       {/* Events Tab */}
       <TabsContent value="events" className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Community Events</h2>
+          <h2 className="text-lg font-semibold">Eventos de la Comunidad</h2>
           {isMember && (
             <Button className="gap-2 bg-emerald-500 hover:bg-emerald-600">
               <Plus className="w-4 h-4" />
-              Create Event
+              Crear Evento
             </Button>
           )}
         </div>
@@ -211,17 +211,17 @@ export default function CommunityTabs({
         <Card>
           <CardContent className="text-center py-12">
             <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No events yet</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Aún no hay eventos</h3>
             <p className="text-gray-500 mb-4">
               {isMember
-                ? "Create the first event for this community!"
-                : "Join this community to see and participate in events."
+                ? "¡Crea el primer evento para esta comunidad!"
+                : "Únete a esta comunidad para ver y participar en eventos."
               }
             </p>
             {isMember && (
               <Button className="bg-emerald-500 hover:bg-emerald-600">
                 <Plus className="w-4 h-4 mr-2" />
-                Create Event
+                Crear Evento
               </Button>
             )}
           </CardContent>

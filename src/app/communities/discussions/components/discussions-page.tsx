@@ -50,7 +50,7 @@ export default function DiscussionsPageCmp({
 
   // Transform communities to options format
   const communityOptions = [
-    { value: "all", label: "All Communities" },
+    { value: "all", label: "Todas las comunidades" },
     ...(communities || []).map((community) => ({ value: community.id, label: community.name })),
   ];
 
@@ -118,8 +118,8 @@ export default function DiscussionsPageCmp({
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-emerald-500">Community Discussions</h1>
-          <p className="text-muted-foreground">Join conversations and share ideas with the community</p>
+          <h1 className="text-3xl font-bold text-emerald-500">Discusiones de la Comunidad</h1>
+          <p className="text-muted-foreground">Únete a conversaciones y comparte ideas con la comunidad</p>
         </div>
         {effectiveUser && (
           <Button
@@ -127,7 +127,7 @@ export default function DiscussionsPageCmp({
             onClick={handleStartDiscussion}
           >
             <Plus className="w-4 h-4 mr-2" />
-            Start Discussion
+            Iniciar Discusión
           </Button>
         )}
       </div>
@@ -137,14 +137,14 @@ export default function DiscussionsPageCmp({
         <div className="lg:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>Filters</CardTitle>
+              <CardTitle>Filtros</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="search">Search Discussions</Label>
+                <Label htmlFor="search">Buscar Discusiones</Label>
                 <Input
                   id="search"
-                  placeholder="Search by title or content..."
+                  placeholder="Buscar por título o contenido..."
                   value={filters.search}
                   onChange={(e) => handleFilterChange("search", e.target.value)}
                 />
@@ -152,9 +152,9 @@ export default function DiscussionsPageCmp({
 
               <FormSelect
                 field={{} as AnyFieldApi}
-                label="Community"
+                label="Comunidad"
                 value={filters.community}
-                placeholder="Select community"
+                placeholder="Seleccionar comunidad"
                 options={communityOptions}
                 onValueChange={(value) => handleFilterChange("community", value)}
               />
@@ -164,7 +164,7 @@ export default function DiscussionsPageCmp({
                 className="w-full mt-4 border-emerald-500 text-emerald-500 hover:text-emerald-500"
                 onClick={handleClearAll}
               >
-                Clear All
+                Limpiar Todo
               </Button>
             </CardContent>
           </Card>
@@ -174,9 +174,9 @@ export default function DiscussionsPageCmp({
         <div className="lg:col-span-3">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold">All Discussions</h2>
+              <h2 className="text-2xl font-bold">Todas las Discusiones</h2>
               <p className="text-muted-foreground">
-                {filteredDiscussions.length} discussion{filteredDiscussions.length !== 1 ? "s" : ""} found
+                {filteredDiscussions.length} discusión{filteredDiscussions.length !== 1 ? "es" : ""} encontrada{filteredDiscussions.length !== 1 ? "s" : ""}
               </p>
             </div>
           </div>
@@ -184,7 +184,7 @@ export default function DiscussionsPageCmp({
           <div className="space-y-4">
             {filteredDiscussions.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                No discussions found matching your criteria.
+                No se encontraron discusiones que coincidan con tus criterios.
               </div>
             ) : (
               filteredDiscussions.map((discussion) => (
@@ -217,10 +217,10 @@ function DiscussionCard({ discussion }: DiscussionCardProps) {
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return 'Just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    if (diffInSeconds < 60) return 'Ahora mismo';
+    if (diffInSeconds < 3600) return `hace ${Math.floor(diffInSeconds / 60)}m`;
+    if (diffInSeconds < 86400) return `hace ${Math.floor(diffInSeconds / 3600)}h`;
+    if (diffInSeconds < 604800) return `hace ${Math.floor(diffInSeconds / 86400)}d`;
 
     return date.toLocaleDateString();
   };
@@ -270,7 +270,7 @@ function DiscussionCard({ discussion }: DiscussionCardProps) {
 
             <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-3">
               <span>
-                by {discussion.profiles?.full_name || discussion.profiles?.username || "Anonymous"}
+                por {discussion.profiles?.full_name || discussion.profiles?.username || "Anónimo"}
               </span>
             </div>
 
@@ -284,7 +284,7 @@ function DiscussionCard({ discussion }: DiscussionCardProps) {
               <div className="flex items-center space-x-4">
                 <div className="flex items-center text-sm text-muted-foreground">
                   <MessageSquare className="w-4 h-4 mr-1" />
-                  <span>0 replies</span>
+                  <span>0 respuestas</span>
                 </div>
               </div>
               <div className="flex gap-2">
@@ -294,7 +294,7 @@ function DiscussionCard({ discussion }: DiscussionCardProps) {
                   className="border-emerald-500 text-emerald-500 hover:text-emerald-500"
                   onClick={() => router.push(`/communities/discussions/${discussion.id}`)}
                 >
-                  View Discussion
+                  Ver Discusión
                 </Button>
               </div>
             </div>

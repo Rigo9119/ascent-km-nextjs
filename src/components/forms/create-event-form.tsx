@@ -197,7 +197,7 @@ export default function CreateEventForm({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <MapPin className="w-5 h-5" />
-            Date, Time & Location
+            Fecha, Hora y Ubicación
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -206,14 +206,14 @@ export default function CreateEventForm({
               name="date"
               validators={{
                 onChange: ({ value }) =>
-                  !value ? 'Event date is required' : undefined,
+                  !value ? 'La fecha del evento es requerida' : undefined,
               }}
             >
               {(field) => (
                 <FormDatePicker
                   field={field}
-                  label="Event Date"
-                  placeholder="Select event date"
+                  label="Fecha del Evento"
+                  placeholder="Seleccionar fecha del evento"
                   value={field.state.value}
                   onChange={(date) => field.handleChange(date)}
                 />
@@ -223,7 +223,7 @@ export default function CreateEventForm({
             <form.Field name="time">
               {(field) => (
                 <FormTimeInput field={field}
-                  label={'Select a time'}
+                  label={'Seleccionar hora'}
                   name={field.name}
                   value={field.state.value}
                   onChange={(event) => field.handleChange(event.target.value)}
@@ -236,8 +236,8 @@ export default function CreateEventForm({
             {(field) => (
               <FormSelect
                 field={field}
-                label="Location"
-                placeholder="Select a location"
+                label="Ubicación"
+                placeholder="Seleccionar una ubicación"
                 value={field.state.value}
                 options={locationOptions}
                 onValueChange={(value) => field.handleChange(value)}
@@ -250,7 +250,7 @@ export default function CreateEventForm({
       {/* Categories & Type */}
       <Card>
         <CardHeader>
-          <CardTitle>Categories & Type</CardTitle>
+          <CardTitle>Categorías y Tipo</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-col gap-4">
@@ -258,8 +258,8 @@ export default function CreateEventForm({
               {(field) => (
                 <FormSelect
                   field={field}
-                  label="Category"
-                  placeholder="Select a category"
+                  label="Categoría"
+                  placeholder="Seleccionar una categoría"
                   value={field.state.value}
                   options={categoryOptions}
                   onValueChange={(value) => field.handleChange(value)}
@@ -271,8 +271,8 @@ export default function CreateEventForm({
               {(field) => (
                 <FormSelect
                   field={field}
-                  label="Event Type"
-                  placeholder="Select event type"
+                  label="Tipo de Evento"
+                  placeholder="Seleccionar tipo de evento"
                   value={field.state.value}
                   options={eventTypeOptions}
                   onValueChange={(value) => field.handleChange(value)}
@@ -288,7 +288,7 @@ export default function CreateEventForm({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <DollarSign className="w-5 h-5" />
-            Pricing & Capacity
+            Precios y Capacidad
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -300,7 +300,7 @@ export default function CreateEventForm({
                   checked={field.state.value}
                   onCheckedChange={(checked) => field.handleChange(checked)}
                 />
-                <Label htmlFor="is_free">This is a free event</Label>
+                <Label htmlFor="is_free">Este es un evento gratuito</Label>
               </div>
             )}
           </form.Field>
@@ -310,7 +310,7 @@ export default function CreateEventForm({
               {(field) => (
                 <FormInput
                   field={field}
-                  label="Price ($)"
+                  label="Precio ($)"
                   name={field.name}
                   type="number"
                   placeholder="0.00"
@@ -325,7 +325,7 @@ export default function CreateEventForm({
               {(field) => (
                 <FormInput
                   field={field}
-                  label="Max Participants"
+                  label="Máximo de Participantes"
                   name={field.name}
                   type="number"
                   placeholder="50"
@@ -342,7 +342,7 @@ export default function CreateEventForm({
       {/* Contact Information */}
       <Card>
         <CardHeader>
-          <CardTitle>Contact Information</CardTitle>
+          <CardTitle>Información de Contacto</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-col gap-4">
@@ -350,10 +350,10 @@ export default function CreateEventForm({
               {(field) => (
                 <FormInput
                   field={field}
-                  label="Contact Email"
+                  label="Email de Contacto"
                   name={field.name}
                   type="email"
-                  placeholder="contact@example.com"
+                  placeholder="contacto@ejemplo.com"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                   onBlur={field.handleBlur}
@@ -540,7 +540,7 @@ export default function CreateEventForm({
           onClick={() => form.reset()}
           disabled={isSubmitting}
         >
-          Reset
+          Reiniciar
         </Button>
         <Button
           type="submit"
@@ -548,7 +548,7 @@ export default function CreateEventForm({
           className="bg-emerald-500 hover:bg-emerald-600"
         >
           <Save className="w-4 h-4 mr-2" />
-          {isSubmitting ? 'Creating...' : 'Create Event'}
+          {isSubmitting ? 'Creando...' : 'Crear Evento'}
         </Button>
       </div>
     </form>

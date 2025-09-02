@@ -13,24 +13,24 @@ export default function DiscussionNotFound() {
           </div>
 
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Discussion Not Found
+            Discusión No Encontrada
           </h1>
 
           <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
-            The discussion you are looking for does not exist or may have been removed.
+            La discusión que estás buscando no existe o puede haber sido eliminada.
           </p>
 
           <div className="space-x-4">
             <Button asChild variant="outline">
               <Link href="/communities/discussions">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Discussions
+                Volver a Discusiones
               </Link>
             </Button>
 
             <Button asChild className="bg-emerald-500 hover:bg-emerald-600">
               <Link href="/communities">
-                Explore Communities
+                Explorar Comunidades
               </Link>
             </Button>
           </div>

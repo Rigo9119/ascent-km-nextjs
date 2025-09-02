@@ -136,7 +136,7 @@ export default function ProfileSettings({
         throw new Error('Failed to update profile');
       }
 
-      toast.success('Profile updated successfully!', {
+      toast.success('¡Perfil actualizado correctamente!', {
         style: {
           background: '#10b981',
           color: 'white',
@@ -144,7 +144,7 @@ export default function ProfileSettings({
       });
     } catch (error) {
       console.log(error)
-      toast.error('Failed to update profile. Please try again.', {
+      toast.error('Error al actualizar el perfil. Inténtalo de nuevo.', {
         style: {
           background: '#ef4444',
           color: 'white',
@@ -164,7 +164,7 @@ export default function ProfileSettings({
       {/* Basic Information */}
       <Card>
         <CardHeader>
-          <CardTitle>Basic Information</CardTitle>
+          <CardTitle>Información Básica</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Avatar */}
@@ -178,49 +178,49 @@ export default function ProfileSettings({
             <div>
               <Button variant="outline" size="sm">
                 <Upload className="w-4 h-4 mr-2" />
-                Change Avatar
+                Cambiar Avatar
               </Button>
-              <p className="text-sm text-gray-500 mt-1">JPG, PNG or GIF. Max size 2MB.</p>
+              <p className="text-sm text-gray-500 mt-1">JPG, PNG o GIF. Tamaño máximo 2MB.</p>
             </div>
           </div>
 
           {/* Name Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="full_name">Full Name</Label>
+              <Label htmlFor="full_name">Nombre Completo</Label>
               <Input
                 id="full_name"
                 value={formData.full_name}
                 onChange={(e) => handleInputChange('full_name', e.target.value)}
-                placeholder="Enter your full name"
+                placeholder="Ingresa tu nombre completo"
               />
             </div>
             <div>
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username">Nombre de Usuario</Label>
               <Input
                 id="username"
                 value={formData.username}
                 onChange={(e) => handleInputChange('username', e.target.value)}
-                placeholder="Enter your username"
+                placeholder="Ingresa tu nombre de usuario"
               />
             </div>
           </div>
 
           {/* Bio */}
           <div>
-            <Label htmlFor="bio">Bio</Label>
+            <Label htmlFor="bio">Biografía</Label>
             <Textarea
               id="bio"
               value={formData.bio}
               onChange={(e) => handleInputChange('bio', e.target.value)}
-              placeholder="Tell us about yourself..."
+              placeholder="Cuéntanos sobre ti..."
               rows={3}
             />
           </div>
 
           {/* Phone */}
           <div>
-            <Label htmlFor="phone">Phone Number</Label>
+            <Label htmlFor="phone">Número de Teléfono</Label>
             <PhoneInput
               international
               countryCallingCodeEditable={false}
@@ -235,18 +235,18 @@ export default function ProfileSettings({
       {/* Social Links */}
       <Card>
         <CardHeader>
-          <CardTitle>Social Links</CardTitle>
+          <CardTitle>Enlaces Sociales</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="website">Website</Label>
+              <Label htmlFor="website">Sitio Web</Label>
               <Input
                 id="website"
                 type="url"
                 value={formData.website}
                 onChange={(e) => handleInputChange('website', e.target.value)}
-                placeholder="https://your-website.com"
+                placeholder="https://tu-sitio-web.com"
               />
             </div>
             <div>
@@ -255,7 +255,7 @@ export default function ProfileSettings({
                 id="linkedin"
                 value={formData.linkedin}
                 onChange={(e) => handleInputChange('linkedin', e.target.value)}
-                placeholder="linkedin.com/in/username"
+                placeholder="linkedin.com/in/usuario"
               />
             </div>
             <div>
@@ -283,7 +283,7 @@ export default function ProfileSettings({
       {/* Preferences */}
       <Card>
         <CardHeader>
-          <CardTitle>Preferences</CardTitle>
+          <CardTitle>Preferencias</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -308,7 +308,7 @@ export default function ProfileSettings({
       {/* Interests */}
       <Card>
         <CardHeader>
-          <CardTitle>Interests</CardTitle>
+          <CardTitle>Intereses</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -338,7 +338,7 @@ export default function ProfileSettings({
           className="bg-emerald-500 hover:bg-emerald-600"
         >
           <Save className="w-4 h-4 mr-2" />
-          {isLoading ? 'Saving...' : 'Save Changes'}
+          {isLoading ? 'Guardando...' : 'Guardar Cambios'}
         </Button>
       </div>
     </div>

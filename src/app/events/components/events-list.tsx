@@ -26,7 +26,7 @@ export default function EventsList({ events, loading = false }: EventsListProps)
   if (loading) {
     return (
       <div className="lg:col-span-3">
-        <div className="text-center py-8">Loading events...</div>
+        <div className="text-center py-8">Cargando eventos...</div>
       </div>
     );
   }
@@ -35,9 +35,9 @@ export default function EventsList({ events, loading = false }: EventsListProps)
     <div className="lg:col-span-3">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Upcoming Events</h1>
+          <h1 className="text-2xl font-bold">Próximos Eventos</h1>
           <p className="text-muted-foreground">
-            {events.length} event{events.length !== 1 ? "s" : ""} found
+            {events.length} evento{events.length !== 1 ? "s" : ""} encontrado{events.length !== 1 ? "s" : ""}
           </p>
         </div>
       </div>
@@ -45,7 +45,7 @@ export default function EventsList({ events, loading = false }: EventsListProps)
       <div className="space-y-4">
         {events?.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
-            No events found
+            No se encontraron eventos
           </div>
         ) : (
           events?.map((event, index) => (
@@ -55,9 +55,9 @@ export default function EventsList({ events, loading = false }: EventsListProps)
                   <div>
                     <h3 className="text-xl font-semibold mb-2">{event.event_name}</h3>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
-                      <span>📅 {event.date ? new Date(event.date).toLocaleDateString() : 'Date TBD'}</span>
-                      <span>📍 {event.location_name || 'Location TBD'}</span>
-                      {event.is_free && <span>💰 Free</span>}
+                      <span>📅 {event.date ? new Date(event.date).toLocaleDateString() : 'Fecha por definir'}</span>
+                      <span>📍 {event.location_name || 'Ubicación por definir'}</span>
+                      {event.is_free && <span>💰 Gratis</span>}
                     </div>
                   </div>
                   <Badge variant="secondary">{event.category_name}</Badge>
@@ -70,7 +70,7 @@ export default function EventsList({ events, loading = false }: EventsListProps)
                       size="sm"
                       onClick={() => handleJoinEvent(event.event_id || '')}
                     >
-                      Join Event
+                      Unirse al Evento
                     </Button>
                     <Button 
                       className="border-emerald-500 text-emerald-500 hover:text-emerald-500" 
@@ -78,7 +78,7 @@ export default function EventsList({ events, loading = false }: EventsListProps)
                       size="sm"
                       onClick={() => router.push(`/events/${event.event_id}`)}
                     >
-                      Learn More
+                      Saber Más
                     </Button>
                   </div>
                   <ShareButton
@@ -99,8 +99,8 @@ export default function EventsList({ events, loading = false }: EventsListProps)
       <AuthRequiredModal
         isOpen={showAuthModal}
         onClose={closeAuthModal}
-        title="Join Event"
-        description="Create an account to join events and connect with the community."
+        title="Unirse al Evento"
+        description="Crea una cuenta para unirte a eventos y conectar con la comunidad."
       />
     </div>
   );

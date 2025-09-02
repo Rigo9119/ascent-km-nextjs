@@ -26,7 +26,7 @@ export function AppBreadcrumbs({ breadcrumbs }: AppBreadcrumbsProps) {
     <Breadcrumb className="h-auto w-fit">
       <BreadcrumbList className="h-auto flex-nowrap">
         <BreadcrumbItem>
-          <BreadcrumbLink href="/">Home</BreadcrumbLink>
+          <BreadcrumbLink href="/">Inicio</BreadcrumbLink>
         </BreadcrumbItem>
         {breadcrumbs.map((breadcrumb: BreadcrumbData, index: number) => (
           <React.Fragment key={index}>

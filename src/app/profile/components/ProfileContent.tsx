@@ -60,7 +60,7 @@ export default function ProfileContent({ user, profile, preferenceTypes, interes
     if (profile.phone_number && profile.country_code) {
       return `+${profile.country_code} ${profile.phone_number}`;
     }
-    return profile.phone_number || 'Not provided';
+    return profile.phone_number || 'No proporcionado';
   };
 
   // Format social links
@@ -90,7 +90,7 @@ export default function ProfileContent({ user, profile, preferenceTypes, interes
                   <p className="text-lg text-gray-600">@{profile.username}</p>
                   <span className="text-gray-400">•</span>
                   <p className="text-sm text-gray-500">
-                    Last active {new Date(profile.last_active).toLocaleDateString()}
+                    Última actividad {new Date(profile.last_active).toLocaleDateString()}
                   </p>
                 </div>
                 {profile.bio && (
@@ -104,7 +104,7 @@ export default function ProfileContent({ user, profile, preferenceTypes, interes
               className="flex items-center gap-2"
             >
               <Edit className="w-4 h-4" />
-              Edit Profile
+              Editar Perfil
             </Button>
           </div>
         </CardHeader>
@@ -115,29 +115,29 @@ export default function ProfileContent({ user, profile, preferenceTypes, interes
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Mail className="w-5 h-5" />
-            Contact Information
+            Información de Contacto
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-gray-500" />
-              <span className="text-gray-600">Email:</span>
+              <span className="text-gray-600">Correo:</span>
               <span>{profile.email}</span>
             </div>
             <div className="flex items-center gap-2">
               <Phone className="w-4 h-4 text-gray-500" />
-              <span className="text-gray-600">Phone:</span>
+              <span className="text-gray-600">Teléfono:</span>
               <span>{formatPhoneNumber()}</span>
             </div>
             <div className="flex items-center gap-2">
               <MapPin className="w-4 h-4 text-gray-500" />
-              <span className="text-gray-600">Location:</span>
+              <span className="text-gray-600">Ubicación:</span>
               <span>{profile.city}, {profile.country}</span>
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-gray-500" />
-              <span className="text-gray-600">Joined:</span>
+              <span className="text-gray-600">Se unió:</span>
               <span>{new Date(profile.created_at).toLocaleDateString()}</span>
             </div>
           </div>
@@ -148,7 +148,7 @@ export default function ProfileContent({ user, profile, preferenceTypes, interes
       {userInterests.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Interests</CardTitle>
+            <CardTitle>Intereses</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
@@ -170,7 +170,7 @@ export default function ProfileContent({ user, profile, preferenceTypes, interes
       {userPreferences.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Preferences</CardTitle>
+            <CardTitle>Preferencias</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
@@ -194,7 +194,7 @@ export default function ProfileContent({ user, profile, preferenceTypes, interes
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Globe className="w-5 h-5" />
-              Social Links
+              Enlaces Sociales
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -222,21 +222,21 @@ export default function ProfileContent({ user, profile, preferenceTypes, interes
       {/* Activity Stats */}
       <Card>
         <CardHeader>
-          <CardTitle>Activity</CardTitle>
+          <CardTitle>Actividad</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
             <div className="p-4 rounded-lg bg-emerald-50">
               <p className="text-2xl font-bold text-emerald-600">0</p>
-              <p className="text-sm text-gray-600">Communities</p>
+              <p className="text-sm text-gray-600">Comunidades</p>
             </div>
             <div className="p-4 rounded-lg bg-blue-50">
               <p className="text-2xl font-bold text-blue-600">0</p>
-              <p className="text-sm text-gray-600">Events</p>
+              <p className="text-sm text-gray-600">Eventos</p>
             </div>
             <div className="p-4 rounded-lg bg-purple-50">
               <p className="text-2xl font-bold text-purple-600">0</p>
-              <p className="text-sm text-gray-600">Discussions</p>
+              <p className="text-sm text-gray-600">Discusiones</p>
             </div>
           </div>
         </CardContent>

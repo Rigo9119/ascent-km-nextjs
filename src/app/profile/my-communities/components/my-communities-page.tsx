@@ -116,10 +116,10 @@ export default function MyCommunitiesContent({
               <h3 className="text-lg font-semibold text-gray-900 mb-2">{community.name}</h3>
               <div className="flex gap-2 mb-2">
                 {community.is_public && (
-                  <Badge variant="secondary" className="text-xs">Public</Badge>
+                  <Badge variant="secondary" className="text-xs">Público</Badge>
                 )}
                 {community.is_featured && (
-                  <Badge className="text-xs bg-emerald-100 text-emerald-700">Featured</Badge>
+                  <Badge className="text-xs bg-emerald-100 text-emerald-700">Destacado</Badge>
                 )}
               </div>
             </div>
@@ -141,7 +141,7 @@ export default function MyCommunitiesContent({
           <div className="flex items-center justify-between text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4" />
-              <span>{community.member_count} members</span>
+              <span>{community.member_count} miembros</span>
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
@@ -151,7 +151,7 @@ export default function MyCommunitiesContent({
 
           <Button className="w-full mt-4 bg-emerald-500 hover:bg-emerald-600">
             <ExternalLink className="w-4 h-4 mr-2" />
-            View Community
+            Ver Comunidad
           </Button>
         </div>
       </CardContent>
@@ -176,7 +176,7 @@ export default function MyCommunitiesContent({
                     <UserIcon className="w-3 h-3" />
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-sm text-gray-600">in {discussion.communities.name}</span>
+                <span className="text-sm text-gray-600">en {discussion.communities.name}</span>
               </div>
             )}
           </div>
@@ -214,7 +214,7 @@ export default function MyCommunitiesContent({
             )}
             <div className="flex items-center gap-1">
               <MessageSquare className="w-4 h-4" />
-              <span>Discussion</span>
+              <span>Discusión</span>
             </div>
           </div>
           <span>{formatDate(discussion.created_at)}</span>
@@ -242,12 +242,12 @@ export default function MyCommunitiesContent({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">My Communities</h1>
-          <p className="text-gray-600 mt-1">Manage your communities and track your discussions</p>
+          <h1 className="text-3xl font-bold text-gray-900">Mis Comunidades</h1>
+          <p className="text-gray-600 mt-1">Gestiona tus comunidades y sigue tus discusiones</p>
         </div>
         <Button className="bg-emerald-500 hover:bg-emerald-600">
           <Plus className="w-4 h-4 mr-2" />
-          Create Community
+          Crear Comunidad
         </Button>
       </div>
 
@@ -256,19 +256,19 @@ export default function MyCommunitiesContent({
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold text-emerald-600">{communities.length}</p>
-            <p className="text-sm text-gray-600">My Communities</p>
+            <p className="text-sm text-gray-600">Mis Comunidades</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold text-blue-600">{createdDiscussions.length}</p>
-            <p className="text-sm text-gray-600">Discussions Created</p>
+            <p className="text-sm text-gray-600">Discusiones Creadas</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <p className="text-2xl font-bold text-purple-600">{participatedDiscussions.length}</p>
-            <p className="text-sm text-gray-600">Discussions Participated</p>
+            <p className="text-sm text-gray-600">Discusiones Participadas</p>
           </CardContent>
         </Card>
         <Card>
@@ -276,7 +276,7 @@ export default function MyCommunitiesContent({
             <p className="text-2xl font-bold text-orange-600">
               {communities.reduce((total, community) => total + community.member_count, 0)}
             </p>
-            <p className="text-sm text-gray-600">Total Members</p>
+            <p className="text-sm text-gray-600">Total de Miembros</p>
           </CardContent>
         </Card>
       </div>
@@ -287,7 +287,7 @@ export default function MyCommunitiesContent({
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
-              placeholder="Search communities and discussions..."
+              placeholder="Buscar comunidades y discusiones..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -299,9 +299,9 @@ export default function MyCommunitiesContent({
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="communities">Communities ({filteredCommunities.length})</TabsTrigger>
-          <TabsTrigger value="created">My Discussions ({filteredCreatedDiscussions.length})</TabsTrigger>
-          <TabsTrigger value="participated">Participated ({filteredParticipatedDiscussions.length})</TabsTrigger>
+          <TabsTrigger value="communities">Comunidades ({filteredCommunities.length})</TabsTrigger>
+          <TabsTrigger value="created">Mis Discusiones ({filteredCreatedDiscussions.length})</TabsTrigger>
+          <TabsTrigger value="participated">Participadas ({filteredParticipatedDiscussions.length})</TabsTrigger>
         </TabsList>
 
         {/* Communities Tab */}
@@ -314,12 +314,12 @@ export default function MyCommunitiesContent({
             </div>
           ) : (
             <EmptyState
-              title="No Communities Found"
-              description={searchTerm ? "No communities match your search." : "You haven't created any communities yet."}
+              title="No se Encontraron Comunidades"
+              description={searchTerm ? "No hay comunidades que coincidan con tu búsqueda." : "Aún no has creado ninguna comunidad."}
               action={!searchTerm && (
                 <Button className="bg-emerald-500 hover:bg-emerald-600">
                   <Plus className="w-4 h-4 mr-2" />
-                  Create Your First Community
+                  Crear tu Primera Comunidad
                 </Button>
               )}
             />
@@ -336,12 +336,12 @@ export default function MyCommunitiesContent({
             </div>
           ) : (
             <EmptyState
-              title="No Discussions Found"
-              description={searchTerm ? "No discussions match your search." : "You haven't started any discussions yet."}
+              title="No se Encontraron Discusiones"
+              description={searchTerm ? "No hay discusiones que coincidan con tu búsqueda." : "Aún no has iniciado ninguna discusión."}
               action={!searchTerm && (
                 <Button className="bg-blue-500 hover:bg-blue-600">
                   <MessageSquare className="w-4 h-4 mr-2" />
-                  Start Your First Discussion
+                  Iniciar tu Primera Discusión
                 </Button>
               )}
             />
@@ -358,12 +358,12 @@ export default function MyCommunitiesContent({
             </div>
           ) : (
             <EmptyState
-              title="No Participated Discussions"
-              description={searchTerm ? "No discussions match your search." : "You haven't participated in any discussions yet."}
+              title="No hay Discusiones Participadas"
+              description={searchTerm ? "No hay discusiones que coincidan con tu búsqueda." : "Aún no has participado en ninguna discusión."}
               action={!searchTerm && (
                 <Button className="bg-purple-500 hover:bg-purple-600">
                   <ExternalLink className="w-4 h-4 mr-2" />
-                  Explore Communities
+                  Explorar Comunidades
                 </Button>
               )}
             />

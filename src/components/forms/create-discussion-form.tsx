@@ -113,14 +113,14 @@ export default function CreateDiscussionForm({ communityId, userId, onCancel }: 
               name="title"
               validators={{
                 onChange: ({ value }) =>
-                  !value ? 'Discussion title is required' : undefined,
+                  !value ? 'El título de la discusión es requerido' : undefined,
               }}
             >
               {(field) => (
                 <FormInput
                   field={field}
-                  label="Title"
-                  placeholder="What would you like to discuss?"
+                  label="Título"
+                  placeholder="¿De qué te gustaría discutir?"
                   name={field.name}
                   value={field.state.value}
                   type="text"
@@ -134,14 +134,14 @@ export default function CreateDiscussionForm({ communityId, userId, onCancel }: 
               name="content"
               validators={{
                 onChange: ({ value }) =>
-                  !value ? 'Discussion content is required' : undefined,
+                  !value ? 'El contenido de la discusión es requerido' : undefined,
               }}
             >
               {(field) => (
                 <FormTextarea
                   field={field}
-                  label="Content"
-                  placeholder="Share your thoughts, questions, or ideas with the community..."
+                  label="Contenido"
+                  placeholder="Comparte tus pensamientos, preguntas o ideas con la comunidad..."
                   value={field.state.value}
                   name={field.name}
                   rows={6}
@@ -158,7 +158,7 @@ export default function CreateDiscussionForm({ communityId, userId, onCancel }: 
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Link2 className="w-5 h-5" />
-              Attach Link (Optional)
+              Adjuntar Enlace (Opcional)
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -166,8 +166,8 @@ export default function CreateDiscussionForm({ communityId, userId, onCancel }: 
               {(field) => (
                 <FormInput
                   field={field}
-                  label="Link Title"
-                  placeholder="Give your link a descriptive title"
+                  label="Título del Enlace"
+                  placeholder="Dale a tu enlace un título descriptivo"
                   name={field.name}
                   value={field.state.value}
                   type="text"
@@ -181,7 +181,7 @@ export default function CreateDiscussionForm({ communityId, userId, onCancel }: 
               {(field) => (
                 <FormInput
                   field={field}
-                  label="Link URL"
+                  label="URL del Enlace"
                   placeholder="https://example.com"
                   name={field.name}
                   value={field.state.value}
@@ -202,7 +202,7 @@ export default function CreateDiscussionForm({ communityId, userId, onCancel }: 
             onClick={() => onCancel ? onCancel() : router.back()}
             disabled={isSubmitting}
           >
-            Cancel
+            Cancelar
           </Button>
 
           <createDiscussionForm.Subscribe>
@@ -215,12 +215,12 @@ export default function CreateDiscussionForm({ communityId, userId, onCancel }: 
                 {isSubmitting || formSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Creating...
+                    Creando...
                   </>
                 ) : (
                   <>
                     <Send className="w-4 h-4 mr-2" />
-                    Create Discussion
+                    Crear Discusión
                   </>
                 )}
               </Button>

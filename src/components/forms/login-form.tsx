@@ -37,7 +37,7 @@ export default function LoginForm({ mode }: { mode: string }) {
             value={field.state.value}
             type="email"
             placeholder="example@email.com"
-            label="Email"
+            label="Correo"
             onChange={(event: ChangeEvent<HTMLInputElement>) => field.handleChange(event.target.value)}
           />
         )}
@@ -49,8 +49,8 @@ export default function LoginForm({ mode }: { mode: string }) {
             name={field.name}
             value={field.state.value}
             type="password"
-            placeholder="password"
-            label="Password"
+            placeholder="contraseña"
+            label="Contraseña"
             onChange={(event: ChangeEvent<HTMLInputElement>) => field.handleChange(event.target.value)}
           />
         )}
@@ -58,7 +58,7 @@ export default function LoginForm({ mode }: { mode: string }) {
       <loginForm.Subscribe>
         {({ isSubmitting }) => (
           <Button type="submit" disabled={isSubmitting || isLoading} className="bg-emerald-500">
-            {isSubmitting || isLoading ? "Loading..." : mode === "login" ? "Login" : "Sign Up"}
+            {isSubmitting || isLoading ? "Cargando..." : mode === "login" ? "Iniciar Sesión" : "Registrarse"}
           </Button>
         )}
       </loginForm.Subscribe>

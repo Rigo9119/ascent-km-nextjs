@@ -24,8 +24,8 @@ function AuthContent() {
           </div>
         )}
         <div>
-          <h2 className="text-3xl font-bold">{mode === 'login' ? 'Login' : 'Sign Up'}</h2>
-          <p className="mt-2 text-sm text-gray-600 hidden">Or continue with</p>
+          <h2 className="text-3xl font-bold">{mode === 'login' ? 'Iniciar Sesión' : 'Registrarse'}</h2>
+          <p className="mt-2 text-sm text-gray-600 hidden">O continúa con</p>
           <div className="mt-3 flex flex-col justify-center gap-3 hidden">
             <Button
               type="button"
@@ -52,7 +52,7 @@ function AuthContent() {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <p className="bg-white px-2 text-gray-500">Or continue with email</p>
+              <p className="bg-white px-2 text-gray-500">O continúa con email</p>
             </div>
           </div>
         </div>

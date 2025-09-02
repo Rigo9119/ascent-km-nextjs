@@ -20,7 +20,7 @@ interface SearchBarProps {
   className?: string
 }
 
-export function SearchBar({ onSearch, placeholder = "Search events, locations, communities...", className }: SearchBarProps) {
+export function SearchBar({ onSearch, placeholder = "Buscar eventos, ubicaciones, comunidades...", className }: SearchBarProps) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<SearchResult[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -108,7 +108,7 @@ export function SearchBar({ onSearch, placeholder = "Search events, locations, c
             <div className="p-4 text-center text-gray-500">
               <div className="inline-flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-                Searching...
+                Buscando...
               </div>
             </div>
           ) : results.length > 0 ? (
@@ -127,7 +127,7 @@ export function SearchBar({ onSearch, placeholder = "Search events, locations, c
             </div>
           ) : query.trim().length >= 2 ? (
             <div className="p-4 text-center text-gray-500">
-              `No results found for ${query}`
+              `No se encontraron resultados para "${query}"`
             </div>
           ) : null}
         </div>

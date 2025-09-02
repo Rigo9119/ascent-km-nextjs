@@ -49,24 +49,24 @@ export function AppSidebar() {
   // Menu items
   const menuItems = [
     {
-      title: 'Home',
+      title: 'Inicio',
       url: '/',
       icon: House
     },
     {
-      title: 'Communities',
+      title: 'Comunidades',
       url: '/communities',
       icon: Handshake,
       subitems: [
         {
-          title: 'Discussions',
+          title: 'Discusiones',
           url: '/communities/discussions',
           icon: MessageSquare
         }
       ]
     },
     {
-      title: 'Resources',
+      title: 'Recursos',
       url: '/resources',
       icon: FileSearch
     },
@@ -75,7 +75,7 @@ export function AppSidebar() {
   // Protected menu items TODO: delete and clean up after new menu moves to the header
   const protectedItems = [
     {
-      title: 'Profile',
+      title: 'Perfil',
       url: '/profile',
       icon: UserIcon
     },
@@ -85,17 +85,17 @@ export function AppSidebar() {
     //   icon: Calendar
     // },
     {
-      title: 'My Communities',
+      title: 'Mis Comunidades',
       url: '/profile/my-communities',
       icon: Users
     },
     {
-      title: 'Favourites',
+      title: 'Favoritos',
       url: '/favourites',
       icon: Heart
     },
     {
-      title: 'Settings',
+      title: 'Configuración',
       url: '/settings',
       icon: Settings
     }
@@ -105,7 +105,7 @@ export function AppSidebar() {
     <Sidebar collapsible="offcanvas" variant="inset">
       <SidebarHeader>
         <div className="flex flex-row items-center justify-between">
-          <h2 className="font-semibold text-emerald-600">Menu</h2>
+          <h2 className="font-semibold text-emerald-600">Menú</h2>
           <Button
             variant="ghost"
             size="icon"
@@ -118,7 +118,7 @@ export function AppSidebar() {
 
       <SidebarContent className='overflow-hidden'>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Aplicación</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <MenuItems menuItems={menuItems} />
@@ -132,7 +132,7 @@ export function AppSidebar() {
           <Skeleton className="h-20 w-full" />
         ) : user ? (
           <SidebarGroup>
-            <SidebarGroupLabel>Profile</SidebarGroupLabel>
+            <SidebarGroupLabel>Perfil</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <MenuItems menuItems={protectedItems} />
@@ -145,7 +145,7 @@ export function AppSidebar() {
       <SidebarFooter>
         <div className="mt-4 pt-4 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
-            © {new Date().getFullYear()} NextRoots. All rights reserved.
+            © {new Date().getFullYear()} NextRoots. Todos los derechos reservados.
           </p>
         </div>
       </SidebarFooter>

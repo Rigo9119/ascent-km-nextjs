@@ -21,8 +21,8 @@ interface AuthRequiredModalProps {
 export default function AuthRequiredModal({
   isOpen,
   onClose,
-  title = "Account Required",
-  description = "You need to create an account to join events and connect with the community."
+  title = "Cuenta Requerida",
+  description = "Necesitas crear una cuenta para unirte a eventos y conectar con la comunidad."
 }: AuthRequiredModalProps) {
   const router = useRouter()
 
@@ -50,13 +50,13 @@ export default function AuthRequiredModal({
             onClick={onClose}
             className="flex-1"
           >
-            Cancel
+            Cancelar
           </Button>
           <Button
             onClick={handleCreateAccount}
             className="flex-1 bg-emerald-500 hover:bg-emerald-600"
           >
-            Create Account
+            Crear Cuenta
           </Button>
         </div>
       </DialogContent>

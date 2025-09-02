@@ -160,9 +160,9 @@ export default function BlogsPageCmp({
 
               <FormSelect
                 field={{} as AnyFieldApi}
-                label="Category"
+                label="Categoría"
                 value={filters.category}
-                placeholder="Select category"
+                placeholder="Seleccionar categoría"
                 options={categoryOptions}
                 onValueChange={(value) => handleFilterChange("category", value)}
               />

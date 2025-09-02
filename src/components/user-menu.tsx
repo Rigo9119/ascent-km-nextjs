@@ -29,14 +29,14 @@ export function UserMenu() {
           variant="outline"
           size="sm"
         >
-          Log in
+          Iniciar Sesión
         </Button>
         <Button
           onClick={() => window.location.href = '/auth?mode=sign-up'}
           size="sm"
           className="bg-emerald-500 hover:bg-emerald-600"
         >
-          Sign up
+          Registrarse
         </Button>
       </div>
     );
@@ -66,20 +66,20 @@ export function UserMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => window.location.href = '/profile'}>
           <User className="mr-2 h-4 w-4" />
-          Profile
+          Perfil
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => window.location.href = '/favourites'}>
           <Heart className="mr-2 h-4 w-4" />
-          Favourites
+          Favoritos
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => window.location.href = '/settings'}>
           <Settings className="mr-2 h-4 w-4" />
-          Settings
+          Configuración
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
           <LogOut className="mr-2 h-4 w-4" />
-          Log out
+          Cerrar Sesión
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

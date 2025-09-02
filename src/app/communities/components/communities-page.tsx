@@ -46,7 +46,7 @@ export default function CommunitiesPageCmp({
 
   // Transform community types to options format
   const communityTypeOptions = [
-    { value: "all", label: "All Types" },
+    { value: "all", label: "Todos los Tipos" },
     ...(communityTypes || []).map((type) => ({ value: type.id, label: type.name })),
   ];
 
@@ -92,19 +92,19 @@ export default function CommunitiesPageCmp({
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-emerald-500">Communities</h1>
-        <p className="text-muted-foreground">Join communities that match your interests and connect with like-minded people</p>
+        <h1 className="text-3xl font-bold text-emerald-500">Comunidades</h1>
+        <p className="text-muted-foreground">Únete a comunidades que coincidan con tus intereses y conecta con personas afines</p>
       </div>
 
       {featuredCommunities && featuredCommunities.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Featured Communities</h2>
-              <p className="text-gray-600">Discover our most active and popular communities</p>
+              <h2 className="text-2xl font-bold text-gray-900">Comunidades Destacadas</h2>
+              <p className="text-gray-600">Descubre nuestras comunidades más activas y populares</p>
             </div>
             <Badge variant="secondary" className="text-emerald-600 bg-emerald-50">
-              {featuredCommunities.length} Featured
+              {featuredCommunities.length} Destacadas
             </Badge>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -126,14 +126,14 @@ export default function CommunitiesPageCmp({
         <div className="lg:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>Filters</CardTitle>
+              <CardTitle>Filtros</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="search">Search Communities</Label>
+                <Label htmlFor="search">Buscar Comunidades</Label>
                 <Input
                   id="search"
-                  placeholder="Search by name..."
+                  placeholder="Buscar por nombre..."
                   value={filters.search}
                   onChange={(e) => handleFilterChange("search", e.target.value)}
                 />
@@ -141,9 +141,9 @@ export default function CommunitiesPageCmp({
 
               <FormSelect
                 field={{} as AnyFieldApi}
-                label="Community Type"
+                label="Tipo de Comunidad"
                 value={filters.communityType}
-                placeholder="Select type"
+                placeholder="Seleccionar tipo"
                 options={communityTypeOptions}
                 onValueChange={(value) => handleFilterChange("communityType", value)}
               />
@@ -153,7 +153,7 @@ export default function CommunitiesPageCmp({
                 className="w-full mt-4 border-emerald-500 text-emerald-500 hover:text-emerald-500"
                 onClick={handleClearAll}
               >
-                Clear All
+                Limpiar Todo
               </Button>
             </CardContent>
           </Card>
@@ -163,9 +163,9 @@ export default function CommunitiesPageCmp({
         <div className="lg:col-span-3">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold">All Communities</h2>
+              <h2 className="text-2xl font-bold">Todas las comunidades</h2>
               <p className="text-muted-foreground">
-                {filteredCommunities.length} communit{filteredCommunities.length !== 1 ? "ies" : "y"} found
+                {filteredCommunities.length} comunidad{filteredCommunities.length !== 1 ? "es" : ""} encontrada{filteredCommunities.length !== 1 ? "s" : ""}
               </p>
             </div>
           </div>
@@ -173,7 +173,7 @@ export default function CommunitiesPageCmp({
           <div className="space-y-4">
             {filteredCommunities.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                No communities found matching your criteria.
+                No se encontraron comunidades que coincidan con tus criterios.
               </div>
             ) : (
               filteredCommunities.map((community) => (
@@ -250,7 +250,7 @@ function CommunityCard({ community, featured = false, isMember = false, currentU
             <div className="absolute top-3 right-3">
               <Badge className="bg-yellow-100 text-yellow-800">
                 <Star className="w-3 h-3 mr-1" />
-                Featured
+                Destacado
               </Badge>
             </div>
           </div>
@@ -284,10 +284,10 @@ function CommunityCard({ community, featured = false, isMember = false, currentU
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
               <Users className="w-4 h-4 text-gray-400" />
-              <span className="text-sm font-medium">{community.member_count || 0} members</span>
+              <span className="text-sm font-medium">{community.member_count || 0} miembros</span>
             </div>
             <Badge variant={community.is_public ? "default" : "secondary"} className="text-xs">
-              {community.is_public ? 'Public' : 'Private'}
+              {community.is_public ? 'Público' : 'Privado'}
             </Badge>
           </div>
 
@@ -298,7 +298,7 @@ function CommunityCard({ community, featured = false, isMember = false, currentU
               className="flex-1 bg-emerald-500 hover:bg-emerald-600"
               onClick={() => router.push(`/communities/${community.id}`)}
             >
-              {isMember ? 'View Community' : 'Learn More'}
+              {isMember ? 'Ver Comunidad' : 'Conocer Más'}
             </Button>
           </div>
         </div>
@@ -316,7 +316,7 @@ function CommunityCard({ community, featured = false, isMember = false, currentU
             <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
               <div className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
-                <span>{community.member_count || 0} members</span>
+                <span>{community.member_count || 0} miembros</span>
               </div>
               {formattedLocation && (
                 <div className="flex items-center gap-1">
@@ -325,7 +325,7 @@ function CommunityCard({ community, featured = false, isMember = false, currentU
                 </div>
               )}
               <Badge variant={community.is_public ? "default" : "secondary"} className="text-xs">
-                {community.is_public ? 'Public' : 'Private'}
+                {community.is_public ? 'Público' : 'Privado'}
               </Badge>
             </div>
           </div>
@@ -337,7 +337,7 @@ function CommunityCard({ community, featured = false, isMember = false, currentU
           <div className="flex gap-2">
             {!isMember && currentUser && (
               <Button className="bg-emerald-500 hover:bg-emerald-600" size="sm">
-                Join Community
+                Unirse a la Comunidad
               </Button>
             )}
             <Button
@@ -346,7 +346,7 @@ function CommunityCard({ community, featured = false, isMember = false, currentU
               size="sm"
               onClick={() => router.push(`/communities/${community.id}`)}
             >
-              Learn More
+              Conocer Más
             </Button>
           </div>
         </div>

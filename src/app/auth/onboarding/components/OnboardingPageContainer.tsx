@@ -11,8 +11,8 @@ export default function OnboardingPageContainer({ user, preferenceTypes, interes
   return (
     <div className="max-w-2xl mx-auto py-8">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Complete Your Profile</h1>
-        <p className="text-gray-600">Tell us a bit about yourself to get started</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Completa tu Perfil</h1>
+        <p className="text-gray-600">Cuéntanos un poco sobre ti para comenzar</p>
       </div>
       <OnboardingForm user={user} preferenceTypes={preferenceTypes} interestsTypes={interestsTypes} />
     </div>

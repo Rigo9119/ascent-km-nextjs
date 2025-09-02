@@ -61,21 +61,21 @@ export default function EventsPageCmp({ categories, locations, events }: EventsP
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-emerald-500">Events</h1>
-          <p className="text-muted-foreground">Discover and join exciting events in your area</p>
+          <h1 className="text-3xl font-bold text-emerald-500">Eventos</h1>
+          <p className="text-muted-foreground">Descubre y únete a eventos emocionantes en tu área</p>
         </div>
         {user && (
           <Sheet>
             <SheetTrigger asChild>
               <Button className="bg-emerald-500 hover:bg-emerald-600">
                 <PlusIcon className="w-4 h-4 mr-2" />
-                Create Event
+                Crear Evento
               </Button>
             </SheetTrigger>
             <SheetContent>
               <SheetHeader>
-                <SheetTitle>Create New Event</SheetTitle>
-                <SheetDescription>Fill out the form below to create a new event.</SheetDescription>
+                <SheetTitle>Crear Nuevo Evento</SheetTitle>
+                <SheetDescription>Completa el formulario a continuación para crear un nuevo evento.</SheetDescription>
               </SheetHeader>
               <div className="mt-2 overflow-y-auto">
                 <CreateEventForm user={user as User} />

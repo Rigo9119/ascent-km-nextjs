@@ -230,10 +230,10 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
               {(field: AnyFieldApi) => (
                 <FormInput
                   field={field}
-                  label="Username"
+                  label="Nombre de Usuario"
                   name={field.name}
                   type="text"
-                  placeholder="johndoe"
+                  placeholder="usuario123"
                   value={field.state.value}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => field.handleChange(event.target.value)}
                 />
@@ -244,10 +244,10 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
               {(field: AnyFieldApi) => (
                 <FormInput
                   field={field}
-                  label="Full Name"
+                  label="Nombre Completo"
                   name={field.name}
                   type="text"
-                  placeholder="John Doe"
+                  placeholder="Juan Pérez"
                   value={field.state.value}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => field.handleChange(event.target.value)}
                 />

@@ -12,8 +12,8 @@ export default function LocationsPageCmp({ locations, featuredLocations }: Locat
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-emerald-500">Locations</h1>
-        <p className="text-muted-foreground">Discover amazing places and locations</p>
+        <h1 className="text-3xl font-bold text-emerald-500">Ubicaciones</h1>
+        <p className="text-muted-foreground">Descubre lugares y ubicaciones increíbles</p>
       </div>
 
       {/* Map Section */}
