@@ -25,8 +25,8 @@ function AuthContent() {
         )}
         <div>
           <h2 className="text-3xl font-bold">{mode === 'login' ? 'Login' : 'Sign Up'}</h2>
-          <p className="mt-2 text-sm text-gray-600">Or continue with</p>
-          <div className="mt-3 flex flex-col justify-center gap-3">
+          <p className="mt-2 text-sm text-gray-600 hidden">Or continue with</p>
+          <div className="mt-3 flex flex-col justify-center gap-3 hidden">
             <Button
               type="button"
               disabled={isLoading}
@@ -47,7 +47,7 @@ function AuthContent() {
               Kakao
             </Button>
           </div>
-          <div className="relative mt-6">
+          <div className="relative mt-6 hidden">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
             </div>

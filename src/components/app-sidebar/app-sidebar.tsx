@@ -53,16 +53,6 @@ export function AppSidebar() {
       url: '/',
       icon: House
     },
-    // {
-    //   title: 'Events',
-    //   url: '/events',
-    //   icon: Ticket
-    // },
-    // {
-    //   title: 'Locations',
-    //   url: '/locations',
-    //   icon: Map
-    // },
     {
       title: 'Communities',
       url: '/communities',
@@ -80,14 +70,9 @@ export function AppSidebar() {
       url: '/resources',
       icon: FileSearch
     },
-    // {
-    //   title: 'Blogs',
-    //   url: '/blogs',
-    //   icon: BookOpen
-    // }
   ]
 
-  // Protected menu items
+  // Protected menu items TODO: delete and clean up after new menu moves to the header
   const protectedItems = [
     {
       title: 'Profile',
@@ -158,31 +143,11 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
-        {isLoading ? (
-          <Skeleton className="h-10 w-full" />
-        ) : !user ? (
-          <div className="flex flex-col gap-2">
-            <Button
-              onClick={() => window.location.href = '/auth?mode=login'}
-              className="bg-emerald-500 hover:bg-emerald-600"
-            >
-              Log in
-            </Button>
-            <Button
-              onClick={() => window.location.href = '/auth?mode=sign-up'}
-              className="bg-emerald-500 hover:bg-emerald-600"
-            >
-              Sign up
-            </Button>
-          </div>
-        ) : (
-          <Button
-            onClick={handleLogout}
-            className="w-full bg-emerald-500 hover:bg-emerald-600"
-          >
-            Log out
-          </Button>
-        )}
+        <div className="mt-4 pt-4 border-t border-gray-200">
+          <p className="text-xs text-gray-500 text-center">
+            © {new Date().getFullYear()} NextRoots. All rights reserved.
+          </p>
+        </div>
       </SidebarFooter>
     </Sidebar>
   )
