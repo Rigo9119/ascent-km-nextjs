@@ -20,6 +20,7 @@ import { CommentWithProfile } from '@/types/discussion';
 import { User as SupabaseUser } from '@supabase/supabase-js';
 import { toast } from 'sonner';
 import Image from 'next/image';
+import { VoteButtons } from '@/components/vote-buttons';
 
 interface CommentSectionProps {
   discussionId: string;
@@ -69,6 +70,16 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
       <div className={`${depth > 0 ? 'pl-4 border-l-2 border-gray-100' : ''}`}
         style={{ marginLeft: depth > 0 ? `${indentation}px` : '0' }}>
         <div className="flex space-x-3">
+          {/* Voting for comments */}
+          <div className="flex-shrink-0">
+            <VoteButtons 
+              targetId={comment.id} 
+              targetType="comment"
+              initialScore={comment.score || 0}
+              className="scale-75"
+            />
+          </div>
+
           <Avatar className={`${depth > 3 ? 'h-6 w-6' : 'h-8 w-8'} flex-shrink-0`}>
             <Image
               height={48}

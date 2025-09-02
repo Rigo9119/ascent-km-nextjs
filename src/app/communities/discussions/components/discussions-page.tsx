@@ -16,10 +16,13 @@ import Image from "next/image";
 import { AnyFieldApi } from "@tanstack/react-form";
 import { User } from "@supabase/supabase-js";
 import { useAuth } from "@/hooks/use-auth";
+import { VoteButtons } from "@/components/vote-buttons";
+import { sortingService, SortOption, sortOptions } from "@/services/sorting";
 
 export type FilterState = {
   search: string;
   community: string;
+  sort: SortOption;
 }
 
 interface DiscussionsPageProps {
@@ -39,6 +42,7 @@ export default function DiscussionsPageCmp({
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     community: "all",
+    sort: sortingService.getDefaultSort(),
   });
 
   // Use client-side auth context to ensure consistency with sidebar
@@ -71,6 +75,7 @@ export default function DiscussionsPageCmp({
     const clearedFilters = {
       search: "",
       community: "all",
+      sort: sortingService.getDefaultSort(),
     };
     handleFiltersChange(clearedFilters);
   };
@@ -97,6 +102,9 @@ export default function DiscussionsPageCmp({
           discussion.content?.toLowerCase().includes(currentFilters.search.toLowerCase())
       );
     }
+
+    // Apply sorting
+    filtered = sortingService.sortDiscussions(filtered, currentFilters.sort);
 
     setFilteredDiscussions(filtered);
   };
@@ -159,6 +167,18 @@ export default function DiscussionsPageCmp({
                 onValueChange={(value) => handleFilterChange("community", value)}
               />
 
+              <FormSelect
+                field={{} as AnyFieldApi}
+                label="Ordenar por"
+                value={filters.sort}
+                placeholder="Seleccionar orden"
+                options={sortOptions.map(option => ({ 
+                  value: option.value, 
+                  label: option.label 
+                }))}
+                onValueChange={(value) => handleFilterChange("sort", value as SortOption)}
+              />
+
               <Button
                 variant="outline"
                 className="w-full mt-4 border-emerald-500 text-emerald-500 hover:text-emerald-500"
@@ -179,6 +199,24 @@ export default function DiscussionsPageCmp({
                 {filteredDiscussions.length} discusión{filteredDiscussions.length !== 1 ? "es" : ""} encontrada{filteredDiscussions.length !== 1 ? "s" : ""}
               </p>
             </div>
+          </div>
+
+          {/* Quick Sort Tabs */}
+          <div className="mb-4 flex space-x-2">
+            {sortOptions.map((option) => (
+              <Button
+                key={option.value}
+                variant={filters.sort === option.value ? "default" : "outline"}
+                size="sm"
+                className={filters.sort === option.value 
+                  ? "bg-emerald-500 hover:bg-emerald-600" 
+                  : "border-emerald-500 text-emerald-500 hover:text-emerald-500"
+                }
+                onClick={() => handleFilterChange("sort", option.value)}
+              >
+                {option.label}
+              </Button>
+            ))}
           </div>
 
           <div className="space-y-4">
@@ -229,6 +267,15 @@ function DiscussionCard({ discussion }: DiscussionCardProps) {
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-6">
         <div className="flex items-start space-x-4">
+          {/* Voting */}
+          <div className="flex-shrink-0">
+            <VoteButtons 
+              targetId={discussion.id} 
+              targetType="discussion"
+              initialScore={discussion.score || 0}
+            />
+          </div>
+
           {/* Avatar */}
           <div className="flex-shrink-0">
             {discussion.profiles?.avatar_url ? (

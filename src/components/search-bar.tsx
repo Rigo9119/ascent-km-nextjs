@@ -127,7 +127,7 @@ export function SearchBar({ onSearch, placeholder = "Buscar eventos, ubicaciones
             </div>
           ) : query.trim().length >= 2 ? (
             <div className="p-4 text-center text-gray-500">
-              `No se encontraron resultados para "${query}"`
+              No se encontraron resultados para &ldquo;{query}&rdquo;
             </div>
           ) : null}
         </div>

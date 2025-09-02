@@ -16,6 +16,9 @@ export type DiscussionWithDetails = Discussion & {
     username: string | null;
     avatar_url: string | null;
   } | null;
+  score?: number;
+  upvotes?: number;
+  downvotes?: number;
 };
 
 export type CommentWithProfile = Comment & {
@@ -25,4 +28,7 @@ export type CommentWithProfile = Comment & {
     username: string | null;
     avatar_url: string | null;
   } | null;
+  score?: number;
+  upvotes?: number;
+  downvotes?: number;
 };
