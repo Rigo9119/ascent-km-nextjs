@@ -94,11 +94,11 @@ export function AppSidebar() {
       url: '/profile',
       icon: UserIcon
     },
-    {
-      title: 'My Events',
-      url: '/profile/my-events',
-      icon: Calendar
-    },
+    // {
+    //   title: 'My Events',
+    //   url: '/profile/my-events',
+    //   icon: Calendar
+    // },
     {
       title: 'My Communities',
       url: '/profile/my-communities',

@@ -28,7 +28,7 @@ export function HomeSearch() {
     <SearchBar 
       onSearch={handleSearch}
       placeholder="Search events, locations, communities..."
-      className="mb-8"
+      className="mb-0 max-w-md mx-auto"
     />
   )
 }
