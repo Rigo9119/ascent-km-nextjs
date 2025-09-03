@@ -33,38 +33,21 @@ import { Skeleton } from '@/components/ui/skeleton'
 import MenuItems from '@/components/app-sidebar/menu-items'
 import { useAuth } from '@/hooks/use-auth'
 
-
 export function AppSidebar() {
   const sidebar = useSidebar()
-  const { signOut, user, isLoading } = useAuth()
+  const { user, isLoading } = useAuth()
 
-  const handleLogout = async () => {
-    try {
-      await signOut()
-    } catch (error) {
-      console.error('Logout failed:', error)
-    }
-  }
-
-  // Menu items
   const menuItems = [
     {
       title: 'Inicio',
       url: '/',
-      icon: House
+      icon: Handshake
     },
-    {
-      title: 'Comunidades',
-      url: '/communities',
-      icon: Handshake,
-      subitems: [
-        {
-          title: 'Discusiones',
-          url: '/communities/discussions',
-          icon: MessageSquare
-        }
-      ]
-    },
+    // {
+    //   title: 'Comunidades',
+    //   url: '/communities',
+    //   icon: Handshake
+    // },
     {
       title: 'Recursos',
       url: '/resources',
