@@ -48,18 +48,18 @@ export default async function DiscussionPage({ params }: DiscussionPageProps) {
   const { discussionId } = await params;
   const supabase = await createSupabaseServerAction();
   const { data: { user } } = await supabase.auth.getUser();
-  
+
   const data = await getDiscussionData(discussionId);
 
   if (!data?.discussion) {
     notFound();
   }
-
   const { discussion, comments } = data;
+  console.log('discussion: ', discussion)
 
   return (
     <PageContainer>
-      <DiscussionDetail 
+      <DiscussionDetail
         discussion={discussion}
         comments={comments}
         currentUser={user}

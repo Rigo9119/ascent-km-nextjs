@@ -79,7 +79,7 @@ export default function CommunityTabs({
         ) : (
           <div className="space-y-4">
             {discussions.map((discussion) => (
-              <Card key={discussion.id} className="hover:shadow-md transition-shadow bg-white">
+              <Card key={discussion.id} className="hover:shadow-md transition-shadow bg-white dark:bg-gray-800">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-3 flex-1 min-w-0">
@@ -94,7 +94,7 @@ export default function CommunityTabs({
                         <div className="flex items-center gap-2 mb-1">
                           <Link
                             href={`/discussions/${discussion.id}`}
-                            className="font-medium text-gray-900 hover:text-emerald-600 truncate"
+                            className="font-medium text-gray-900 dark:text-gray-100 hover:text-emerald-600 truncate"
                           >
                             {discussion.title}
                           </Link>

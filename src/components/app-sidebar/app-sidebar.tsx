@@ -14,6 +14,7 @@ import {
   Calendar,
   Users,
   MessageSquare,
+  DiamondPlus,
 } from 'lucide-react'
 import Link from 'next/link'
 import {
@@ -21,6 +22,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
@@ -55,7 +57,7 @@ export function AppSidebar() {
     },
   ]
 
-  // Protected menu items TODO: delete and clean up after new menu moves to the header
+  // Protected menu items TODO: delete and clean up after new menu moves to the header, this should show the users communites list
   const protectedItems = [
     {
       title: 'Perfil',
@@ -101,7 +103,6 @@ export function AppSidebar() {
 
       <SidebarContent className='overflow-hidden'>
         <SidebarGroup>
-          <SidebarGroupLabel>Aplicación</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <MenuItems menuItems={menuItems} />
@@ -111,23 +112,25 @@ export function AppSidebar() {
 
         <SidebarSeparator />
 
-        {isLoading ? (
-          <Skeleton className="h-20 w-full" />
-        ) : user ? (
-          <SidebarGroup>
-            <SidebarGroupLabel>Perfil</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <MenuItems menuItems={protectedItems} />
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ) : null}
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <Button variant='ghost' className='text-emerald-500 hover:text-emerald-700'>
+                <DiamondPlus />
+                Create a community
+              </Button>
+              <Button variant='ghost' className='text-emerald-500 hover:text-emerald-700'>
+                <DiamondPlus />
+                Create a discussion
+              </Button>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter>
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          <p className="text-xs text-gray-500 text-center">
+        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
             © {new Date().getFullYear()} NextRoots. Todos los derechos reservados.
           </p>
         </div>

@@ -298,7 +298,7 @@ function DiscussionCard({ discussion }: DiscussionCardProps) {
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center space-x-2">
                 <h3
-                  className="text-lg font-semibold text-gray-900 hover:text-emerald-600 cursor-pointer transition-colors"
+                  className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-emerald-600 cursor-pointer transition-colors"
                   onClick={() => router.push(`/communities/discussions/${discussion.id}`)}
                 >
                   {discussion.title}

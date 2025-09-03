@@ -170,7 +170,7 @@ export default function CommunitiesPageCmp({
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border dark:border-gray-700">
             {filteredCommunities.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 No se encontraron comunidades que coincidan con tus criterios.
@@ -309,7 +309,7 @@ function CommunityRow({ community, isMember = false, currentUser, isLast = false
   const router = useRouter();
 
   return (
-    <div className={`flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors ${!isLast ? 'border-b border-gray-100' : ''}`}>
+    <div className={`flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${!isLast ? 'border-b border-gray-100 dark:border-gray-600' : ''}`}>
       {/* Left side - Community info */}
       <div className="flex items-center space-x-3 flex-1">
         {/* Avatar */}
@@ -333,7 +333,7 @@ function CommunityRow({ community, isMember = false, currentUser, isLast = false
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <h3 
-              className="font-medium text-gray-900 hover:text-emerald-600 cursor-pointer transition-colors text-sm"
+              className="font-medium text-gray-900 dark:text-gray-100 hover:text-emerald-600 cursor-pointer transition-colors text-sm"
               onClick={() => router.push(`/communities/${community.id}`)}
             >
               {community.name}

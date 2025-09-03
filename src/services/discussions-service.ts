@@ -52,9 +52,19 @@ export class DiscussionsService {
 				.eq('id', discussionId)
 				.single();
 
-			if (sbError) throw new Error(`getDiscussionById error: ${sbError.message}`);
+			if (sbError) {
+				// If the error is "not found", return null instead of throwing
+				if (sbError.code === 'PGRST116') {
+					return null;
+				}
+				throw new Error(`getDiscussionById error: ${sbError.message}`);
+			}
 			return discussion;
 		} catch (error) {
+			// Re-throw if it's already a known error, otherwise wrap it
+			if (error instanceof Error && error.message.includes('getDiscussionById error:')) {
+				throw error;
+			}
 			throw new Error(`getDiscussionById-service-error: ${error}`);
 		}
 	}

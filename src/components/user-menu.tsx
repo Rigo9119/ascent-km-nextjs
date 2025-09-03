@@ -1,13 +1,15 @@
 'use client'
 
-import { User, Settings, LogOut, Heart } from "lucide-react";
+import { User, Settings, LogOut, Heart, Sun, Moon, Monitor } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "./ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuPortal } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useTheme } from "next-themes";
 
 export function UserMenu() {
   const { user, signOut, isLoading } = useAuth();
+  const { setTheme } = useTheme();
 
   const handleLogout = async () => {
     try {
@@ -76,6 +78,28 @@ export function UserMenu() {
           <Settings className="mr-2 h-4 w-4" />
           Configuración
         </DropdownMenuItem>
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>
+            <Sun className="mr-2 h-4 w-4" />
+            Tema
+          </DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem onClick={() => setTheme('light')}>
+                <Sun className="mr-2 h-4 w-4" />
+                Claro
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme('dark')}>
+                <Moon className="mr-2 h-4 w-4" />
+                Oscuro
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme('system')}>
+                <Monitor className="mr-2 h-4 w-4" />
+                Sistema
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
           <LogOut className="mr-2 h-4 w-4" />

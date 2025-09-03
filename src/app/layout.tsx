@@ -5,6 +5,7 @@ import { SidebarLayout } from "@/components/app-sidebar/sidebar-layout";
 import { AuthProvider } from "@/contexts/auth-context";
 import { NextFontWithVariable } from "next/dist/compiled/@next/font";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 
 
 const geistSans: NextFontWithVariable = Geist({
@@ -35,14 +36,21 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        <AuthProvider>
-          <SidebarLayout>
-            {children}
-          </SidebarLayout>
-          <Toaster />
-        </AuthProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthProvider>
+            <SidebarLayout>
+              {children}
+            </SidebarLayout>
+            <Toaster />
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
