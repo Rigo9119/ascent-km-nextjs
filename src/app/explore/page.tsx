@@ -1,9 +1,8 @@
 import { PageContainer } from "@/components/page-container";
 import { CommunitiesService } from "@/services/communities-service";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import CommunitiesPageCmp from "./communities/components/communities-page";
 import { DiscussionsService } from "@/services/discussions-service";
-import RecentDiscussions from "@/components/home/recent-discussions";
+import CommunitiesPageCmp from "../communities/components/communities-page";
 
 const getPageData = async () => {
   const supabase = await createSupabaseServerClient();
@@ -50,36 +49,24 @@ const getPageData = async () => {
   };
 };
 
-export default async function Home() {
+export default async function Explore() {
   const {
     publicCommunities,
     featuredCommunities,
     communityTypes,
     userMemberships,
-    recentDiscussions,
     currentUser
   } = await getPageData();
 
   return (
     <PageContainer>
-
-      {currentUser ? (
-        <CommunitiesPageCmp
-          communities={publicCommunities || []}
-          featuredCommunities={featuredCommunities || []}
-          communityTypes={communityTypes || []}
-          userMemberships={userMemberships}
-          currentUser={currentUser}
-        />
-      ) : (
-        <div>
-          <RecentDiscussions
-            discussions={recentDiscussions || []}
-            currentUser={currentUser}
-          />
-        </div>
-      )}
-
+      <CommunitiesPageCmp
+        communities={publicCommunities || []}
+        featuredCommunities={featuredCommunities || []}
+        communityTypes={communityTypes || []}
+        userMemberships={userMemberships}
+        currentUser={currentUser}
+      />
     </PageContainer>
-  );
+  )
 }

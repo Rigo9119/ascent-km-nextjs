@@ -1,37 +1,24 @@
 'use client'
 
 import {
-  House,
-  Map,
-  User as UserIcon,
-  Ticket,
   Handshake,
   CircleX,
-  Heart,
   FileSearch,
-  Settings,
-  BookOpen,
-  Calendar,
-  Users,
-  MessageSquare,
   DiamondPlus,
+  Earth,
 } from 'lucide-react'
-import Link from 'next/link'
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupAction,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarSeparator,
   useSidebar,
 } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
 import MenuItems from '@/components/app-sidebar/menu-items'
 import { useAuth } from '@/hooks/use-auth'
 
@@ -45,11 +32,11 @@ export function AppSidebar() {
       url: '/',
       icon: Handshake
     },
-    // {
-    //   title: 'Comunidades',
-    //   url: '/communities',
-    //   icon: Handshake
-    // },
+    {
+      title: 'Explora',
+      url: '/explore',
+      icon: Earth
+    },
     {
       title: 'Recursos',
       url: '/resources',
@@ -86,13 +73,33 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              <Button variant='ghost' className='text-emerald-500 hover:text-emerald-700 cursor-pointer'>
+              <Button 
+                variant='ghost' 
+                className='text-emerald-500 hover:text-emerald-700 cursor-pointer'
+                onClick={() => {
+                  if (user) {
+                    window.location.href = '/communities/create';
+                  } else {
+                    window.location.href = '/auth';
+                  }
+                }}
+              >
                 <DiamondPlus />
-                Create a community
+                Crea una comunidad
               </Button>
-              <Button variant='ghost' className='text-emerald-500 hover:text-emerald-700 cursor-pointer'>
+              <Button 
+                variant='ghost' 
+                className='text-emerald-500 hover:text-emerald-700 cursor-pointer'
+                onClick={() => {
+                  if (user) {
+                    window.location.href = '/communities/discussions/create';
+                  } else {
+                    window.location.href = '/auth';
+                  }
+                }}
+              >
                 <DiamondPlus />
-                Create a discussion
+                Crea una discusión
               </Button>
             </SidebarMenu>
           </SidebarGroupContent>

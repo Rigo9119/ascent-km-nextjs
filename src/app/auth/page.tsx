@@ -14,7 +14,7 @@ function AuthContent() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-background">
-      <div className='w-full max-w-md space-y-8 rounded-lg bg-white dark:bg-black p-6 shadow-lg border dark:border-emerald-500'>
+      <div className='w-full max-w-md space-y-8 rounded-lg bg-white dark:bg-black p-6 shadow-lg border border-gray-200 dark:border-emerald-500'>
         {error && (
           <div className="mb-4 p-4 text-sm text-red-800 bg-red-100 rounded-md flex justify-between items-center">
             <span>{error}</span>

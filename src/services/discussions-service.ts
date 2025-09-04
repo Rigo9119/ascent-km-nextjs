@@ -87,6 +87,42 @@ export class DiscussionsService {
 		}
 	}
 
+	async getMostRecentDiscussionPerCommunity() {
+		try {
+			// Get the most recent discussion for each community
+			const { data: discussions, error: sbError } = await this.supabase
+				.rpc('get_latest_discussion_per_community');
+
+			if (sbError) {
+				// Fallback to manual query if RPC doesn't exist
+				const { data: fallbackDiscussions, error: fallbackError } = await this.supabase
+					.from('discussions')
+					.select(`
+						*,
+						communities(id, name, image_url),
+						profiles(id, full_name, username, avatar_url)
+					`)
+					.order('created_at', { ascending: false });
+
+				if (fallbackError) throw new Error(`getMostRecentDiscussionPerCommunity error: ${fallbackError.message}`);
+				
+				// Group by community and take the first (most recent) for each
+				const groupedByCommunity = new Map();
+				fallbackDiscussions?.forEach(discussion => {
+					if (!groupedByCommunity.has(discussion.community_id)) {
+						groupedByCommunity.set(discussion.community_id, discussion);
+					}
+				});
+				
+				return Array.from(groupedByCommunity.values());
+			}
+
+			return discussions;
+		} catch (error) {
+			throw new Error(`getMostRecentDiscussionPerCommunity-service-error: ${error}`);
+		}
+	}
+
 	async createDiscussion(discussionData: {
 		title: string;
 		content: string;
