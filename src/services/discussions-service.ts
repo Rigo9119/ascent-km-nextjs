@@ -262,4 +262,39 @@ export class DiscussionsService {
 			throw new Error(`getUserParticipatedDiscussions-service-error: ${error}`);
 		}
 	}
+
+	async getRecentDiscussionsFromUserCommunities(userId: string, limit: number = 10) {
+		try {
+			// First get the community IDs the user is a member of
+			const { data: memberships, error: membershipError } = await this.supabase
+				.from('community_members')
+				.select('community_id')
+				.eq('user_id', userId);
+
+			if (membershipError) throw new Error(`getRecentDiscussionsFromUserCommunities memberships error: ${membershipError.message}`);
+
+			if (!memberships || memberships.length === 0) {
+				return [];
+			}
+
+			const communityIds = memberships.map(m => m.community_id);
+
+			// Get recent discussions from those communities
+			const { data: discussions, error: sbError } = await this.supabase
+				.from('discussions')
+				.select(`
+					*,
+					communities(id, name, image_url),
+					profiles(id, full_name, username, avatar_url)
+				`)
+				.in('community_id', communityIds)
+				.order('created_at', { ascending: false })
+				.limit(limit);
+
+			if (sbError) throw new Error(`getRecentDiscussionsFromUserCommunities error: ${sbError.message}`);
+			return discussions;
+		} catch (error) {
+			throw new Error(`getRecentDiscussionsFromUserCommunities-service-error: ${error}`);
+		}
+	}
 }

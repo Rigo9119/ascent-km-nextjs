@@ -1,7 +1,6 @@
 import { PageContainer } from "@/components/page-container";
 import { CommunitiesService } from "@/services/communities-service";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import CommunitiesPageCmp from "./communities/components/communities-page";
 import { DiscussionsService } from "@/services/discussions-service";
 import RecentDiscussions from "@/components/home/recent-discussions";
 
@@ -11,11 +10,12 @@ const getPageData = async () => {
   const discussionsService = new DiscussionsService(supabase);
   const { data: { user } } = await supabase.auth.getUser();
 
-  const [publicCommunities, featuredCommunities, communityTypes, recentDiscussions] = await Promise.all([
+  const [publicCommunities, featuredCommunities, communityTypes, recentDiscussions, userRecentDiscussions] = await Promise.all([
     communitiesService.getPublicCommunities(),
     communitiesService.getPublicFeaturedCommunities(),
     communitiesService.getAllCommunityTypes(),
-    discussionsService.getMostRecentDiscussionPerCommunity()
+    discussionsService.getMostRecentDiscussionPerCommunity(),
+    user ? discussionsService.getRecentDiscussionsFromUserCommunities(user.id) : Promise.resolve(null)
   ]);
 
   // Get user memberships if user is logged in
@@ -46,31 +46,43 @@ const getPageData = async () => {
     communityTypes,
     userMemberships,
     recentDiscussions,
+    userRecentDiscussions,
     currentUser: user,
   };
 };
 
 export default async function Home() {
   const {
-    publicCommunities,
-    featuredCommunities,
-    communityTypes,
-    userMemberships,
     recentDiscussions,
+    userRecentDiscussions,
     currentUser
   } = await getPageData();
-
+  console.log('user discussions', userRecentDiscussions)
   return (
     <PageContainer>
-
       {currentUser ? (
-        <CommunitiesPageCmp
-          communities={publicCommunities || []}
-          featuredCommunities={featuredCommunities || []}
-          communityTypes={communityTypes || []}
-          userMemberships={userMemberships}
-          currentUser={currentUser}
-        />
+        <div className="space-y-8">
+          {userRecentDiscussions && userRecentDiscussions.length > 0 ? (
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+                Discusiones Recientes de tus Comunidades
+              </h2>
+              <RecentDiscussions
+                discussions={userRecentDiscussions}
+                currentUser={currentUser}
+              />
+            </div>
+          ) : (
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+                Discusiones Recientes de tus Comunidades
+              </h2>
+              <p className="text-gray-500 dark:text-gray-400">
+                No hay discusiones recientes en tus comunidades. Únete a una comunidad
+              </p>
+            </div>
+          )}
+        </div>
       ) : (
         <div>
           <RecentDiscussions
