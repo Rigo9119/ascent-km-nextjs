@@ -13,8 +13,8 @@ function AuthContent() {
   const { signInWithProvider, isLoading, error, clearError } = useAuth()
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className='w-full max-w-md space-y-8 rounded-lg bg-white p-6 shadow-lg'>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-background">
+      <div className='w-full max-w-md space-y-8 rounded-lg bg-white dark:bg-black p-6 shadow-lg border dark:border-emerald-500'>
         {error && (
           <div className="mb-4 p-4 text-sm text-red-800 bg-red-100 rounded-md flex justify-between items-center">
             <span>{error}</span>
@@ -24,7 +24,7 @@ function AuthContent() {
           </div>
         )}
         <div>
-          <h2 className="text-3xl font-bold">{mode === 'login' ? 'Iniciar Sesión' : 'Registrarse'}</h2>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{mode === 'login' ? 'Iniciar Sesión' : 'Registrarse'}</h2>
           <p className="mt-2 text-sm text-gray-600 hidden">O continúa con</p>
           <div className="mt-3 flex flex-col justify-center gap-3 hidden">
             <Button

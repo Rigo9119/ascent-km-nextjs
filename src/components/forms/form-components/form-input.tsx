@@ -28,7 +28,7 @@ export default function FormInput({
 }: FormInputProps) {
   return (
     <div className="w-full">
-      <Label className="mb-4">{label}</Label>
+      <Label className="mb-4 text-gray-900 dark:text-gray-100">{label}</Label>
       <Input
         name={name}
         type={type}

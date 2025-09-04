@@ -79,7 +79,7 @@ export default function CommunityTabs({
         ) : (
           <div className="space-y-4">
             {discussions.map((discussion) => (
-              <Card key={discussion.id} className="hover:shadow-md transition-shadow bg-white dark:bg-gray-800">
+              <Card key={discussion.id} className="hover:shadow-md transition-shadow bg-white dark:bg-black">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-3 flex-1 min-w-0">

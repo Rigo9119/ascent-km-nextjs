@@ -111,7 +111,7 @@ export default function ResourcesPageCmp({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Recursos Destacados</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Recursos Destacados</h2>
               <p className="text-gray-600">Nuestros recursos más populares y recomendados</p>
             </div>
             <Badge variant="secondary" className="text-emerald-600 bg-emerald-50">
@@ -254,7 +254,7 @@ function ResourceCard({ resource, featured = false }: ResourceCardProps) {
                 <Icon className="w-6 h-6 text-emerald-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-lg text-gray-900 group-hover:text-emerald-600 transition-colors">
+                <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100 group-hover:text-emerald-600 transition-colors">
                   {resource.title}
                 </h3>
                 <Badge variant="secondary" className="mt-1 text-xs capitalize">
@@ -304,7 +304,7 @@ function ResourceCard({ resource, featured = false }: ResourceCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-2">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 hover:text-emerald-600 transition-colors">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-emerald-600 transition-colors">
                   {resource.title}
                 </h3>
                 <div className="flex items-center space-x-2 mt-1">

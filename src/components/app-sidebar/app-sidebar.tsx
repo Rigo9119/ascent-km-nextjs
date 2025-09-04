@@ -57,35 +57,6 @@ export function AppSidebar() {
     },
   ]
 
-  // Protected menu items TODO: delete and clean up after new menu moves to the header, this should show the users communites list
-  const protectedItems = [
-    {
-      title: 'Perfil',
-      url: '/profile',
-      icon: UserIcon
-    },
-    // {
-    //   title: 'My Events',
-    //   url: '/profile/my-events',
-    //   icon: Calendar
-    // },
-    {
-      title: 'Mis Comunidades',
-      url: '/profile/my-communities',
-      icon: Users
-    },
-    {
-      title: 'Favoritos',
-      url: '/favourites',
-      icon: Heart
-    },
-    {
-      title: 'Configuración',
-      url: '/settings',
-      icon: Settings
-    }
-  ]
-
   return (
     <Sidebar collapsible="offcanvas" variant="inset">
       <SidebarHeader>
@@ -115,11 +86,11 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              <Button variant='ghost' className='text-emerald-500 hover:text-emerald-700'>
+              <Button variant='ghost' className='text-emerald-500 hover:text-emerald-700 cursor-pointer'>
                 <DiamondPlus />
                 Create a community
               </Button>
-              <Button variant='ghost' className='text-emerald-500 hover:text-emerald-700'>
+              <Button variant='ghost' className='text-emerald-500 hover:text-emerald-700 cursor-pointer'>
                 <DiamondPlus />
                 Create a discussion
               </Button>

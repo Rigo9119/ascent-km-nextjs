@@ -24,13 +24,13 @@ const getPageData = async () => {
         .from('community_members')
         .select('community_id')
         .eq('user_id', user.id);
-      
+
       console.log('Membership query result:', { data: memberships, error });
-      
+
       if (error) {
         console.error('Supabase error fetching memberships:', error);
       }
-      
+
       userMemberships = memberships?.map(m => m.community_id) || [];
       console.log('Final userMemberships array:', userMemberships);
     } catch (error) {
@@ -52,13 +52,21 @@ export default async function Home() {
 
   return (
     <PageContainer>
-      <CommunitiesPageCmp 
-        communities={publicCommunities || []} 
-        featuredCommunities={featuredCommunities || []}
-        communityTypes={communityTypes || []}
-        userMemberships={userMemberships}
-        currentUser={currentUser}
-      />
+
+      {currentUser ? (
+        <CommunitiesPageCmp
+          communities={publicCommunities || []}
+          featuredCommunities={featuredCommunities || []}
+          communityTypes={communityTypes || []}
+          userMemberships={userMemberships}
+          currentUser={currentUser}
+        />
+      ) : (
+        <div>
+          Current page
+        </div>
+      )}
+
     </PageContainer>
   );
 }
