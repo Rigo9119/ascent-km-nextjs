@@ -1,11 +1,9 @@
 'use client'
 import { useState } from "react";
 import { useForm } from "@tanstack/react-form";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import FormInput from "./form-components/form-input";
 import FormTextarea from "./form-components/form-textarea";
 import { MessageSquare, Link2, ArrowLeft, Send, Loader2 } from "lucide-react";

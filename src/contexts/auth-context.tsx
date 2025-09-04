@@ -58,8 +58,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (event === 'SIGNED_IN') {
           setError(null)
 
+          // Only redirect on actual sign-in, not on page load when user is already signed in
+          const currentPath = window.location.pathname;
+          const isOnAuthPage = currentPath.startsWith('/auth');
+          
           // Check if user has completed onboarding by checking if they have a profile
-          if (session?.user) {
+          if (session?.user && isOnAuthPage) {
             try {
               const { data: profile } = await supabase
                 .from('profiles')
