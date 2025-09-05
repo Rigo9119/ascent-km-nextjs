@@ -108,23 +108,110 @@ A modern, full-stack community event management platform built with Next.js 15, 
 
 ## 🗄️ Database Setup
 
-### Required Tables
-The application requires the following Supabase tables:
+You can choose between **Cloud** (production) or **Local Development** setups:
+
+### Option 1: Local Development with Supabase CLI
+
+**Prerequisites:**
+- Install [Supabase CLI](https://supabase.com/docs/guides/cli)
+- Docker installed and running
+
+**Setup Steps:**
+
+1. **Initialize and start local Supabase**
+   ```bash
+   # Start local Supabase services
+   supabase start
+   ```
+
+2. **Get local credentials**
+   After `supabase start`, you'll see output like:
+   ```
+   API URL: http://127.0.0.1:54321
+   Anon key: eyJhbGci...
+   Service Role key: eyJhbGci...
+   Studio URL: http://127.0.0.1:54323
+   ```
+
+3. **Update your `.env.local` for local development**
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_local_anon_key_from_above
+   ```
+
+4. **Pull existing schema from cloud (if you have one)**
+   ```bash
+   # Connect to your cloud project first
+   supabase login
+   supabase link --project-ref your-project-ref
+   
+   # Pull the schema
+   supabase db pull
+   
+   # Reset local DB with cloud schema
+   supabase db reset
+   ```
+
+**Local Development Commands:**
+```bash
+# Start services
+supabase start
+
+# View Supabase Studio locally
+open http://127.0.0.1:54323
+
+# Reset local database (applies migrations + seeds)
+supabase db reset
+
+# Push local changes to cloud
+supabase db push
+
+# Stop services
+supabase stop
+```
+
+### Option 2: Cloud Setup (Production)
+
+1. **Create a Supabase project** at [supabase.com](https://supabase.com)
+2. **Get your credentials** from Project Settings > API
+3. **Use cloud credentials in `.env.local`**
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_cloud_anon_key
+   ```
+
+### Required Database Tables
+
+The application uses these main tables:
 
 - `profiles` - User profiles and settings
-- `communities` - Community information
-- `events` - Event details and management
-- `discussions` - Discussion threads
+- `communities` - Community information  
+- `community_members` - Community memberships
+- `community_types` - Community categories
+- `discussions` - Discussion threads with voting
 - `comments` - Discussion comments with threading
+- `votes` - Voting system for discussions/comments
 - `locations` - Location data for events
 - `categories` - Event and community categories
-- `favorites` - User favorites system
+- `events` - Event details and management
 
 ### Authentication Setup
 1. **Enable authentication providers** in Supabase Dashboard
-2. **Configure OAuth apps** for Google and Kakao
+2. **Configure OAuth apps** for Google and Kakao (optional)
 3. **Set up email templates** for authentication flows
 4. **Configure RLS policies** for data security
+
+### Migration Management
+```bash
+# Create a new migration
+supabase migration new add_some_feature
+
+# Apply migrations locally
+supabase db reset
+
+# Push to production
+supabase db push
+```
 
 ## 📁 Project Structure
 

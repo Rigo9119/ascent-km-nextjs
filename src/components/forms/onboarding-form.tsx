@@ -77,29 +77,48 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
       last_active: "",
     },
     onSubmit: async ({ value }) => {
+      console.log('Form submission started with values:', value);
       try {
+        console.log('Step 1: Starting avatar processing...');
         let avatarPath = null;
 
-        // Only process avatar if a valid data URL is provided
-        if (value.avatar_url && value.avatar_url.startsWith("data:")) {
+        // Temporarily skip avatar upload due to timeout issues
+        if (false && value.avatar_url && value.avatar_url.startsWith("data:")) {
+          console.log('Step 2: Processing avatar upload...');
           try {
             const avatarBlob = dataURLtoBlob(value.avatar_url);
+            console.log('Step 3: Avatar blob created, uploading to storage...');
             //stores the avatar image on the avatars bucket and gets the path
-            const { data: avatarUrl, error: avartUploadError } = await supabase.storage
+            
+            // Create upload promise with timeout
+            const uploadPromise = supabase.storage
               .from("user_avatars")
               .upload(`${user.id}.png`, avatarBlob, {
                 cacheControl: "3600",
                 upsert: true,
               });
+            
+            // Create timeout promise
+            const timeoutPromise = new Promise((_, reject) => {
+              setTimeout(() => reject(new Error('Upload timeout after 10 seconds')), 10000);
+            });
+            
+            const { data: avatarUrl, error: avartUploadError } = await Promise.race([
+              uploadPromise,
+              timeoutPromise
+            ]);
+            console.log('Step 4: Upload response received:', { avatarUrl, avartUploadError });
             if (avartUploadError) {
               throw new Error(avartUploadError.message);
             } else {
               const { data } = supabase.storage.from("user_avatars").getPublicUrl(avatarUrl.path);
               avatarPath = data.publicUrl;
+              console.log('Step 5: Avatar URL obtained:', avatarPath);
             }
           } catch (error) {
             console.error("Avatar upload error:", error);
-            toast.error("Failed to upload avatar, but continuing with profile creation", {
+            console.log('Step 5: Avatar upload failed, continuing without avatar...');
+            toast.error("Error al subir el avatar, continuando sin foto de perfil", {
               style: {
                 background: '#fef2f2',
                 border: '1px solid #fecaca',
@@ -108,8 +127,11 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
             });
             avatarPath = null;
           }
+        } else {
+          console.log('Step 2: No avatar to upload, skipping...');
         }
 
+        console.log('Step 6: Creating profile data...');
         const profileData = {
           id: user.id,
           username: value.username,
@@ -119,7 +141,7 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
           created_at: new Date().toISOString(),
           phone_number: value.phone_number,
           email: user.email,
-          country_code: phoneCountryCode || value.country_code,
+          country_code: phoneCountryCode || value.country_code || null,
           interests: selectedInterests,
           bio: value.bio,
           city: value.location.city,
@@ -129,7 +151,7 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
           last_active: new Date().toISOString(),
         };
 
-        // updates user profile
+        console.log('Step 7: Inserting profile into database...');
         const { error: updateUserProfileError } = await supabase
           .from("profiles")
           .upsert(profileData, { onConflict: "id" });
@@ -137,9 +159,10 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
         if (updateUserProfileError) {
           throw new Error(updateUserProfileError.message);
         }
-
+        console.log("profileData", profileData);
+        console.log('Profile created successfully, redirecting...');
         // Success toast
-        toast.success("Profile created successfully! Welcome to the platform!", {
+        toast.success("¡Perfil creado exitosamente! ¡Bienvenido a la plataforma!", {
           style: {
             background: '#ecfdf5',
             border: '1px solid #a7f3d0',
@@ -149,12 +172,13 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
 
         // Redirect after a short delay to show the toast
         setTimeout(() => {
-          router.push("/profile");
+          console.log('Attempting redirect to home...');
+          router.push("/");
         }, 1500);
 
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
-        toast.error(`Failed to create profile: ${errorMessage}`, {
+        toast.error(`Error al crear el perfil: ${errorMessage}`, {
           style: {
             background: '#fef2f2',
             border: '1px solid #fecaca',
@@ -199,7 +223,7 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
       {/* Avatar Section */}
       <Card>
         <CardHeader>
-          <CardTitle>Profile Picture</CardTitle>
+          <CardTitle>Foto de Perfil</CardTitle>
         </CardHeader>
         <CardContent>
           <onboardingForm.Field name="avatar_url">
@@ -222,7 +246,7 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
       {/* Basic Information */}
       <Card>
         <CardHeader>
-          <CardTitle>Basic Information</CardTitle>
+          <CardTitle>Información Básica</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -260,9 +284,9 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
               {(field: AnyFieldApi) => (
                 <FormPhoneInput
                   field={field}
-                  label="Phone Number"
+                  label="Número de Teléfono"
                   name={field.name}
-                  placeholder="Enter your phone number"
+                  placeholder="Ingresa tu número de teléfono"
                   value={field.state.value}
                   onChange={(value) => field.handleChange(value || "")}
                   onCountryChange={(countryCode) => setPhoneCountryCode(countryCode || "")}
@@ -276,8 +300,8 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
             {(field: AnyFieldApi) => (
               <FormTextarea
                 field={field}
-                label="Bio"
-                placeholder="Tell us about yourself..."
+                label="Biografía"
+                placeholder="Cuéntanos sobre ti..."
                 value={field.state.value}
                 name={field.name}
                 onChange={(event) => field.handleChange(event.target.value)}
@@ -292,7 +316,7 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
       {/* Location */}
       <Card>
         <CardHeader>
-          <CardTitle>Location</CardTitle>
+          <CardTitle>Ubicación</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -301,10 +325,10 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
                 <>
                   <FormInput
                     field={field}
-                    label="City"
+                    label="Ciudad"
                     name="city"
                     type="text"
-                    placeholder="Seoul"
+                    placeholder="Buenos Aires"
                     value={field.state.value?.city || ""}
                     onChange={(e) =>
                       field.handleChange({
@@ -315,10 +339,10 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
                   />
                   <FormInput
                     field={field}
-                    label="Country"
+                    label="País"
                     name="country"
                     type="text"
-                    placeholder="South Korea"
+                    placeholder="Argentina"
                     value={field.state.value?.country || ""}
                     onChange={(e) =>
                       field.handleChange({
@@ -337,8 +361,8 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
       {/* Interests */}
       <Card>
         <CardHeader>
-          <CardTitle>Interests</CardTitle>
-          <p className="text-sm text-gray-600">Select your interests to help us personalize your experience</p>
+          <CardTitle>Intereses</CardTitle>
+          <p className="text-sm text-gray-600">Selecciona tus intereses para ayudarnos a personalizar tu experiencia</p>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
@@ -362,8 +386,8 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
       {/* Social Links */}
       <Card>
         <CardHeader>
-          <CardTitle>Social Links</CardTitle>
-          <p className="text-sm text-gray-600">Connect your social media profiles (optional)</p>
+          <CardTitle>Redes Sociales</CardTitle>
+          <p className="text-sm text-gray-600">Conecta tus perfiles de redes sociales (opcional)</p>
         </CardHeader>
         <CardContent className="space-y-4">
           {socialTypes.map((social) => {
@@ -407,8 +431,8 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
       {/* Preferences */}
       <Card>
         <CardHeader>
-          <CardTitle>Preferences</CardTitle>
-          <p className="text-sm text-gray-600">Select your preferences to customize your experience</p>
+          <CardTitle>Preferencias</CardTitle>
+          <p className="text-sm text-gray-600">Selecciona tus preferencias para personalizar tu experiencia</p>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
@@ -437,7 +461,7 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
             disabled={isSubmitting}
             className="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 text-lg"
           >
-            {isSubmitting ? "Creating Profile..." : "Complete Profile"}
+            {isSubmitting ? "Creando Perfil..." : "Completar Perfil"}
           </Button>
         )}
       </onboardingForm.Subscribe>

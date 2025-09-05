@@ -27,29 +27,47 @@ export default function FormPhoneInput({
   countryCode
 }: FormPhoneInputProps) {
 
-  // Reconstruct full E.164 phone number for PhoneInput component
-  const displayValue = value && countryCode ? `+${countryCode}${value}` : value;
+  // Handle display value safely - avoid double country codes
+  const displayValue = (() => {
+    if (!value) return value;
+    
+    // If value already starts with +, use it as-is (already E.164 format)
+    if (value.startsWith('+')) return value;
+    
+    // If we have a country code and value doesn't start with +, reconstruct
+    if (countryCode) return `+${countryCode}${value}`;
+    
+    // Fallback to original value
+    return value;
+  })();
 
   const handlePhoneChange = (newValue: string | undefined) => {
-    // Extract numeric country calling code and local phone number
-    if (newValue && onCountryChange) {
-      try {
-        const phoneNumber = parsePhoneNumber(newValue);
-        if (phoneNumber && phoneNumber.country) {
-          const callingCode = getCountryCallingCode(phoneNumber.country);
-          const localNumber = phoneNumber.nationalNumber; // Gets number without country code
+    if (!newValue) {
+      onChange(undefined);
+      return;
+    }
 
+    try {
+      // Parse the phone number
+      const phoneNumber = parsePhoneNumber(newValue);
+      
+      if (phoneNumber && phoneNumber.country) {
+        // Store only the national number (digits only) to match DB constraint
+        const nationalNumber = phoneNumber.nationalNumber;
+        onChange(nationalNumber);
+        
+        // Update country code if callback provided
+        if (onCountryChange) {
+          const callingCode = getCountryCallingCode(phoneNumber.country);
           onCountryChange(callingCode);
-          onChange(localNumber); // Pass local number to form
-        } else {
-          onChange(newValue); // Fallback to original value if parsing fails
         }
-      } catch (error) {
-        console.log(error)
-        onChange(newValue); // Fallback to original value if parsing fails
+      } else {
+        // If parsing fails, store as-is
+        onChange(newValue);
       }
-    } else {
-      onChange(newValue);
+    } catch (error) {
+      console.log('Phone parsing error:', error);
+      onChange(newValue); // Fallback to original value if parsing fails
     }
   };
   return (

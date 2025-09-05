@@ -117,9 +117,9 @@ export default function CommunitiesPageCmp({
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Filters Sidebar */}
-        <div className="lg:col-span-1">
+      <div className="grid grid-cols-1 gap-8">
+        {/* Filters Sidebar - Hidden */}
+        <div className="hidden lg:col-span-1">
           <Card>
             <CardHeader>
               <CardTitle>Filtros</CardTitle>
@@ -156,7 +156,7 @@ export default function CommunitiesPageCmp({
         </div>
 
         {/* Communities List */}
-        <div className="lg:col-span-3">
+        <div className="col-span-1">
           <div className="mb-6 flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold">Todas las comunidades</h2>

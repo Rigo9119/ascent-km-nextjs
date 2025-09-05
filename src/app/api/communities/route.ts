@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerAction } from '@/lib/supabase/server'
 import { CommunitiesService } from '@/services/communities-service'
 
@@ -14,6 +14,25 @@ export async function GET() {
     console.error('Communities API error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch communities' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const supabase = await createSupabaseServerAction()
+    const communitiesService = new CommunitiesService(supabase)
+    
+    const communityData = await request.json()
+    
+    const community = await communitiesService.createCommunity(communityData)
+    
+    return NextResponse.json({ success: true, community })
+  } catch (error) {
+    console.error('Create community API error:', error)
+    return NextResponse.json(
+      { error: 'Failed to create community' },
       { status: 500 }
     )
   }
