@@ -1,103 +1,18 @@
-"use client";
-
-import { useState } from "react";
 import { Resource } from "@/types/resource";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import FormSelect from "@/components/forms/form-components/form-select";
 import { ExternalLink, FileText, Star, Globe, BookOpen } from "lucide-react";
-import { AnyFieldApi } from "@tanstack/react-form";
-
-export type FilterState = {
-  search: string;
-  category: string;
-}
 
 interface ResourcesPageProps {
   resources: Resource[];
-  categories: string[];
 }
 
 export default function ResourcesPageCmp({
   resources,
-  categories,
 }: ResourcesPageProps) {
-  const [filteredResources, setFilteredResources] = useState(resources);
-  const [filters, setFilters] = useState<FilterState>({
-    search: "",
-    category: "all",
-  });
-
-  // Transform categories to options format
-  const categoryOptions = [
-    { value: "all", label: "Todas las Categorías" },
-    ...(categories || []).map((category) => ({
-      value: category,
-      label: category.charAt(0).toUpperCase() + category.slice(1)
-    })),
-  ];
-
-  const handleFiltersChange = (newFilters: FilterState) => {
-    setFilters(newFilters);
-    filterResources(newFilters);
-  };
-
-  const handleFilterChange = (key: keyof FilterState, value: string) => {
-    const newFilters = {
-      ...filters,
-      [key]: value,
-    };
-    handleFiltersChange(newFilters);
-  };
-
-  const handleClearAll = () => {
-    const clearedFilters = {
-      search: "",
-      category: "all",
-    };
-    handleFiltersChange(clearedFilters);
-  };
-
-  const filterResources = (currentFilters: FilterState) => {
-    let filtered = resources;
-
-    if (currentFilters.category && currentFilters.category !== "all") {
-      filtered = filtered.filter((resource) => resource.category === currentFilters.category);
-    }
-
-    if (currentFilters.search) {
-      filtered = filtered.filter(
-        (resource) =>
-          resource.title.toLowerCase().includes(currentFilters.search.toLowerCase()) ||
-          resource.description?.toLowerCase().includes(currentFilters.search.toLowerCase())
-      );
-    }
-
-    setFilteredResources(filtered);
-  };
-
-  // Group resources by category for featured section
-  const featuredResources = resources.filter(resource => resource.badge === "featured").slice(0, 6);
-  const resourcesByCategory = categories.reduce((acc, category) => {
-    acc[category] = resources.filter(resource => resource.category === category);
-    return acc;
-  }, {} as Record<string, Resource[]>);
-
-  const getIconForCategory = (category: string) => {
-    switch (category.toLowerCase()) {
-      case 'documentation':
-        return BookOpen;
-      case 'tools':
-        return FileText;
-      case 'websites':
-        return Globe;
-      default:
-        return FileText;
-    }
-  };
+  // Get featured resources
+  const featuredResources = resources.filter(resource => resource.badge === "featured");
 
   return (
     <div className="space-y-8">
@@ -126,92 +41,25 @@ export default function ResourcesPageCmp({
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Filters Sidebar */}
-        <div className="lg:col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle>Filtros</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="search">Buscar Recursos</Label>
-                <Input
-                  id="search"
-                  placeholder="Buscar por título o descripción..."
-                  value={filters.search}
-                  onChange={(e) => handleFilterChange("search", e.target.value)}
-                />
-              </div>
-
-              <FormSelect
-                field={{} as AnyFieldApi}
-                label="Categoría"
-                value={filters.category}
-                placeholder="Seleccionar categoría"
-                options={categoryOptions}
-                onValueChange={(value) => handleFilterChange("category", value)}
-              />
-
-              <Button
-                variant="outline"
-                className="w-full mt-4 border-emerald-500 text-emerald-500 hover:text-emerald-500"
-                onClick={handleClearAll}
-              >
-                Limpiar Todo
-              </Button>
-
-              {/* Category Quick Links */}
-              <div className="pt-4 border-t">
-                <Label className="text-sm font-medium">Categorías</Label>
-                <div className="space-y-2 mt-2">
-                  {categories.map((category) => {
-                    const Icon = getIconForCategory(category);
-                    const count = resourcesByCategory[category]?.length || 0;
-                    return (
-                      <button
-                        key={category}
-                        onClick={() => handleFilterChange("category", category)}
-                        className="w-full flex items-center justify-between p-2 text-left hover:bg-emerald-50 rounded transition-colors"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <Icon className="w-4 h-4 text-emerald-600" />
-                          <span className="text-sm capitalize">{category}</span>
-                        </div>
-                        <Badge variant="secondary" className="text-xs">
-                          {count}
-                        </Badge>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+      {/* All Resources */}
+      <div className="space-y-4">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold">Todos los Recursos</h2>
+          <p className="text-muted-foreground">
+            {resources.length} recurso{resources.length !== 1 ? "s" : ""} disponible{resources.length !== 1 ? "s" : ""}
+          </p>
         </div>
 
-        {/* Resources List */}
-        <div className="lg:col-span-3">
-          <div className="mb-6 flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold">Todos los Recursos</h2>
-              <p className="text-muted-foreground">
-                {filteredResources.length} recurso{filteredResources.length !== 1 ? "s" : ""} encontrado{filteredResources.length !== 1 ? "s" : ""}
-              </p>
+        <div className="space-y-4">
+          {resources.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              No hay recursos disponibles.
             </div>
-          </div>
-
-          <div className="space-y-4">
-            {filteredResources.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                No se encontraron recursos que coincidan con tus criterios.
-              </div>
-            ) : (
-              filteredResources.map((resource) => (
-                <ResourceCard key={resource.id} resource={resource} />
-              ))
-            )}
-          </div>
+          ) : (
+            resources.map((resource) => (
+              <ResourceCard key={resource.id} resource={resource} />
+            ))
+          )}
         </div>
       </div>
     </div>
