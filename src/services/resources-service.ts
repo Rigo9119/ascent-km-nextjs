@@ -8,12 +8,16 @@ export class ResourcesService {
       const { data: resources, error: sbError } = await this.supabase
         .from('resources')
         .select('*')
-        .eq('is_active', true)
         .order('created_at', { ascending: false });
 
-      if (sbError) throw new Error(`getAllResources error: ${sbError.message}`);
+      if (sbError) {
+        console.error('Supabase error:', sbError);
+        throw new Error(`getAllResources error: ${sbError.message}`);
+      }
+
       return resources;
     } catch (error) {
+
       throw new Error(`getAllResources-services-error: ${error}`);
     }
   }
@@ -42,7 +46,7 @@ export class ResourcesService {
         .eq('is_active', true);
 
       if (sbError) throw new Error(`getResourceCategories error: ${sbError.message}`);
-      
+
       // Get unique categories
       const uniqueCategories = [...new Set(categories?.map(item => item.category) || [])];
       return uniqueCategories;

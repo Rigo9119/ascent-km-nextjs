@@ -1,3 +1,4 @@
+'use client'
 import { Resource } from "@/types/resource";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ interface ResourcesPageProps {
 export default function ResourcesPageCmp({
   resources,
 }: ResourcesPageProps) {
-  // Get featured resources
+
   const featuredResources = resources.filter(resource => resource.badge === "featured");
 
   return (

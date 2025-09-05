@@ -7,25 +7,23 @@ const getPageData = async () => {
   const supabase = createSupabaseClient();
   const resourcesService = new ResourcesService(supabase);
 
-  const [resources, categories] = await Promise.all([
-    resourcesService.getAllResources(),
-    resourcesService.getResourceCategories(),
-  ]);
-
-  return {
-    resources,
-    categories,
-  };
+  try {
+    const resources = await resourcesService.getAllResources();
+    console.log('Fetched resources:', resources);
+    return { resources: resources || [] };
+  } catch (error) {
+    console.error('Error fetching resources:', error);
+    return { resources: [] };
+  }
 };
 
 export default async function ResourcesPage() {
-  const { resources, categories } = await getPageData();
+  const { resources } = await getPageData();
 
   return (
     <PageContainer>
       <ResourcesPageCmp 
-        resources={resources || []} 
-        categories={categories || []}
+        resources={resources} 
       />
     </PageContainer>
   );
