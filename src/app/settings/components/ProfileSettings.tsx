@@ -12,7 +12,7 @@ import { Save, Upload } from "lucide-react";
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import { toast } from "sonner";
-import { Interest, Preference } from "@/components/forms/onboarding-form";
+import { CommunityType } from "@/types/community-type";
 
 interface UserSettings {
   id: string;
@@ -38,15 +38,13 @@ interface UserSettings {
 
 interface ProfileSettingsProps {
   userSettings: UserSettings;
-  allPreferences: Preference[];
-  allInterests: Interest[];
+  allCommunityTypes: CommunityType[];
   userId: string;
 }
 
 export default function ProfileSettings({
   userSettings,
-  allPreferences,
-  allInterests,
+  allCommunityTypes,
   userId
 }: ProfileSettingsProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -63,13 +61,7 @@ export default function ProfileSettings({
     avatar_url: userSettings.avatar_url || ''
   });
 
-  const [selectedPreferences, setSelectedPreferences] = useState<string[]>(
-    userSettings.user_preferences?.map(up =>
-      typeof up === 'object' && 'preference_id' in up ? up.preference_id : up
-    ) || []
-  );
-
-  const [selectedInterests, setSelectedInterests] = useState<string[]>(
+  const [selectedCommunityTypes, setSelectedCommunityTypes] = useState<string[]>(
     userSettings.user_interests?.map(ui =>
       typeof ui === 'object' && 'interest_id' in ui ? ui.interest_id : ui
     ) || []
@@ -100,19 +92,11 @@ export default function ProfileSettings({
     }
   };
 
-  const handlePreferenceChange = (preferenceId: string, checked: boolean) => {
+  const handleCommunityTypeChange = (communityTypeId: string, checked: boolean) => {
     if (checked) {
-      setSelectedPreferences(prev => [...prev, preferenceId]);
+      setSelectedCommunityTypes(prev => [...prev, communityTypeId]);
     } else {
-      setSelectedPreferences(prev => prev.filter(id => id !== preferenceId));
-    }
-  };
-
-  const handleInterestChange = (interestId: string, checked: boolean) => {
-    if (checked) {
-      setSelectedInterests(prev => [...prev, interestId]);
-    } else {
-      setSelectedInterests(prev => prev.filter(id => id !== interestId));
+      setSelectedCommunityTypes(prev => prev.filter(id => id !== communityTypeId));
     }
   };
 
@@ -127,8 +111,7 @@ export default function ProfileSettings({
         body: JSON.stringify({
           userId,
           profileData: formData,
-          preferences: selectedPreferences,
-          interests: selectedInterests
+          communityTypes: selectedCommunityTypes
         }),
       });
 
@@ -280,49 +263,24 @@ export default function ProfileSettings({
         </CardContent>
       </Card>
 
-      {/* Preferences */}
+      {/* Community Types */}
       <Card>
         <CardHeader>
-          <CardTitle>Preferencias</CardTitle>
+          <CardTitle>Tipos de Comunidades de Interés</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {allPreferences.map((preference) => (
-              <div key={preference.id} className="flex items-center space-x-2">
+            {allCommunityTypes.map((communityType) => (
+              <div key={communityType.id} className="flex items-center space-x-2">
                 <Checkbox
-                  id={`pref-${preference.id}`}
-                  checked={selectedPreferences.includes(preference.id)}
+                  id={`community-${communityType.id}`}
+                  checked={selectedCommunityTypes.includes(communityType.id)}
                   onCheckedChange={(checked) =>
-                    handlePreferenceChange(preference.id, checked as boolean)
+                    handleCommunityTypeChange(communityType.id, checked as boolean)
                   }
                 />
-                <Label htmlFor={`pref-${preference.id}`} className="text-sm">
-                  {preference.name}
-                </Label>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Interests */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Intereses</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {allInterests.map((interest) => (
-              <div key={interest.id} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`interest-${interest.id}`}
-                  checked={selectedInterests.includes(interest.id)}
-                  onCheckedChange={(checked) =>
-                    handleInterestChange(interest.id, checked as boolean)
-                  }
-                />
-                <Label htmlFor={`interest-${interest.id}`} className="text-sm">
-                  {interest.name}
+                <Label htmlFor={`community-${communityType.id}`} className="text-sm">
+                  {communityType.name}
                 </Label>
               </div>
             ))}

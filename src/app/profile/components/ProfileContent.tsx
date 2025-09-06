@@ -7,16 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Edit, Mail, Phone, MapPin, Calendar, Globe, User as UserIcon } from "lucide-react";
-
-interface Preference {
-  id: number;
-  description: string | null;
-}
-
-interface Interest {
-  id: number;
-  description: string | null;
-}
+import { CommunityType } from "@/types/community-type";
 
 interface Profile {
   id: string;
@@ -29,8 +20,7 @@ interface Profile {
   country_code: string;
   city: string;
   country: string;
-  interests: number[];
-  preferences: number[];
+  interests: string[];
   social_links: Array<{ type: string; url: string }>;
   created_at: string;
   last_active: string;
@@ -39,20 +29,15 @@ interface Profile {
 interface ProfileContentProps {
   user: User;
   profile: Profile;
-  preferenceTypes: Preference[];
-  interestTypes: Interest[];
+  communityTypes: CommunityType[];
 }
 
-export default function ProfileContent({ user, profile, preferenceTypes, interestTypes }: ProfileContentProps) {
+export default function ProfileContent({ user, profile, communityTypes }: ProfileContentProps) {
   const [isEditing, setIsEditing] = useState(false);
 
-  // Get preference and interest descriptions by IDs
-  const userPreferences = preferenceTypes.filter(pref => 
-    profile.preferences?.includes(pref.id)
-  );
-  
-  const userInterests = interestTypes.filter(interest => 
-    profile.interests?.includes(interest.id)
+  // Get community types by IDs
+  const userCommunityTypes = communityTypes.filter(type => 
+    profile.interests?.includes(type.id)
   );
 
   // Format phone number with country code
@@ -144,43 +129,28 @@ export default function ProfileContent({ user, profile, preferenceTypes, interes
         </CardContent>
       </Card>
 
-      {/* Interests */}
-      {userInterests.length > 0 && (
+      {/* Community Types */}
+      {userCommunityTypes.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Intereses</CardTitle>
+            <CardTitle>Tipos de Comunidades de Interés</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {userInterests.map((interest) => (
+              {userCommunityTypes.map((communityType, index) => (
                 <Badge 
-                  key={interest.id} 
+                  key={communityType.id} 
                   variant="secondary"
-                  className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
+                  className={`
+                    ${index % 5 === 0 ? 'bg-blue-100 text-blue-800' : ''}
+                    ${index % 5 === 1 ? 'bg-green-100 text-green-800' : ''}
+                    ${index % 5 === 2 ? 'bg-purple-100 text-purple-800' : ''}
+                    ${index % 5 === 3 ? 'bg-orange-100 text-orange-800' : ''}
+                    ${index % 5 === 4 ? 'bg-pink-100 text-pink-800' : ''}
+                    hover:scale-105 transition-transform
+                  `}
                 >
-                  {interest.description}
-                </Badge>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Preferences */}
-      {userPreferences.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Preferencias</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {userPreferences.map((preference) => (
-                <Badge 
-                  key={preference.id} 
-                  variant="outline"
-                  className="border-emerald-200 text-emerald-700"
-                >
-                  {preference.description}
+                  {communityType.name}
                 </Badge>
               ))}
             </div>

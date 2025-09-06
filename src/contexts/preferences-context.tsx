@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { createSupabaseClient } from '@/lib/supabase/client'
 import { useAuth } from '@/hooks/use-auth'
 import { PreferencesService } from '@/services/preferences-service'
-import { UserPreferences, defaultPreferences } from '@/types/preferences'
+import { UserPreferences, defaultPreferences, Notifications, Privacy, UserPreferencesUpdate } from '@/types/preferences'
 
 interface PreferencesContextType {
   preferences: UserPreferences
@@ -12,9 +12,9 @@ interface PreferencesContextType {
   error: string | null
   updateTheme: (theme: UserPreferences['theme']) => Promise<boolean>
   updateNotification: (key: keyof UserPreferences['notifications'], value: boolean) => Promise<boolean>
-  updatePrivacySetting: (key: keyof UserPreferences['privacy'], value: any) => Promise<boolean>
+  updatePrivacySetting: (key: keyof UserPreferences['privacy'], value: UserPreferences['privacy'][keyof UserPreferences['privacy']]) => Promise<boolean>
   updateLanguage: (language: UserPreferences['language']) => Promise<boolean>
-  updatePreferences: (preferences: Partial<UserPreferences>) => Promise<boolean>
+  updatePreferences: (preferences: UserPreferencesUpdate) => Promise<boolean>
   refreshPreferences: () => Promise<void>
 }
 
@@ -45,10 +45,10 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     try {
       setIsLoading(true)
       setError(null)
-      
+
       const userPrefs = await preferencesService.getUserPreferences(user.id)
       setPreferences(userPrefs)
-      
+
       // Also save to localStorage for offline access
       localStorage.setItem('user-preferences', JSON.stringify(userPrefs))
     } catch (err) {
@@ -78,7 +78,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     setPreferences(newPrefs)
   }
 
-  const updatePreferences = async (updates: Partial<UserPreferences>): Promise<boolean> => {
+  const updatePreferences = async (updates: UserPreferencesUpdate): Promise<boolean> => {
     const newPreferences: UserPreferences = {
       ...preferences,
       ...updates,
@@ -122,20 +122,20 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   }
 
   const updateNotification = async (
-    key: keyof UserPreferences['notifications'], 
+    key: keyof UserPreferences['notifications'],
     value: boolean
   ): Promise<boolean> => {
     return updatePreferences({
-      notifications: { [key]: value } as Partial<UserPreferences['notifications']>
+      notifications: { [key]: value }
     })
   }
 
   const updatePrivacySetting = async (
     key: keyof UserPreferences['privacy'],
-    value: any
+    value: UserPreferences['privacy'][keyof UserPreferences['privacy']]
   ): Promise<boolean> => {
     return updatePreferences({
-      privacy: { [key]: value } as Partial<UserPreferences['privacy']>
+      privacy: { [key]: value }
     })
   }
 

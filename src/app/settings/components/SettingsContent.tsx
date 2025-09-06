@@ -15,7 +15,7 @@ import ProfileSettings from "./ProfileSettings";
 import NotificationSettings from "./NotificationSettings";
 import PrivacySettings from "./PrivacySettings";
 import AccountSettings from "./AccountSettings";
-import { Interest, Preference } from "@/components/forms/onboarding-form";
+import { CommunityType } from "@/types/community-type";
 
 interface UserSettings {
   id: string;
@@ -42,16 +42,14 @@ interface UserSettings {
 
 interface SettingsContentProps {
   userSettings: UserSettings;
-  allPreferences: Preference[];
-  allInterests: Interest[];
+  allCommunityTypes: CommunityType[];
   userId: string;
   userEmail: string;
 }
 
 export default function SettingsContent({
   userSettings,
-  allPreferences,
-  allInterests,
+  allCommunityTypes,
   userId,
   userEmail
 }: SettingsContentProps) {
@@ -176,8 +174,7 @@ export default function SettingsContent({
             <TabsContent value="profile" className="mt-0">
               <ProfileSettings
                 userSettings={userSettings}
-                allPreferences={allPreferences}
-                allInterests={allInterests}
+                allCommunityTypes={allCommunityTypes}
                 userId={userId}
               />
             </TabsContent>

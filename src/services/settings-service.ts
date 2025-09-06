@@ -1,4 +1,3 @@
-import { Preference } from '@/components/forms/onboarding-form';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 export class SettingsService {

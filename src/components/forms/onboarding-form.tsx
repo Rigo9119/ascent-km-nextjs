@@ -57,9 +57,7 @@ export default function OnboardingForm({ user, communityTypes }: OnboardingFormP
       last_active: "",
     },
     onSubmit: async ({ value }) => {
-      console.log('Form submission started with values:', value);
       try {
-        console.log('Step 1: Starting avatar processing...');
         let avatarPath = null;
 
         // Temporarily skip avatar upload due to timeout issues
@@ -67,9 +65,9 @@ export default function OnboardingForm({ user, communityTypes }: OnboardingFormP
           console.log('Step 2: Processing avatar upload...');
           try {
             const avatarBlob = dataURLtoBlob(value.avatar_url);
-            console.log('Step 3: Avatar blob created, uploading to storage...');
+
             //stores the avatar image on the avatars bucket and gets the path
-            
+
             // Create upload promise with timeout
             const uploadPromise = supabase.storage
               .from("user_avatars")
@@ -77,27 +75,28 @@ export default function OnboardingForm({ user, communityTypes }: OnboardingFormP
                 cacheControl: "3600",
                 upsert: true,
               });
-            
+
             // Create timeout promise
             const timeoutPromise = new Promise((_, reject) => {
               setTimeout(() => reject(new Error('Upload timeout after 10 seconds')), 10000);
             });
-            
-            const { data: avatarUrl, error: avartUploadError } = await Promise.race([
+
+            const result = await Promise.race([
               uploadPromise,
               timeoutPromise
-            ]);
+            ]) as { data: { path: string } | null; error: Error | null };
+
+            const { data: avatarUrl, error: avartUploadError } = result;
             console.log('Step 4: Upload response received:', { avatarUrl, avartUploadError });
             if (avartUploadError) {
-              throw new Error(avartUploadError.message);
-            } else {
-              const { data } = supabase.storage.from("user_avatars").getPublicUrl(avatarUrl.path);
+              throw new Error(avartUploadError?.message || 'Upload failed');
+            } else if (avatarUrl?.path) {
+              const { data } = supabase.storage.from("user_avatars").getPublicUrl(avatarUrl?.path as string);
               avatarPath = data.publicUrl;
               console.log('Step 5: Avatar URL obtained:', avatarPath);
             }
           } catch (error) {
             console.error("Avatar upload error:", error);
-            console.log('Step 5: Avatar upload failed, continuing without avatar...');
             toast.error("Error al subir el avatar, continuando sin foto de perfil", {
               style: {
                 background: '#fef2f2',
@@ -111,7 +110,6 @@ export default function OnboardingForm({ user, communityTypes }: OnboardingFormP
           console.log('Step 2: No avatar to upload, skipping...');
         }
 
-        console.log('Step 6: Creating profile data...');
         const profileData = {
           id: user.id,
           username: value.username,
@@ -130,7 +128,6 @@ export default function OnboardingForm({ user, communityTypes }: OnboardingFormP
           last_active: new Date().toISOString(),
         };
 
-        console.log('Step 7: Inserting profile into database...');
         const { error: updateUserProfileError } = await supabase
           .from("profiles")
           .upsert(profileData, { onConflict: "id" });
@@ -138,9 +135,7 @@ export default function OnboardingForm({ user, communityTypes }: OnboardingFormP
         if (updateUserProfileError) {
           throw new Error(updateUserProfileError.message);
         }
-        console.log("profileData", profileData);
-        console.log('Profile created successfully, redirecting...');
-        // Success toast
+
         toast.success("¡Perfil creado exitosamente! ¡Bienvenido a la plataforma!", {
           style: {
             background: '#ecfdf5',
@@ -149,9 +144,7 @@ export default function OnboardingForm({ user, communityTypes }: OnboardingFormP
           },
         });
 
-        // Redirect after a short delay to show the toast
         setTimeout(() => {
-          console.log('Attempting redirect to home...');
           router.push("/");
         }, 1500);
 
@@ -164,7 +157,6 @@ export default function OnboardingForm({ user, communityTypes }: OnboardingFormP
             color: '#dc2626',
           },
         });
-        console.error('Profile creation error:', error);
       }
     },
   });
@@ -354,11 +346,10 @@ export default function OnboardingForm({ user, communityTypes }: OnboardingFormP
                   key={theme.value}
                   type="button"
                   onClick={() => setUserPreferences(prev => ({ ...prev, theme: theme.value as UserPreferences['theme'] }))}
-                  className={`p-3 rounded-lg border text-sm font-medium transition-colors ${
-                    userPreferences.theme === theme.value
-                      ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
-                      : 'border-gray-200 hover:bg-gray-50'
-                  }`}
+                  className={`p-3 rounded-lg border text-sm font-medium transition-colors ${userPreferences.theme === theme.value
+                    ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                    : 'border-gray-200 hover:bg-gray-50'
+                    }`}
                 >
                   {theme.label}
                 </button>
@@ -382,7 +373,7 @@ export default function OnboardingForm({ user, communityTypes }: OnboardingFormP
                   </label>
                   <Switch
                     checked={userPreferences.notifications[notification.key as keyof UserPreferences['notifications']]}
-                    onCheckedChange={(checked) => 
+                    onCheckedChange={(checked) =>
                       setUserPreferences(prev => ({
                         ...prev,
                         notifications: {
@@ -413,32 +404,31 @@ export default function OnboardingForm({ user, communityTypes }: OnboardingFormP
                     <button
                       key={visibility.value}
                       type="button"
-                      onClick={() => setUserPreferences(prev => ({ 
-                        ...prev, 
-                        privacy: { 
-                          ...prev.privacy, 
-                          profile_visibility: visibility.value as "public" | "private" 
-                        } 
+                      onClick={() => setUserPreferences(prev => ({
+                        ...prev,
+                        privacy: {
+                          ...prev.privacy,
+                          profile_visibility: visibility.value as "public" | "private"
+                        }
                       }))}
-                      className={`p-2 rounded-lg border text-sm transition-colors ${
-                        userPreferences.privacy.profile_visibility === visibility.value
-                          ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
-                          : 'border-gray-200 hover:bg-gray-50'
-                      }`}
+                      className={`p-2 rounded-lg border text-sm transition-colors ${userPreferences.privacy.profile_visibility === visibility.value
+                        ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                        : 'border-gray-200 hover:bg-gray-50'
+                        }`}
                     >
                       {visibility.label}
                     </button>
                   ))}
                 </div>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <label className="text-sm text-gray-700 dark:text-gray-300">
                   Mostrar email en el perfil
                 </label>
                 <Switch
                   checked={userPreferences.privacy.show_email}
-                  onCheckedChange={(checked) => 
+                  onCheckedChange={(checked) =>
                     setUserPreferences(prev => ({
                       ...prev,
                       privacy: {
@@ -464,11 +454,10 @@ export default function OnboardingForm({ user, communityTypes }: OnboardingFormP
                   key={language.value}
                   type="button"
                   onClick={() => setUserPreferences(prev => ({ ...prev, language: language.value as UserPreferences['language'] }))}
-                  className={`p-3 rounded-lg border text-sm font-medium transition-colors ${
-                    userPreferences.language === language.value
-                      ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
-                      : 'border-gray-200 hover:bg-gray-50'
-                  }`}
+                  className={`p-3 rounded-lg border text-sm font-medium transition-colors ${userPreferences.language === language.value
+                    ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                    : 'border-gray-200 hover:bg-gray-50'
+                    }`}
                 >
                   {language.label}
                 </button>

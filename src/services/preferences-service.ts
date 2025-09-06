@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { UserPreferences } from '@/types/preferences';
+import type { UserPreferences, UserPreferencesUpdate } from '@/types/preferences';
 import { defaultPreferences } from '@/types/preferences';
 
 export class PreferencesService {
@@ -31,7 +31,7 @@ export class PreferencesService {
 
   async updateUserPreferences(
     userId: string, 
-    preferences: Partial<UserPreferences>
+    preferences: UserPreferencesUpdate
   ): Promise<{ success: boolean; error?: string }> {
     try {
       // First get current preferences
@@ -92,7 +92,7 @@ export class PreferencesService {
   async updatePrivacySetting(
     userId: string,
     key: keyof UserPreferences['privacy'],
-    value: any
+    value: UserPreferences['privacy'][keyof UserPreferences['privacy']]
   ): Promise<boolean> {
     const result = await this.updateUserPreferences(userId, {
       privacy: { [key]: value } as Partial<UserPreferences['privacy']>

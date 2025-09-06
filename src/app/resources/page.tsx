@@ -9,7 +9,6 @@ const getPageData = async () => {
 
   try {
     const resources = await resourcesService.getAllResources();
-    console.log('Fetched resources:', resources);
     return { resources: resources || [] };
   } catch (error) {
     console.error('Error fetching resources:', error);
@@ -22,8 +21,8 @@ export default async function ResourcesPage() {
 
   return (
     <PageContainer>
-      <ResourcesPageCmp 
-        resources={resources} 
+      <ResourcesPageCmp
+        resources={resources}
       />
     </PageContainer>
   );
