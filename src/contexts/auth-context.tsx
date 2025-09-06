@@ -4,6 +4,7 @@ import { createContext, useEffect, useState, ReactNode } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { createSupabaseClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { translateAuthError } from '@/lib/utils/translate-auth-errors'
 
 interface AuthState {
   user: User | null
@@ -37,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { data: { session }, error } = await supabase.auth.getSession()
 
       if (error) {
-        setError(error.message)
+        setError(translateAuthError(error.message))
       } else {
         setSession(session)
         setUser(session?.user ?? null)
@@ -110,7 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) throw error
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred'
-      setError(message)
+      setError(translateAuthError(message))
       setIsLoading(false)
     }
   }
@@ -128,7 +129,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) throw error
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred'
-      setError(message)
+      setError(translateAuthError(message))
     } finally {
       setIsLoading(false)
     }
@@ -155,13 +156,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Check if email confirmation is required
       if (data.user && !data.session) {
         // User was created but needs to confirm email
-        setError('Please check your email and click the confirmation link to complete signup.')
+        setError(translateAuthError('Please check your email and click the confirmation link to complete signup.'))
         return
       }
 
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred'
-      setError(message)
+      setError(translateAuthError(message))
     } finally {
       setIsLoading(false)
     }
@@ -193,7 +194,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred'
-      setError(message)
+      setError(translateAuthError(message))
       
       // Force clear state and navigate anyway
       setUser(null)

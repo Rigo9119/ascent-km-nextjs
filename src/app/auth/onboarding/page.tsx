@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { User } from "@supabase/supabase-js";
 import OnboardingPageContainer from "./components/OnboardingPageContainer";
-import { Interest, Preference } from "@/components/forms/onboarding-form";
+import { CommunitiesService } from "@/services/communities-service";
+import { CommunityType } from "@/types/community-type";
 
 
 export default async function OnboardingPage() {
@@ -16,12 +17,21 @@ export default async function OnboardingPage() {
     redirect("/auth");
   }
 
+  // Fetch community types
+  let communityTypes: CommunityType[] = [];
+  try {
+    const communitiesService = new CommunitiesService(supabase);
+    communityTypes = await communitiesService.getAllCommunityTypes() || [];
+  } catch (error) {
+    console.error('Error fetching community types:', error);
+    communityTypes = [];
+  }
+
   return (
     <PageContainer>
       <OnboardingPageContainer
         user={user as unknown as User}
-        preferenceTypes={[] as Preference[]}
-        interestsTypes={[] as Interest[]}
+        communityTypes={communityTypes}
       />
     </PageContainer>
   );

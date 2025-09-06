@@ -5,39 +5,22 @@ import { AnyFieldApi, useForm } from "@tanstack/react-form";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import FormInput from "./form-components/form-input";
-import FormFileInput from "./form-components/form-file-input";
-import { X } from "lucide-react";
+import FormAvatarInput from "./form-components/form-avatar-input";
+import FormCommunityTypesSelect from "./form-components/form-community-types-select";
 import { useState, ChangeEvent } from "react";
 import FormTextarea from "./form-components/form-textarea";
 import FormPhoneInput from "./form-components/form-phone-input";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-
-export type Preference = {
-  id: string;
-  name?: string | undefined;
-  description: string | null;
-};
-
-export type Interest = {
-  id: string;
-  name: string;
-  description: string | null;
-};
+import { defaultPreferences, UserPreferences } from "@/types/preferences";
+import { CommunityType } from "@/types/community-type";
 
 interface OnboardingFormProps {
   user: User;
-  preferenceTypes: Preference[];
-  interestsTypes: Interest[];
+  communityTypes: CommunityType[];
 }
 
-const socialTypes = [
-  { type: "instagram", label: "Instagram", placeholder: "https://instagram.com/yourprofile" },
-  { type: "facebook", label: "Facebook", placeholder: "https://facebook.com/yourprofile" },
-  { type: "kakao", label: "Kakao", placeholder: "https://open.kakao.com/yourprofile" },
-  { type: "twitter", label: "Twitter", placeholder: "https://twitter.com/yourprofile" },
-];
 
 export type LocationValue = { city: string; country: string };
 
@@ -53,13 +36,12 @@ export function dataURLtoBlob(dataurl: string) {
   return new Blob([u8arr], { type: mime });
 }
 
-export default function OnboardingForm({ user, preferenceTypes, interestsTypes }: OnboardingFormProps) {
+export default function OnboardingForm({ user, communityTypes }: OnboardingFormProps) {
   const router = useRouter();
   const supabase = createSupabaseClient();
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-  const [socialLinks, setSocialLinks] = useState<Array<{ type: string; url: string }>>([]);
-  const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
+  const [selectedCommunityTypes, setSelectedCommunityTypes] = useState<string[]>([]);
   const [phoneCountryCode, setPhoneCountryCode] = useState<string>("");
+  const [userPreferences, setUserPreferences] = useState<UserPreferences>(defaultPreferences);
   const onboardingForm = useForm({
     defaultValues: {
       username: "",
@@ -72,8 +54,6 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
       interests: [],
       bio: "",
       location: {} as LocationValue,
-      social_links: [],
-      preferences: [],
       last_active: "",
     },
     onSubmit: async ({ value }) => {
@@ -142,12 +122,11 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
           phone_number: value.phone_number,
           email: user.email,
           country_code: phoneCountryCode || value.country_code || null,
-          interests: selectedInterests,
+          interests: selectedCommunityTypes,
           bio: value.bio,
           city: value.location.city,
           country: value.location.country,
-          social_links: socialLinks,
-          preferences: selectedPreferences,
+          preferences: userPreferences,
           last_active: new Date().toISOString(),
         };
 
@@ -196,27 +175,6 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
     onboardingForm.handleSubmit();
   };
 
-  const toggleInterest = (interest: Interest) => {
-    setSelectedInterests((prev) =>
-      prev.includes(interest.id) ? prev.filter((id) => id !== interest.id) : [...prev, interest.id],
-    );
-  };
-
-  const togglePreference = (preference: Preference) => {
-    setSelectedPreferences((prev) =>
-      prev.includes(preference.id) ? prev.filter((id) => id !== preference.id) : [...prev, preference.id],
-    );
-  };
-
-  const addSocialLink = (type: string, url: string) => {
-    if (url.trim()) {
-      setSocialLinks((prev) => [...prev.filter((link) => link.type !== type), { type, url: url.trim() }]);
-    }
-  };
-
-  const removeSocialLink = (type: string) => {
-    setSocialLinks((prev) => prev.filter((link) => link.type !== type));
-  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -228,9 +186,9 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
         <CardContent>
           <onboardingForm.Field name="avatar_url">
             {(field: AnyFieldApi) => (
-              <FormFileInput
+              <FormAvatarInput
                 field={field}
-                label="Avatar"
+                label="Foto de Perfil"
                 id={field.name}
                 name={field.name}
                 src={field.state.value || "?"}
@@ -358,100 +316,168 @@ export default function OnboardingForm({ user, preferenceTypes, interestsTypes }
         </CardContent>
       </Card>
 
-      {/* Interests */}
+      {/* Community Types */}
       <Card>
         <CardHeader>
-          <CardTitle>Intereses</CardTitle>
-          <p className="text-sm text-gray-600">Selecciona tus intereses para ayudarnos a personalizar tu experiencia</p>
+          <CardTitle>Tipos de Comunidades</CardTitle>
+          <p className="text-sm text-gray-600">Selecciona los tipos de comunidades que te interesan</p>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {interestsTypes.map((interest: Interest, index: number) => (
-              <Badge
-                key={index}
-                variant={selectedInterests.includes(interest.id) ? "default" : "outline"}
-                className={`cursor-pointer transition-colors ${selectedInterests.includes(interest.id)
-                  ? "bg-emerald-500 hover:bg-emerald-600"
-                  : "hover:bg-emerald-50"
-                  }`}
-                onClick={() => toggleInterest(interest)}
-              >
-                {interest.description}
-              </Badge>
-            ))}
-          </div>
+          <FormCommunityTypesSelect
+            field={{} as AnyFieldApi}
+            label=""
+            communityTypes={communityTypes}
+            selectedIds={selectedCommunityTypes}
+            onChange={setSelectedCommunityTypes}
+          />
         </CardContent>
       </Card>
 
-      {/* Social Links */}
+
+      {/* App Preferences */}
       <Card>
         <CardHeader>
-          <CardTitle>Redes Sociales</CardTitle>
-          <p className="text-sm text-gray-600">Conecta tus perfiles de redes sociales (opcional)</p>
+          <CardTitle>Preferencias de la Aplicación</CardTitle>
+          <p className="text-sm text-gray-600">Configura cómo quieres usar la aplicación</p>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {socialTypes.map((social) => {
-            const existingLink = socialLinks.find((link) => link.type === social.type);
-            return (
-              <div key={social.type} className="flex items-center gap-2">
-                <div className="flex-1">
-                  <FormInput
-                    field={{} as AnyFieldApi}
-                    label={social.label}
-                    name={social.type}
-                    type="url"
-                    placeholder={social.placeholder}
-                    value={existingLink?.url || ""}
-                    onChange={(e) => {
-                      if (e.target.value.trim()) {
-                        addSocialLink(social.type, e.target.value);
-                      } else {
-                        removeSocialLink(social.type);
-                      }
-                    }}
+        <CardContent className="space-y-6">
+          {/* Theme Preference */}
+          <div className="space-y-3">
+            <h4 className="font-medium text-gray-900 dark:text-gray-100">Tema</h4>
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { value: "light", label: "Claro" },
+                { value: "dark", label: "Oscuro" },
+                { value: "system", label: "Sistema" }
+              ].map((theme) => (
+                <button
+                  key={theme.value}
+                  type="button"
+                  onClick={() => setUserPreferences(prev => ({ ...prev, theme: theme.value as UserPreferences['theme'] }))}
+                  className={`p-3 rounded-lg border text-sm font-medium transition-colors ${
+                    userPreferences.theme === theme.value
+                      ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                      : 'border-gray-200 hover:bg-gray-50'
+                  }`}
+                >
+                  {theme.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Notification Preferences */}
+          <div className="space-y-3">
+            <h4 className="font-medium text-gray-900 dark:text-gray-100">Notificaciones</h4>
+            <div className="space-y-3">
+              {[
+                { key: "email", label: "Notificaciones por email" },
+                { key: "community_updates", label: "Actualizaciones de comunidades" },
+                { key: "new_discussions", label: "Nuevas discusiones" },
+                { key: "new_comments", label: "Nuevos comentarios" }
+              ].map((notification) => (
+                <div key={notification.key} className="flex items-center justify-between">
+                  <label className="text-sm text-gray-700 dark:text-gray-300">
+                    {notification.label}
+                  </label>
+                  <Switch
+                    checked={userPreferences.notifications[notification.key as keyof UserPreferences['notifications']]}
+                    onCheckedChange={(checked) => 
+                      setUserPreferences(prev => ({
+                        ...prev,
+                        notifications: {
+                          ...prev.notifications,
+                          [notification.key]: checked
+                        }
+                      }))
+                    }
                   />
                 </div>
-                {existingLink && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => removeSocialLink(social.type)}
-                    className="mt-6"
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                )}
-              </div>
-            );
-          })}
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </div>
 
-      {/* Preferences */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Preferencias</CardTitle>
-          <p className="text-sm text-gray-600">Selecciona tus preferencias para personalizar tu experiencia</p>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {preferenceTypes.map((preference) => (
-              <Badge
-                key={preference.id}
-                variant={selectedPreferences.includes(preference.id) ? "default" : "outline"}
-                className={`cursor-pointer transition-colors ${selectedPreferences.includes(preference.id)
-                  ? "bg-emerald-500 hover:bg-emerald-600"
-                  : "hover:bg-emerald-50"
+          {/* Privacy Preferences */}
+          <div className="space-y-3">
+            <h4 className="font-medium text-gray-900 dark:text-gray-100">Privacidad</h4>
+            <div className="space-y-3">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Visibilidad del perfil
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { value: "public", label: "Público" },
+                    { value: "private", label: "Privado" }
+                  ].map((visibility) => (
+                    <button
+                      key={visibility.value}
+                      type="button"
+                      onClick={() => setUserPreferences(prev => ({ 
+                        ...prev, 
+                        privacy: { 
+                          ...prev.privacy, 
+                          profile_visibility: visibility.value as "public" | "private" 
+                        } 
+                      }))}
+                      className={`p-2 rounded-lg border text-sm transition-colors ${
+                        userPreferences.privacy.profile_visibility === visibility.value
+                          ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                          : 'border-gray-200 hover:bg-gray-50'
+                      }`}
+                    >
+                      {visibility.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <label className="text-sm text-gray-700 dark:text-gray-300">
+                  Mostrar email en el perfil
+                </label>
+                <Switch
+                  checked={userPreferences.privacy.show_email}
+                  onCheckedChange={(checked) => 
+                    setUserPreferences(prev => ({
+                      ...prev,
+                      privacy: {
+                        ...prev.privacy,
+                        show_email: checked
+                      }
+                    }))
+                  }
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Language Preference */}
+          <div className="space-y-3">
+            <h4 className="font-medium text-gray-900 dark:text-gray-100">Idioma</h4>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { value: "es", label: "Español" },
+                { value: "en", label: "English" }
+              ].map((language) => (
+                <button
+                  key={language.value}
+                  type="button"
+                  onClick={() => setUserPreferences(prev => ({ ...prev, language: language.value as UserPreferences['language'] }))}
+                  className={`p-3 rounded-lg border text-sm font-medium transition-colors ${
+                    userPreferences.language === language.value
+                      ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                      : 'border-gray-200 hover:bg-gray-50'
                   }`}
-                onClick={() => togglePreference(preference)}
-              >
-                {preference.description}
-              </Badge>
-            ))}
+                >
+                  {language.label}
+                </button>
+              ))}
+            </div>
           </div>
         </CardContent>
       </Card>
+
 
       {/* Submit Button */}
       <onboardingForm.Subscribe>
