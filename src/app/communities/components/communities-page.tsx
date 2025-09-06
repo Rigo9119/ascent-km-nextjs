@@ -13,6 +13,7 @@ import { AnyFieldApi } from "@tanstack/react-form";
 import { User } from "@supabase/supabase-js";
 import { CommunityCard } from "./community-card";
 import { CommunityRow } from "./community-row";
+import Link from "next/link";
 
 export type FilterState = {
   search: string;
@@ -168,9 +169,13 @@ export default function CommunitiesPageCmp({
 
           <div className="bg-white dark:bg-black rounded-lg border dark:border-gray-800">
             {filteredCommunities.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                No se encontraron comunidades que coincidan con tus criterios.
-              </div>
+              <p className="text-center py-8 px-4 text-muted-foreground">
+                No se encontraron comunidades que coincidan con tus criterios. &nbsp;
+                <Link href={'/auth?mode=login'} className='underline text-emerald-500'>
+                  Únete a la aplicación
+                </Link>
+                &nbsp; para crear una comunidad y compartir contenido.
+              </p>
             ) : (
               filteredCommunities.map((community, index) => (
                 <CommunityRow

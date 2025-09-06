@@ -54,7 +54,7 @@ export default function MenuItems({ menuItems }: MenuItemsProps) {
               <SidebarMenuButton asChild>
                 <button
                   className={isActive(item.url)
-                    ? 'flex w-full items-center justify-between gap-2 rounded border-2 border-emerald-500 px-2 py-1 font-semibold text-emerald-600'
+                    ? 'flex w-full items-center justify-between gap-2 rounded px-2 py-1 font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950'
                     : 'flex w-full items-center justify-between gap-2 rounded px-2 py-1 transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-950 hover:text-emerald-600'}
                   onClick={() => toggleExpanded(item.title)}
                 >
@@ -76,7 +76,7 @@ export default function MenuItems({ menuItems }: MenuItemsProps) {
                       <Link
                         href={item.url}
                         className={pathname === item.url
-                          ? 'flex items-center gap-2 rounded border-2 border-emerald-500 px-2 py-1 text-sm font-semibold text-emerald-600'
+                          ? 'flex items-center gap-2 rounded px-2 py-1 text-sm font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950'
                           : 'flex items-center gap-2 rounded px-2 py-1 text-sm transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-950 hover:text-emerald-600'}
                       >
                         <span>All {item.title}</span>
@@ -91,7 +91,7 @@ export default function MenuItems({ menuItems }: MenuItemsProps) {
                         <Link
                           href={subitem.url}
                           className={isActive(subitem.url)
-                            ? 'flex items-center gap-2 rounded border-2 border-emerald-500 px-2 py-1 text-sm font-semibold text-emerald-600'
+                            ? 'flex items-center gap-2 rounded px-2 py-1 text-sm font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950'
                             : 'flex items-center gap-2 rounded px-2 py-1 text-sm transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-950 hover:text-emerald-600'}
                         >
                           <subitem.icon className="h-3 w-3 stroke-2" />
@@ -109,7 +109,7 @@ export default function MenuItems({ menuItems }: MenuItemsProps) {
               <Link
                 href={item.url}
                 className={isActive(item.url)
-                  ? 'flex items-center gap-2 rounded border-2 border-emerald-500 px-2 py-1 font-semibold text-emerald-600'
+                  ? 'flex items-center gap-2 rounded px-2 py-1 font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950'
                   : 'flex items-center gap-2 rounded px-2 py-1 transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-950 hover:text-emerald-600'}
               >
                 <item.icon className="h-4 w-4 stroke-2" />
