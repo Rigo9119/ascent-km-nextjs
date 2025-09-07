@@ -52,7 +52,7 @@ export default function CreateCommunityForm({ userId, onCancel }: CreateCommunit
       long_description: "",
       community_type_id: "",
       is_public: true,
-      organizer_id: userId,
+      admin_id: userId,
       tags: [] as string[],
       rules: [] as string[],
       created_at: new Date().toISOString(),

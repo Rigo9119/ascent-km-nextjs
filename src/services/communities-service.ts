@@ -1,3 +1,4 @@
+import { Community } from '@/types/community';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 export class CommunitiesService {
@@ -86,7 +87,7 @@ export class CommunitiesService {
       const { data: userCommunities, error: sbError } = await this.supabase
         .from('communities')
         .select('*')
-        .eq('organizer_id', userId)
+        .eq('admin_id', userId)
         .order('created_at', { ascending: false });
 
       if (sbError) throw new Error(`user communities error: ${sbError.message}`);
@@ -97,7 +98,7 @@ export class CommunitiesService {
     }
   }
 
-  async createCommunity(communityData: any) {
+  async createCommunity(communityData: Community) {
     console.log('communityData', communityData)
     try {
       // Clean the data - convert empty strings to null for UUID fields
@@ -115,20 +116,34 @@ export class CommunitiesService {
       if (sbError) throw new Error(`community error: ${sbError.message}`);
 
       // Automatically add the creator as a member of the community
-      if (community && communityData.organizer_id) {
-        const { error: memberError } = await this.supabase
+      if (community && communityData.admin_id) {
+        console.log('Adding creator as member:', {
+          community_id: community.id,
+          user_id: communityData.admin_id,
+          role: 'organizer'
+        });
+
+        const { data: memberData, error: memberError } = await this.supabase
           .from('community_members')
           .insert({
             community_id: community.id,
-            user_id: communityData.organizer_id,
+            user_id: communityData.admin_id,
             joined_at: new Date().toISOString(),
-            role: 'organizer'
-          });
+            role: 'admin'
+          })
+          .select();
 
         if (memberError) {
           console.error('Error adding creator as member:', memberError);
           // Don't throw here, community creation succeeded
+        } else {
+          console.log('Successfully added creator as member:', memberData);
         }
+      } else {
+        console.log('Skipping member addition:', {
+          hasCommunity: !!community,
+          hasAdminId: !!communityData.admin_id
+        });
       }
 
       return community;

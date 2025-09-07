@@ -16,13 +16,13 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Check if current user is the organizer
+    // Check if current user is the admin
     const community = await communitiesService.getCommunityById(communityId);
-    if (community.organizer_id !== user.id) {
+    if (community.admin_id !== user.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // Prevent organizer from removing themselves
+    // Prevent admin from removing themselves
     if (userId === user.id) {
       return NextResponse.json({ error: 'Cannot remove yourself' }, { status: 400 });
     }

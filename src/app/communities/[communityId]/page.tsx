@@ -6,6 +6,9 @@ import CommunityHeader from '@/components/communities/community-header';
 import CommunityTabs from '@/components/communities/community-tabs';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { PageContainer } from '@/components/page-container';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Plus, MessageSquare } from 'lucide-react';
 
 interface CommunityPageProps {
   params: Promise<{

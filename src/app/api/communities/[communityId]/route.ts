@@ -36,7 +36,7 @@ export async function PUT(
 
     // Check if user is the organizer
     const community = await communitiesService.getCommunityById(communityId);
-    if (community.organizer_id !== user.id) {
+    if (community.admin_id !== user.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
@@ -82,7 +82,7 @@ export async function DELETE(
 
     // Check if user is the organizer
     const community = await communitiesService.getCommunityById(communityId);
-    if (community.organizer_id !== user.id) {
+    if (community.admin_id !== user.id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 

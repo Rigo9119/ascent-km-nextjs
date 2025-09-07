@@ -37,8 +37,8 @@ export default async function CommunityManagePage({ params }: CommunityManagePag
   try {
     const community = await communitiesService.getCommunityById(communityId);
     
-    // Check if user is the organizer/creator
-    if (community.organizer_id !== user.id) {
+    // Check if user is the admin/creator
+    if (community.admin_id !== user.id) {
       redirect(`/communities/${communityId}`);
     }
 

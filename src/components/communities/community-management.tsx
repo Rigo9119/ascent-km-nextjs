@@ -238,9 +238,9 @@ export default function CommunityManagement({
                         <p className="text-sm text-gray-500">@{member.profiles?.username}</p>
                       </div>
                       {member.role && (
-                        <Badge variant={member.role === 'organizer' ? 'default' : 'secondary'}>
+                        <Badge variant={member.role === 'admin' ? 'default' : 'secondary'}>
                           <Shield className="w-3 h-3 mr-1" />
-                          {member.role === 'organizer' ? 'organizador' : member.role}
+                          {member.role === 'admin' ? 'administrador' : member.role}
                         </Badge>
                       )}
                     </div>

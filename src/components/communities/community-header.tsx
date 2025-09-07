@@ -104,7 +104,7 @@ export default function CommunityHeader({
     }
   };
 
-  const isOwner = currentUser?.id === community.organizer_id;
+  const isOwner = currentUser?.id === community.admin_id;
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">

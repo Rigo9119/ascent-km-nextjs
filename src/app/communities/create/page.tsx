@@ -26,7 +26,7 @@ export default async function CreateCommunityPage() {
     data: { user },
   } = await supabase.auth.getUser();
   const { profile, communityTypes } = await getCreateCommunityData(supabase, user?.id || "");
-  console.log('communityTypes', communityTypes)
+
   return (
     <PageContainer>
       <CreateCommunityCmp user={user as unknown as User} profile={profile} communityTypes={communityTypes} />
