@@ -50,10 +50,6 @@ export default function CreateCommunityForm({ userId, onCancel }: CreateCommunit
       name: "",
       description: "",
       long_description: "",
-      website: "",
-      location: "",
-      contact_email: "",
-      contact_phone: "",
       community_type_id: "",
       is_public: true,
       organizer_id: userId,
@@ -66,8 +62,6 @@ export default function CreateCommunityForm({ userId, onCancel }: CreateCommunit
       setIsSubmitting(true);
 
       try {
-        console.log('Submitting community data:', value);
-
         const response = await fetch('/api/communities', {
           method: 'POST',
           headers: {
@@ -78,12 +72,11 @@ export default function CreateCommunityForm({ userId, onCancel }: CreateCommunit
 
         if (!response.ok) {
           const errorData = await response.json();
-          console.error('API Error Response:', errorData);
+
           throw new Error(errorData.error || 'Failed to create community');
         }
 
         const result = await response.json();
-        console.log('Community created successfully:', result);
 
         toast.success('¡Comunidad creada exitosamente!', {
           style: { background: '#10b981', color: 'white' }
@@ -214,74 +207,6 @@ export default function CreateCommunityForm({ userId, onCancel }: CreateCommunit
                   value={field.state.value}
                   name={field.name}
                   rows={6}
-                  onChange={(event) => field.handleChange(event.target.value)}
-                  onBlur={field.handleBlur}
-                />
-              )}
-            </createCommunityForm.Field>
-
-            <createCommunityForm.Field name="location">
-              {(field) => (
-                <FormInput
-                  field={field}
-                  label="Ubicación"
-                  placeholder="Ciudad, región o ubicación de la comunidad"
-                  name={field.name}
-                  value={field.state.value}
-                  type="text"
-                  onChange={(event) => field.handleChange(event.target.value)}
-                  onBlur={field.handleBlur}
-                />
-              )}
-            </createCommunityForm.Field>
-
-            <createCommunityForm.Field name="website">
-              {(field) => (
-                <FormInput
-                  field={field}
-                  label="Sitio Web"
-                  placeholder="https://ejemplo.com"
-                  name={field.name}
-                  value={field.state.value}
-                  type="url"
-                  onChange={(event) => field.handleChange(event.target.value)}
-                  onBlur={field.handleBlur}
-                />
-              )}
-            </createCommunityForm.Field>
-          </CardContent>
-        </Card>
-
-        {/* Contact Information */}
-        <Card className="bg-white dark:bg-black border-gray-200 dark:border-gray-800">
-          <CardHeader>
-            <CardTitle className="text-gray-900 dark:text-gray-100">Información de Contacto</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <createCommunityForm.Field name="contact_email">
-              {(field) => (
-                <FormInput
-                  field={field}
-                  label="Email de Contacto"
-                  placeholder="contacto@ejemplo.com"
-                  name={field.name}
-                  value={field.state.value}
-                  type="email"
-                  onChange={(event) => field.handleChange(event.target.value)}
-                  onBlur={field.handleBlur}
-                />
-              )}
-            </createCommunityForm.Field>
-
-            <createCommunityForm.Field name="contact_phone">
-              {(field) => (
-                <FormInput
-                  field={field}
-                  label="Teléfono de Contacto"
-                  placeholder="+1 234 567 8900"
-                  name={field.name}
-                  value={field.state.value}
-                  type="tel"
                   onChange={(event) => field.handleChange(event.target.value)}
                   onBlur={field.handleBlur}
                 />

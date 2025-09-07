@@ -1,32 +1,35 @@
-'use client'
-
 import { PageContainer } from "@/components/page-container";
-import { useAuth } from "@/hooks/use-auth";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import CreateCommunityForm from "@/components/forms/create-community-form";
+import { CreateCommunityCmp } from "./components/create-community-cmp";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { SupabaseClient, User } from "@supabase/supabase-js";
+import { CommunitiesService } from "@/services/communities-service";
+import { UserService } from "@/services/user-service";
 
-export default function CreateCommunityPage() {
-  const { user, isLoading } = useAuth();
-  const router = useRouter();
+async function getCreateCommunityData(supabase: SupabaseClient, userId: string) {
+  const userService = new UserService(supabase);
+  const communitiesService = new CommunitiesService(supabase);
 
-  useEffect(() => {
-    if (!isLoading && !user) {
-      router.push('/auth');
-    }
-  }, [user, isLoading, router]);
+  const [profile, communityTypes] = await Promise.all([
+    userService.getUserProfile(userId),
+    communitiesService.getAllCommunityTypes(),
+  ]);
 
-  if (isLoading) {
-    return <div>Cargando...</div>;
-  }
+  return {
+    profile,
+    communityTypes,
+  };
+}
 
-  if (!user) {
-    return null;
-  }
-
+export default async function CreateCommunityPage() {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { profile, communityTypes } = await getCreateCommunityData(supabase, user?.id || "");
+  console.log('communityTypes', communityTypes)
   return (
     <PageContainer>
-      <CreateCommunityForm userId={user.id} />
+      <CreateCommunityCmp user={user as unknown as User} profile={profile} communityTypes={communityTypes} />
     </PageContainer>
   );
 }

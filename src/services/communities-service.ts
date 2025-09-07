@@ -98,6 +98,7 @@ export class CommunitiesService {
   }
 
   async createCommunity(communityData: unknown) {
+    console.log('communityData', communityData)
     try {
       const { data: community, error: sbError } = await this.supabase
         .from('communities')
