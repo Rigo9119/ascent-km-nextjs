@@ -45,7 +45,8 @@ export function CommunityCard({
     }
   };
 
-  const formattedLocation = formatLocation(community.location);
+  // Location feature not implemented yet
+  // const formattedLocation = formatLocation(community.location);
 
   // Featured community card (grid layout) - keep original design
   return (
@@ -78,12 +79,13 @@ export function CommunityCard({
           <h3 className="font-semibold text-lg text-gray-900 group-hover:text-emerald-600 transition-colors">
             {community.name}
           </h3>
-          {formattedLocation && (
+          {/* Location feature not implemented yet */}
+          {/* {formattedLocation && (
             <div className="flex items-center gap-1 text-sm text-gray-500 mt-1">
               <MapPin className="w-3 h-3" />
               <span>{formattedLocation}</span>
             </div>
-          )}
+          )} */}
         </div>
 
         {community.description && (

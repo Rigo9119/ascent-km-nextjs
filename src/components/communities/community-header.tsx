@@ -163,12 +163,13 @@ export default function CommunityHeader({
                   <Calendar className="w-4 h-4" />
                   <span>Creada el {community.created_at ? new Date(community.created_at).toLocaleDateString('es-ES') : 'Desconocido'}</span>
                 </div>
-                {community.location && (
+                {/* Location feature not implemented yet */}
+                {/* {community.location && (
                   <div className="flex items-center gap-1">
                     <MapPin className="w-4 h-4" />
                     <span>{community.location}</span>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>

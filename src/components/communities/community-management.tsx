@@ -245,11 +245,11 @@ export default function CommunityManagement({
                       )}
                     </div>
                     
-                    {member.user_id !== currentUser.id && (
+                    {member.user_id !== currentUser.id && member.user_id && (
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleRemoveMember(member.user_id)}
+                        onClick={() => handleRemoveMember(member.user_id!)}
                         className="text-red-600 hover:text-red-700"
                       >
                         <UserMinus className="w-4 h-4 mr-1" />
