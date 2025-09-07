@@ -21,6 +21,7 @@ import { createSupabaseClient } from '@/lib/supabase/client';
 import { CommunitiesService } from '@/services/communities-service';
 import { Community } from '@/types/community';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Tables } from '@/lib/types/supabase';
 
 export type CommunityMember = Tables<'community_members'> & {
@@ -185,14 +186,16 @@ export default function CommunityHeader({
             </Button>
 
             {isOwner && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-2"
-              >
-                <Settings className="w-4 h-4" />
-                Manage
-              </Button>
+              <Link href={`/communities/${community.id}/manage`}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                >
+                  <Settings className="w-4 h-4" />
+                  Manage
+                </Button>
+              </Link>
             )}
 
             {currentUser && !isOwner && (

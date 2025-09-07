@@ -50,10 +50,12 @@ export default function CommunityTabs({
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Discusiones Recientes</h2>
           {isMember && (
-            <Button className="gap-2 bg-emerald-500 hover:bg-emerald-600">
-              <Plus className="w-4 h-4" />
-              Nueva Discusión
-            </Button>
+            <Link href={`/communities/discussions/create?communityId=${community.id}`}>
+              <Button className="gap-2 bg-emerald-500 hover:bg-emerald-600">
+                <Plus className="w-4 h-4" />
+                Nueva Discusión
+              </Button>
+            </Link>
           )}
         </div>
 
@@ -69,10 +71,12 @@ export default function CommunityTabs({
                 }
               </p>
               {isMember && (
-                <Button className="bg-emerald-500 hover:bg-emerald-600">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Iniciar Discusión
-                </Button>
+                <Link href={`/communities/discussions/create?communityId=${community.id}`}>
+                  <Button className="bg-emerald-500 hover:bg-emerald-600">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Iniciar Discusión
+                  </Button>
+                </Link>
               )}
             </CardContent>
           </Card>

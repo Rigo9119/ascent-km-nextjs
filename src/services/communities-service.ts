@@ -97,16 +97,39 @@ export class CommunitiesService {
     }
   }
 
-  async createCommunity(communityData: unknown) {
+  async createCommunity(communityData: any) {
     console.log('communityData', communityData)
     try {
+      // Clean the data - convert empty strings to null for UUID fields
+      const cleanedData = {
+        ...communityData,
+        community_type_id: communityData.community_type_id === '' ? null : communityData.community_type_id
+      };
+
       const { data: community, error: sbError } = await this.supabase
         .from('communities')
-        .insert(communityData)
+        .insert(cleanedData)
         .select()
         .single();
 
       if (sbError) throw new Error(`community error: ${sbError.message}`);
+
+      // Automatically add the creator as a member of the community
+      if (community && communityData.organizer_id) {
+        const { error: memberError } = await this.supabase
+          .from('community_members')
+          .insert({
+            community_id: community.id,
+            user_id: communityData.organizer_id,
+            joined_at: new Date().toISOString(),
+            role: 'organizer'
+          });
+
+        if (memberError) {
+          console.error('Error adding creator as member:', memberError);
+          // Don't throw here, community creation succeeded
+        }
+      }
 
       return community;
     } catch (error) {
