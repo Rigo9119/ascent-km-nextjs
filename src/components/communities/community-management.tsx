@@ -74,17 +74,17 @@ export default function CommunityManagement({
         throw new Error('Failed to update community');
       }
 
-      toast.success('Community settings updated successfully!');
+      toast.success('¡Configuración de la comunidad actualizada correctamente!');
     } catch (error) {
       console.error('Error updating community:', error);
-      toast.error('Failed to update community settings');
+      toast.error('Error al actualizar la configuración de la comunidad');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleRemoveMember = async (memberId: string) => {
-    if (!confirm('Are you sure you want to remove this member?')) return;
+    if (!confirm('¿Estás seguro de que quieres remover este miembro?')) return;
 
     try {
       const response = await fetch(`/api/communities/${community.id}/members/${memberId}`, {
@@ -95,12 +95,12 @@ export default function CommunityManagement({
         throw new Error('Failed to remove member');
       }
 
-      toast.success('Member removed successfully');
+      toast.success('Miembro removido exitosamente');
       // Refresh the page to update member list
       window.location.reload();
     } catch (error) {
       console.error('Error removing member:', error);
-      toast.error('Failed to remove member');
+      toast.error('Error al remover el miembro');
     }
   };
 
@@ -120,11 +120,11 @@ export default function CommunityManagement({
         throw new Error('Failed to delete community');
       }
 
-      toast.success('Community deleted successfully');
+      toast.success('Comunidad eliminada exitosamente');
       window.location.href = '/communities';
     } catch (error) {
       console.error('Error deleting community:', error);
-      toast.error('Failed to delete community');
+      toast.error('Error al eliminar la comunidad');
     } finally {
       setIsLoading(false);
       setShowDeleteModal(false);
@@ -143,32 +143,32 @@ export default function CommunityManagement({
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="settings" className="flex items-center gap-2">
             <Settings className="w-4 h-4" />
-            Settings
+            Configuración
           </TabsTrigger>
           <TabsTrigger value="members" className="flex items-center gap-2">
             <Users className="w-4 h-4" />
-            Members ({members.length})
+            Miembros ({members.length})
           </TabsTrigger>
           <TabsTrigger value="danger" className="flex items-center gap-2">
             <AlertTriangle className="w-4 h-4" />
-            Danger Zone
+            Zona de Peligro
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="settings" className="mt-6">
           <Card>
             <CardHeader>
-              <CardTitle>Community Settings</CardTitle>
+              <CardTitle>Configuración de la Comunidad</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="name">Community Name</Label>
+                  <Label htmlFor="name">Nombre de la Comunidad</Label>
                   <Input
                     id="name"
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
-                    placeholder="Enter community name"
+                    placeholder="Ingresa el nombre de la comunidad"
                   />
                 </div>
                 <div className="flex items-center space-x-2">
@@ -177,28 +177,28 @@ export default function CommunityManagement({
                     checked={formData.is_public}
                     onCheckedChange={(checked) => handleInputChange('is_public', checked)}
                   />
-                  <Label htmlFor="is_public">Public Community</Label>
+                  <Label htmlFor="is_public">Comunidad Pública</Label>
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="description">Short Description</Label>
+                <Label htmlFor="description">Descripción Corta</Label>
                 <Textarea
                   id="description"
                   value={formData.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
-                  placeholder="Brief description of your community"
+                  placeholder="Descripción breve de tu comunidad"
                   rows={3}
                 />
               </div>
 
               <div>
-                <Label htmlFor="long_description">Detailed Description</Label>
+                <Label htmlFor="long_description">Descripción Detallada</Label>
                 <Textarea
                   id="long_description"
                   value={formData.long_description}
                   onChange={(e) => handleInputChange('long_description', e.target.value)}
-                  placeholder="Detailed description of your community"
+                  placeholder="Descripción detallada de tu comunidad"
                   rows={5}
                 />
               </div>
@@ -210,7 +210,7 @@ export default function CommunityManagement({
                   className="bg-emerald-500 hover:bg-emerald-600"
                 >
                   <Save className="w-4 h-4 mr-2" />
-                  {isLoading ? 'Saving...' : 'Save Settings'}
+                  {isLoading ? 'Guardando...' : 'Guardar Configuración'}
                 </Button>
               </div>
             </CardContent>
@@ -220,7 +220,7 @@ export default function CommunityManagement({
         <TabsContent value="members" className="mt-6">
           <Card>
             <CardHeader>
-              <CardTitle>Community Members</CardTitle>
+              <CardTitle>Miembros de la Comunidad</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -234,13 +234,13 @@ export default function CommunityManagement({
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="font-medium">{member.profiles?.full_name || 'Unknown'}</p>
+                        <p className="font-medium">{member.profiles?.full_name || 'Desconocido'}</p>
                         <p className="text-sm text-gray-500">@{member.profiles?.username}</p>
                       </div>
                       {member.role && (
                         <Badge variant={member.role === 'organizer' ? 'default' : 'secondary'}>
                           <Shield className="w-3 h-3 mr-1" />
-                          {member.role}
+                          {member.role === 'organizer' ? 'organizador' : member.role}
                         </Badge>
                       )}
                     </div>
@@ -253,7 +253,7 @@ export default function CommunityManagement({
                         className="text-red-600 hover:text-red-700"
                       >
                         <UserMinus className="w-4 h-4 mr-1" />
-                        Remove
+                        Remover
                       </Button>
                     )}
                   </div>
@@ -266,15 +266,15 @@ export default function CommunityManagement({
         <TabsContent value="danger" className="mt-6">
           <Card className="border-red-200">
             <CardHeader>
-              <CardTitle className="text-red-600">Danger Zone</CardTitle>
+              <CardTitle className="text-red-600">Zona de Peligro</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="p-4 border border-red-200 rounded-lg bg-red-50">
-                  <h3 className="font-medium text-red-800 mb-2">Delete Community</h3>
+                  <h3 className="font-medium text-red-800 mb-2">Eliminar Comunidad</h3>
                   <p className="text-sm text-red-600 mb-4">
-                    This action cannot be undone. This will permanently delete your community,
-                    all discussions, and remove all members.
+                    Esta acción no se puede deshacer. Esto eliminará permanentemente tu comunidad,
+                    todas las discusiones y removerá todos los miembros.
                   </p>
                   <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
                     <DialogTrigger asChild>
@@ -284,22 +284,22 @@ export default function CommunityManagement({
                         className="bg-red-600 hover:bg-red-700"
                       >
                         <Trash2 className="w-4 h-4 mr-2" />
-                        Delete Community
+                        Eliminar Comunidad
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-md">
                       <DialogHeader>
-                        <DialogTitle className="text-red-600">Delete Community</DialogTitle>
+                        <DialogTitle className="text-red-600">Eliminar Comunidad</DialogTitle>
                         <DialogDescription className="text-gray-600">
-                          This action cannot be undone. This will permanently delete the{' '}
-                          <span className="font-semibold text-gray-900">{community.name}</span> community,
-                          all its discussions, and remove all members.
+                          Esta acción no se puede deshacer. Esto eliminará permanentemente la comunidad{' '}
+                          <span className="font-semibold text-gray-900">{community.name}</span>,
+                          todas sus discusiones y removerá todos los miembros.
                         </DialogDescription>
                       </DialogHeader>
                       
                       <div className="py-4">
                         <Label htmlFor="delete-confirm" className="text-sm font-medium text-gray-700">
-                          To confirm deletion, please type the community name exactly:
+                          Para confirmar la eliminación, escribe exactamente el nombre de la comunidad:
                         </Label>
                         <div className="mt-2 mb-3">
                           <code className="px-2 py-1 bg-gray-100 rounded text-sm font-mono">
@@ -310,7 +310,7 @@ export default function CommunityManagement({
                           id="delete-confirm"
                           value={deleteConfirmText}
                           onChange={(e) => setDeleteConfirmText(e.target.value)}
-                          placeholder="Enter community name"
+                          placeholder="Ingresa el nombre de la comunidad"
                           className="w-full"
                           autoComplete="off"
                         />
@@ -322,7 +322,7 @@ export default function CommunityManagement({
                           onClick={() => setShowDeleteModal(false)}
                           disabled={isLoading}
                         >
-                          Cancel
+                          Cancelar
                         </Button>
                         <Button
                           variant="destructive"
@@ -333,12 +333,12 @@ export default function CommunityManagement({
                           {isLoading ? (
                             <>
                               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                              Deleting...
+                              Eliminando...
                             </>
                           ) : (
                             <>
                               <Trash2 className="w-4 h-4 mr-2" />
-                              Delete Community
+                              Eliminar Comunidad
                             </>
                           )}
                         </Button>

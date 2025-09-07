@@ -64,19 +64,19 @@ export default function CommunityHeader({
       if (isMember) {
         await communitiesService.leaveCommunity(community.id, currentUser.id);
         setIsMember(false);
-        toast.success('Left community successfully', {
+        toast.success('Saliste de la comunidad exitosamente', {
           style: { background: '#10b981', color: 'white' }
         });
       } else {
         await communitiesService.joinCommunity(community.id, currentUser.id);
         setIsMember(true);
-        toast.success('Joined community successfully', {
+        toast.success('Te uniste a la comunidad exitosamente', {
           style: { background: '#10b981', color: 'white' }
         });
       }
     } catch (error) {
       console.error('Failed to update membership:', error)
-      toast.error('Failed to update membership', {
+      toast.error('Error al actualizar la membresía', {
         style: { background: '#ef4444', color: 'white' }
       });
     } finally {
@@ -98,7 +98,7 @@ export default function CommunityHeader({
     } else {
       // Fallback: copy to clipboard
       await navigator.clipboard.writeText(window.location.href);
-      toast.success('Link copied to clipboard', {
+      toast.success('Enlace copiado al portapapeles', {
         style: { background: '#10b981', color: 'white' }
       });
     }
@@ -157,11 +157,11 @@ export default function CommunityHeader({
               <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
                 <div className="flex items-center gap-1">
                   <Users className="w-4 h-4" />
-                  <span>{members.length} members</span>
+                  <span>{members.length} miembros</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
-                  <span>Created {community.created_at ? new Date(community.created_at).toLocaleDateString() : 'Unknown'}</span>
+                  <span>Creada el {community.created_at ? new Date(community.created_at).toLocaleDateString('es-ES') : 'Desconocido'}</span>
                 </div>
                 {community.location && (
                   <div className="flex items-center gap-1">
@@ -182,7 +182,7 @@ export default function CommunityHeader({
               className="gap-2"
             >
               <Share2 className="w-4 h-4" />
-              Share
+              Compartir
             </Button>
 
             {isOwner && (
@@ -193,7 +193,7 @@ export default function CommunityHeader({
                   className="gap-2"
                 >
                   <Settings className="w-4 h-4" />
-                  Manage
+                  Gestionar
                 </Button>
               </Link>
             )}
@@ -211,12 +211,12 @@ export default function CommunityHeader({
                 {isMember ? (
                   <>
                     <UserMinus className="w-4 h-4" />
-                    Leave
+                    Salir
                   </>
                 ) : (
                   <>
                     <UserPlus className="w-4 h-4" />
-                    Join
+                    Unirse
                   </>
                 )}
               </Button>
@@ -228,7 +228,7 @@ export default function CommunityHeader({
                 className="gap-2 bg-emerald-500 hover:bg-emerald-600 text-white"
               >
                 <UserPlus className="w-4 h-4" />
-                Join
+                Unirse
               </Button>
             )}
           </div>
