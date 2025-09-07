@@ -73,8 +73,8 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              <Button 
-                variant='ghost' 
+              <Button
+                variant='ghost'
                 className='text-emerald-500 hover:text-emerald-700 cursor-pointer'
                 onClick={() => {
                   if (user) {
@@ -86,20 +86,6 @@ export function AppSidebar() {
               >
                 <DiamondPlus />
                 Crea una comunidad
-              </Button>
-              <Button 
-                variant='ghost' 
-                className='text-emerald-500 hover:text-emerald-700 cursor-pointer'
-                onClick={() => {
-                  if (user) {
-                    window.location.href = '/communities/discussions/create';
-                  } else {
-                    window.location.href = '/auth';
-                  }
-                }}
-              >
-                <DiamondPlus />
-                Crea una discusión
               </Button>
             </SidebarMenu>
           </SidebarGroupContent>
