@@ -11,6 +11,7 @@ const getPageData = async () => {
     const supabase = await createSupabaseServerClient();
     const resourcesService = new ResourcesService(supabase);
     const resources = await resourcesService.getAllResources();
+
     return { resources: resources || [] };
   } catch (error) {
     // Gracefully handle any errors during build or runtime
