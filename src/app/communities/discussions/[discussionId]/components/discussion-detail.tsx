@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import ShareButton from '@/components/share-button';
 import CommentSection from './comment-section';
 import {
   MessageSquare,
@@ -129,13 +128,6 @@ export default function DiscussionDetail({
                   {likeCount}
                 </Button>
 
-                <ShareButton
-                  url={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/communities/discussions/${discussion.id}`}
-                  title={discussion.title}
-                  description={discussion.content || ''}
-                  size="sm"
-                  variant="ghost"
-                />
 
                 <Button variant="ghost" size="sm">
                   <MoreHorizontal className="w-4 h-4" />

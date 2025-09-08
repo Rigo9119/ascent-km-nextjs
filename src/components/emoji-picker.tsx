@@ -100,26 +100,28 @@ export default function EmojiPicker({ onEmojiSelect, children }: EmojiPickerProp
       >
         <div className="flex flex-col h-72">
           {/* Category tabs */}
-          <div className="flex border-b border-gray-200 mb-2">
-            {Object.entries(emojiCategories).map(([key, category]) => (
-              <Button
-                key={key}
-                variant={selectedCategory === key ? "default" : "ghost"}
-                size="sm"
-                className={`flex-1 h-8 ${
-                  selectedCategory === key 
-                    ? "bg-emerald-500 text-white" 
-                    : "text-gray-600 hover:text-emerald-600"
-                }`}
-                onClick={() => setSelectedCategory(key)}
-                disabled={key === 'recent' && recentEmojis.length === 0}
-              >
-                {category.icon}
-                <span className="ml-1 text-xs hidden sm:inline">
-                  {category.name}
-                </span>
-              </Button>
-            ))}
+          <div className="flex border-b border-gray-200 mb-2 overflow-x-auto scrollbar-hide">
+            <div className="flex gap-1 min-w-max">
+              {Object.entries(emojiCategories).map(([key, category]) => (
+                <Button
+                  key={key}
+                  variant={selectedCategory === key ? "default" : "ghost"}
+                  size="sm"
+                  className={`h-8 px-3 whitespace-nowrap flex-shrink-0 ${
+                    selectedCategory === key 
+                      ? "bg-emerald-500 text-white" 
+                      : "text-gray-600 hover:text-emerald-600"
+                  }`}
+                  onClick={() => setSelectedCategory(key)}
+                  disabled={key === 'recent' && recentEmojis.length === 0}
+                >
+                  {category.icon}
+                  <span className="ml-1 text-xs">
+                    {category.name}
+                  </span>
+                </Button>
+              ))}
+            </div>
           </div>
 
           {/* Emoji grid */}
