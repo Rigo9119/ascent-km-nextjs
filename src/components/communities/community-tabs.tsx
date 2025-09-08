@@ -84,52 +84,37 @@ export default function CommunityTabs({
           <div className="space-y-4">
             {discussions.map((discussion) => (
               <Card key={discussion.id} className="hover:shadow-md transition-shadow bg-white dark:bg-black">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-start gap-3 flex-1 min-w-0">
-                      <Avatar className="w-10 h-10 shrink-0">
-                        <AvatarImage src={discussion.profiles?.avatar_url || ''} />
-                        <AvatarFallback className="bg-emerald-100 text-emerald-600">
-                          {discussion.profiles?.full_name?.slice(0, 2) || 'U'}
-                        </AvatarFallback>
-                      </Avatar>
-
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="flex items-center justify-between">
                           <Link
-                            href={`/discussions/${discussion.id}`}
-                            className="font-medium text-gray-900 dark:text-gray-100 hover:text-emerald-600 truncate"
+                            href={`/communities/discussions/${discussion.id}`}
+                            className="font-medium text-emerald-600 hover:text-emerald-700 truncate text-xl mr-4"
                           >
                             {discussion.title}
                           </Link>
-                          {discussion.is_pinned && (
-                            <Badge variant="secondary" className="text-xs">Fijado</Badge>
-                          )}
-                        </div>
-
-                        <p className="text-gray-600 text-sm line-clamp-2 mb-2">
-                          {discussion.content}
-                        </p>
-
-                        <div className="flex items-center gap-4 text-xs text-gray-500">
-                          <span>by @{discussion.profiles?.username}</span>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {discussion.created_at ? new Date(discussion.created_at).toLocaleDateString() : 'Unknown'}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <MessageCircle className="w-3 h-3" />
-                            {discussion.comment_count || 0} respuestas
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Heart className="w-3 h-3" />
-                            {discussion.like_count || 0} me gusta
+                          <div className="flex items-center gap-4 text-xs text-gray-500 shrink-0">
+                            <span>@{discussion.profiles?.username}</span>
+                            <div className="flex items-center gap-1">
+                              <MessageCircle className="w-3 h-3" />
+                              {discussion.comment_count || 0} respuestas
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Heart className="w-3 h-3" />
+                              {discussion.like_count || 0} me gusta
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {discussion.created_at ? new Date(discussion.created_at).toLocaleDateString() : 'Unknown'}
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0 shrink-0">
                       <MoreHorizontal className="w-4 h-4" />
                     </Button>
                   </div>

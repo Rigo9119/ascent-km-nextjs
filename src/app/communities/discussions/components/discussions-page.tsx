@@ -3,17 +3,13 @@
 import { useState } from "react";
 import { DiscussionWithDetails } from "@/types/discussion";
 import { Community } from "@/types/community";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import FormSelect from "@/components/forms/form-components/form-select";
 import AuthRequiredModal from "@/components/auth-required-modal";
 import { MessageSquare, Users, Clock, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { AnyFieldApi } from "@tanstack/react-form";
 import { User } from "@supabase/supabase-js";
 import { useAuth } from "@/hooks/use-auth";
 import { VoteButtons } from "@/components/vote-buttons";
@@ -52,12 +48,6 @@ export default function DiscussionsPageCmp({
   const effectiveUser = clientUser || currentUser;
 
 
-  // Transform communities to options format
-  const communityOptions = [
-    { value: "all", label: "Todas las comunidades" },
-    ...(communities || []).map((community) => ({ value: community.id, label: community.name })),
-  ];
-
   const handleFiltersChange = (newFilters: FilterState) => {
     setFilters(newFilters);
     filterDiscussions(newFilters);
@@ -69,15 +59,6 @@ export default function DiscussionsPageCmp({
       [key]: value,
     };
     handleFiltersChange(newFilters);
-  };
-
-  const handleClearAll = () => {
-    const clearedFilters = {
-      search: "",
-      community: "all",
-      sort: sortingService.getDefaultSort(),
-    };
-    handleFiltersChange(clearedFilters);
   };
 
   const handleStartDiscussion = () => {
@@ -141,55 +122,6 @@ export default function DiscussionsPageCmp({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Filters Sidebar */}
-        <div className="lg:col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle>Filtros</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="search">Buscar Discusiones</Label>
-                <Input
-                  id="search"
-                  placeholder="Buscar por título o contenido..."
-                  value={filters.search}
-                  onChange={(e) => handleFilterChange("search", e.target.value)}
-                />
-              </div>
-
-              <FormSelect
-                field={{} as AnyFieldApi}
-                label="Comunidad"
-                value={filters.community}
-                placeholder="Seleccionar comunidad"
-                options={communityOptions}
-                onValueChange={(value) => handleFilterChange("community", value)}
-              />
-
-              <FormSelect
-                field={{} as AnyFieldApi}
-                label="Ordenar por"
-                value={filters.sort}
-                placeholder="Seleccionar orden"
-                options={sortOptions.map(option => ({ 
-                  value: option.value, 
-                  label: option.label 
-                }))}
-                onValueChange={(value) => handleFilterChange("sort", value as SortOption)}
-              />
-
-              <Button
-                variant="outline"
-                className="w-full mt-4 border-emerald-500 text-emerald-500 hover:text-emerald-500"
-                onClick={handleClearAll}
-              >
-                Limpiar Todo
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
         {/* Discussions List */}
         <div className="lg:col-span-3">
           <div className="mb-6 flex items-center justify-between">
@@ -208,8 +140,8 @@ export default function DiscussionsPageCmp({
                 key={option.value}
                 variant={filters.sort === option.value ? "default" : "outline"}
                 size="sm"
-                className={filters.sort === option.value 
-                  ? "bg-emerald-500 hover:bg-emerald-600" 
+                className={filters.sort === option.value
+                  ? "bg-emerald-500 hover:bg-emerald-600"
                   : "border-emerald-500 text-emerald-500 hover:text-emerald-500"
                 }
                 onClick={() => handleFilterChange("sort", option.value)}
@@ -269,8 +201,8 @@ function DiscussionCard({ discussion }: DiscussionCardProps) {
         <div className="flex items-start space-x-4">
           {/* Voting */}
           <div className="flex-shrink-0">
-            <VoteButtons 
-              targetId={discussion.id} 
+            <VoteButtons
+              targetId={discussion.id}
               targetType="discussion"
               initialScore={discussion.score || 0}
             />
