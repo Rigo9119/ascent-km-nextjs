@@ -1,11 +1,11 @@
 import { PageContainer } from "@/components/page-container";
 import { ResourcesService } from "@/services/resources-service";
-import { createSupabaseServerAction } from "@/lib/supabase/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import ResourcesPageCmp from "./components/resources-page";
 
 const getPageData = async () => {
   try {
-    const supabase = await createSupabaseServerAction();
+    const supabase = await createSupabaseServerClient();
     const resourcesService = new ResourcesService(supabase);
     const resources = await resourcesService.getAllResources();
     return { resources: resources || [] };
