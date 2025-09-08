@@ -55,7 +55,7 @@ export default async function DiscussionPage({ params }: DiscussionPageProps) {
     notFound();
   }
   const { discussion, comments } = data;
-  console.log('discussion: ', discussion)
+
 
   return (
     <PageContainer>
