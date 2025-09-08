@@ -3,6 +3,9 @@ import { ResourcesService } from "@/services/resources-service";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import ResourcesPageCmp from "./components/resources-page";
 
+// Force dynamic rendering to avoid cookie/static generation conflicts
+export const dynamic = 'force-dynamic';
+
 const getPageData = async () => {
   try {
     const supabase = await createSupabaseServerClient();
