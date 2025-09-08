@@ -4,19 +4,23 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { DiscussionsService } from "@/services/discussions-service";
 import RecentDiscussions from "@/components/home/recent-discussions";
 
-const getPageData = async () => {
-  const supabase = await createSupabaseServerClient();
-  const communitiesService = new CommunitiesService(supabase);
-  const discussionsService = new DiscussionsService(supabase);
-  const { data: { user } } = await supabase.auth.getUser();
+// Force dynamic rendering to avoid build-time Supabase connection issues
+export const dynamic = 'force-dynamic';
 
-  const [publicCommunities, featuredCommunities, communityTypes, recentDiscussions, userRecentDiscussions] = await Promise.all([
-    communitiesService.getPublicCommunities(),
-    communitiesService.getPublicFeaturedCommunities(),
-    communitiesService.getAllCommunityTypes(),
-    discussionsService.getMostRecentDiscussionPerCommunity(),
-    user ? discussionsService.getRecentDiscussionsFromUserCommunities(user.id) : Promise.resolve(null)
-  ]);
+const getPageData = async () => {
+  try {
+    const supabase = await createSupabaseServerClient();
+    const communitiesService = new CommunitiesService(supabase);
+    const discussionsService = new DiscussionsService(supabase);
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const [publicCommunities, featuredCommunities, communityTypes, recentDiscussions, userRecentDiscussions] = await Promise.all([
+      communitiesService.getPublicCommunities(),
+      communitiesService.getPublicFeaturedCommunities(),
+      communitiesService.getAllCommunityTypes(),
+      discussionsService.getMostRecentDiscussionPerCommunity(),
+      user ? discussionsService.getRecentDiscussionsFromUserCommunities(user.id) : Promise.resolve(null)
+    ]);
 
   // Get user memberships if user is logged in
   let userMemberships: string[] = [];
@@ -40,15 +44,28 @@ const getPageData = async () => {
     }
   }
 
-  return {
-    publicCommunities,
-    featuredCommunities,
-    communityTypes,
-    userMemberships,
-    recentDiscussions,
-    userRecentDiscussions,
-    currentUser: user,
-  };
+    return {
+      publicCommunities,
+      featuredCommunities,
+      communityTypes,
+      userMemberships,
+      recentDiscussions,
+      userRecentDiscussions,
+      currentUser: user,
+    };
+  } catch (error) {
+    console.error('Error loading home page data:', error);
+    // Return safe defaults to prevent build failure
+    return {
+      publicCommunities: [],
+      featuredCommunities: [],
+      communityTypes: [],
+      userMemberships: [],
+      recentDiscussions: [],
+      userRecentDiscussions: null,
+      currentUser: null,
+    };
+  }
 };
 
 export default async function Home() {
