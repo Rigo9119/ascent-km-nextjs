@@ -39,102 +39,81 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if user already voted on this item
-    const existingVoteQuery = supabase
-      .from('interactions')
-      .select('id, vote_type')
+    // Check if user has already voted on this target
+    const { data: existingVote, error: fetchError } = await supabase
+      .from('votes')
+      .select('*')
       .eq('user_id', user.id)
-      .eq('vote_type', voteType)
+      .eq('target_id', targetId)
+      .eq('target_type', targetType)
+      .single()
 
-    if (targetType === 'discussion') {
-      existingVoteQuery.eq('discussion_id', targetId)
-    } else {
-      existingVoteQuery.eq('comment_id', targetId)
+    if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 = no rows returned
+      console.error('Error fetching existing vote:', fetchError)
+      return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
-    const { data: existingVote } = await existingVoteQuery.single()
+    let result
+    let action: 'added' | 'removed' | 'changed'
 
-    // If user already voted the same way, remove the vote (toggle off)
     if (existingVote) {
-      const { error: deleteError } = await supabase
-        .from('interactions')
-        .delete()
-        .eq('id', existingVote.id)
+      if (existingVote.vote_type === voteType) {
+        // Same vote type - remove the vote
+        const { error: deleteError } = await supabase
+          .from('votes')
+          .delete()
+          .eq('id', existingVote.id)
 
-      if (deleteError) {
-        return NextResponse.json(
-          { error: 'Failed to remove vote' },
-          { status: 500 }
-        )
+        if (deleteError) {
+          console.error('Error removing vote:', deleteError)
+          return NextResponse.json({ error: 'Failed to remove vote' }, { status: 500 })
+        }
+
+        action = 'removed'
+      } else {
+        // Different vote type - update the vote
+        const { data: updatedVote, error: updateError } = await supabase
+          .from('votes')
+          .update({ vote_type: voteType, updated_at: new Date().toISOString() })
+          .eq('id', existingVote.id)
+          .select()
+          .single()
+
+        if (updateError) {
+          console.error('Error updating vote:', updateError)
+          return NextResponse.json({ error: 'Failed to update vote' }, { status: 500 })
+        }
+
+        result = updatedVote
+        action = 'changed'
+      }
+    } else {
+      // No existing vote - create new vote
+      const { data: newVote, error: insertError } = await supabase
+        .from('votes')
+        .insert({
+          user_id: user.id,
+          target_id: targetId,
+          target_type: targetType,
+          vote_type: voteType
+        })
+        .select()
+        .single()
+
+      if (insertError) {
+        console.error('Error creating vote:', insertError)
+        return NextResponse.json({ error: 'Failed to create vote' }, { status: 500 })
       }
 
-      return NextResponse.json({ 
-        success: true, 
-        action: 'removed',
-        voteType 
-      })
+      result = newVote
+      action = 'added'
     }
 
-    // Check for opposite vote to replace it
-    const oppositeVoteType = voteType === 'upvote' ? 'downvote' : 'upvote'
-    const oppositeVoteQuery = supabase
-      .from('interactions')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('vote_type', oppositeVoteType)
-
-    if (targetType === 'discussion') {
-      oppositeVoteQuery.eq('discussion_id', targetId)
-    } else {
-      oppositeVoteQuery.eq('comment_id', targetId)
-    }
-
-    const { data: oppositeVote } = await oppositeVoteQuery.single()
-
-    // Remove opposite vote if it exists
-    if (oppositeVote) {
-      await supabase
-        .from('interactions')
-        .delete()
-        .eq('id', oppositeVote.id)
-    }
-
-    // Add the new vote
-    const insertData: {
-      user_id: string
-      vote_type: string
-      value: number
-      created_at: string
-      discussion_id?: string
-      comment_id?: string
-    } = {
-      user_id: user.id,
-      vote_type: voteType,
-      value: voteType === 'upvote' ? 1 : -1,
-      created_at: new Date().toISOString()
-    }
-
-    if (targetType === 'discussion') {
-      insertData.discussion_id = targetId
-    } else {
-      insertData.comment_id = targetId
-    }
-
-    const { error: insertError } = await supabase
-      .from('interactions')
-      .insert(insertData)
-
-    if (insertError) {
-      return NextResponse.json(
-        { error: 'Failed to add vote' },
-        { status: 500 }
-      )
-    }
-
-    return NextResponse.json({ 
-      success: true, 
-      action: oppositeVote ? 'changed' : 'added',
-      voteType 
+    return NextResponse.json({
+      success: true,
+      action,
+      voteType,
+      vote: result
     })
 
   } catch (error) {
@@ -150,40 +129,58 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = await createSupabaseServerAction()
     
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
-      return NextResponse.json({})
-    }
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
 
-    const searchParams = request.nextUrl.searchParams
+    const { searchParams } = new URL(request.url)
     const targetId = searchParams.get('targetId')
     const targetType = searchParams.get('targetType')
 
     if (!targetId || !targetType) {
-      return NextResponse.json({})
+      return NextResponse.json({ error: 'Missing targetId or targetType' }, { status: 400 })
     }
 
-    // Get user's current vote for this item
-    const voteQuery = supabase
-      .from('interactions')
-      .select('vote_type')
-      .eq('user_id', user.id)
-      .in('vote_type', ['upvote', 'downvote'])
-
-    if (targetType === 'discussion') {
-      voteQuery.eq('discussion_id', targetId)
-    } else {
-      voteQuery.eq('comment_id', targetId)
+    if (!['discussion', 'comment'].includes(targetType)) {
+      return NextResponse.json({ error: 'Invalid target type' }, { status: 400 })
     }
 
-    const { data: userVote } = await voteQuery.single()
+    // Get user's vote if authenticated
+    let userVote = null
+    if (user && !authError) {
+      const { data: vote, error: voteError } = await supabase
+        .from('votes')
+        .select('vote_type')
+        .eq('user_id', user.id)
+        .eq('target_id', targetId)
+        .eq('target_type', targetType)
+        .single()
+
+      if (!voteError && vote) {
+        userVote = vote.vote_type
+      }
+    }
+
+    // Get vote counts from the target table
+    const tableName = targetType === 'discussion' ? 'discussions' : 'comments'
+    const { data: targetData, error: targetError } = await supabase
+      .from(tableName)
+      .select('score, upvotes, downvotes')
+      .eq('id', targetId)
+      .single()
+
+    if (targetError) {
+      console.error('Error fetching target data:', targetError)
+      return NextResponse.json({ error: 'Target not found' }, { status: 404 })
+    }
 
     return NextResponse.json({
-      userVote: userVote?.vote_type || null
+      userVote,
+      score: targetData.score || 0,
+      upvotes: targetData.upvotes || 0,
+      downvotes: targetData.downvotes || 0
     })
 
   } catch (error) {
     console.error('Get vote API error:', error)
-    return NextResponse.json({})
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

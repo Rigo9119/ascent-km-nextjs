@@ -6,6 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import AuthRequiredModal from '@/components/auth-required-modal';
 import EmojiPicker from '@/components/emoji-picker';
 import {
@@ -13,7 +21,7 @@ import {
   Send,
   Reply,
   Heart,
-  MoreHorizontal,
+  Trash2,
   Smile
 } from 'lucide-react';
 import { CommentWithProfile } from '@/types/discussion';
@@ -42,6 +50,10 @@ interface CommentTreeNode extends CommentWithProfile {
 function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [selectedReaction, setSelectedReaction] = useState<string | null>(null);
+  const [reactionCounts, setReactionCounts] = useState<Record<string, number>>({});
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -58,6 +70,79 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
     // TODO: Implement comment like functionality
     setIsLiked(!isLiked);
     setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+  };
+
+  const handleEmojiReaction = async (emoji: string) => {
+    if (!currentUser) return;
+
+    if (selectedReaction === emoji) {
+      // Remove reaction if same emoji is clicked
+      setSelectedReaction(null);
+      setReactionCounts(prev => ({
+        ...prev,
+        [emoji]: Math.max(0, (prev[emoji] || 0) - 1)
+      }));
+      toast.success('Reaction removed');
+    } else {
+      // Remove previous reaction if exists
+      if (selectedReaction) {
+        setReactionCounts(prev => ({
+          ...prev,
+          [selectedReaction]: Math.max(0, (prev[selectedReaction] || 0) - 1)
+        }));
+      }
+      
+      // Add new reaction
+      setSelectedReaction(emoji);
+      setReactionCounts(prev => ({
+        ...prev,
+        [emoji]: (prev[emoji] || 0) + 1
+      }));
+      toast.success(`Reacted with ${emoji}`);
+    }
+
+    // TODO: Implement actual API call to save reaction
+    console.log('React to comment', comment.id, 'with', emoji);
+  };
+
+  const handleDeleteClick = () => {
+    if (!currentUser) return;
+    
+    // Check if user owns this comment
+    if (comment.user_id !== currentUser.id) {
+      toast.error('Solo puedes eliminar tus propios comentarios');
+      return;
+    }
+
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+
+    try {
+      const response = await fetch(`/api/discussions/${comment.discussion_id}/comments/${comment.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete comment');
+      }
+
+      toast.success('Comentario eliminado exitosamente');
+      setShowDeleteModal(false);
+      // Refresh the page to update comments
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      toast.error('Error al eliminar el comentario');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
   };
 
   // Calculate indentation based on depth, with max depth limit for readability
@@ -124,9 +209,13 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
                   <span>Reply</span>
                 </button>
 
-                {depth < maxDepth && (
-                  <button className="hover:text-gray-700">
-                    <MoreHorizontal className="w-3 h-3" />
+                {depth < maxDepth && currentUser && currentUser.id === comment.user_id && (
+                  <button 
+                    className="hover:text-red-600 text-gray-400"
+                    onClick={handleDeleteClick}
+                    title="Eliminar comentario"
+                  >
+                    <Trash2 className="w-3 h-3" />
                   </button>
                 )}
               </div>
@@ -134,10 +223,7 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
               {/* Quick Emoji Reactions */}
               {currentUser && (
                 <div className="flex items-center space-x-1">
-                  <EmojiPicker onEmojiSelect={(emoji) => {
-                    // TODO: Add emoji reaction to comment
-                    console.log('React to comment', comment.id, 'with', emoji);
-                  }}>
+                  <EmojiPicker onEmojiSelect={handleEmojiReaction}>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -147,22 +233,56 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
                     </Button>
                   </EmojiPicker>
 
-                  {/* Common quick reactions */}
-                  <div className="flex space-x-1 ml-2">
-                    {['👍', '❤️', '😄', '😮'].map((emoji) => (
+                  {/* Show selected reaction if it exists and is one of the common ones */}
+                  {selectedReaction && ['👍', '❤️', '😄', '😮'].includes(selectedReaction) ? (
+                    <div className="flex items-center space-x-1 ml-2">
                       <button
-                        key={emoji}
-                        className="text-sm hover:scale-125 transition-transform opacity-60 hover:opacity-100"
-                        onClick={() => {
-                          // TODO: Add emoji reaction to comment
-                          console.log('React to comment', comment.id, 'with', emoji);
-                        }}
-                        title={`React with ${emoji}`}
+                        className="text-sm bg-emerald-50 border border-emerald-200 rounded px-1.5 py-0.5 hover:bg-emerald-100 transition-colors"
+                        onClick={() => handleEmojiReaction(selectedReaction)}
+                        title={`Remove ${selectedReaction} reaction`}
                       >
-                        {emoji}
+                        {selectedReaction} {reactionCounts[selectedReaction] || 1}
                       </button>
-                    ))}
-                  </div>
+                    </div>
+                  ) : selectedReaction ? (
+                    <div className="flex items-center space-x-1 ml-2">
+                      <button
+                        className="text-sm bg-emerald-50 border border-emerald-200 rounded px-1.5 py-0.5 hover:bg-emerald-100 transition-colors"
+                        onClick={() => handleEmojiReaction(selectedReaction)}
+                        title={`Remove ${selectedReaction} reaction`}
+                      >
+                        {selectedReaction} {reactionCounts[selectedReaction] || 1}
+                      </button>
+                      
+                      {/* Show common quick reactions */}
+                      <div className="flex space-x-1">
+                        {['👍', '❤️', '😄', '😮'].map((emoji) => (
+                          <button
+                            key={emoji}
+                            className="text-sm hover:scale-125 transition-transform opacity-60 hover:opacity-100"
+                            onClick={() => handleEmojiReaction(emoji)}
+                            title={`React with ${emoji}`}
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    /* Common quick reactions when no reaction selected */
+                    <div className="flex space-x-1 ml-2">
+                      {['👍', '❤️', '😄', '😮'].map((emoji) => (
+                        <button
+                          key={emoji}
+                          className="text-sm hover:scale-125 transition-transform opacity-60 hover:opacity-100"
+                          onClick={() => handleEmojiReaction(emoji)}
+                          title={`React with ${emoji}`}
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -185,6 +305,55 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
           ))}
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-red-600">Eliminar Comentario</DialogTitle>
+            <DialogDescription className="text-gray-600">
+              Esta acción no se puede deshacer. ¿Estás seguro de que quieres eliminar este comentario permanentemente?
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="py-4">
+            <div className="p-3 bg-gray-50 rounded-lg border-l-4 border-red-500">
+              <p className="text-sm text-gray-700 font-medium mb-1">Comentario a eliminar:</p>
+              <p className="text-sm text-gray-600 line-clamp-3">
+                {comment.content}
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={handleCancelDelete}
+              disabled={isDeleting}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmDelete}
+              disabled={isDeleting}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isDeleting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  Eliminando...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Eliminar Comentario
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

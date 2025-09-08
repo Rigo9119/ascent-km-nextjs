@@ -69,23 +69,15 @@ export class VotingService {
 
   async getVoteStatus(targetId: string, targetType: TargetType): Promise<VoteStatus | null> {
     try {
-      const tableName = targetType === 'discussion' ? 'discussions' : 'comments'
+      const response = await fetch(`/api/vote?targetId=${targetId}&targetType=${targetType}`)
       
-      const { data, error } = await this.supabase
-        .from(tableName)
-        .select('score, upvotes, downvotes')
-        .eq('id', targetId)
-        .single()
-
-      if (error || !data) {
-        console.error('Get vote status error:', error)
+      if (!response.ok) {
         return null
       }
 
-      const userVote = await this.getUserVote(targetId, targetType)
-
+      const data = await response.json()
       return {
-        userVote,
+        userVote: data.userVote || null,
         score: data.score || 0,
         upvotes: data.upvotes || 0,
         downvotes: data.downvotes || 0

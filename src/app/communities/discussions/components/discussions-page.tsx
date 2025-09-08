@@ -121,9 +121,8 @@ export default function DiscussionsPageCmp({
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Discussions List */}
-        <div className="lg:col-span-3">
+      {/* Discussions List - Full Width */}
+      <div>
           <div className="mb-6 flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold">Todas las Discusiones</h2>
@@ -162,7 +161,6 @@ export default function DiscussionsPageCmp({
               ))
             )}
           </div>
-        </div>
       </div>
 
       <AuthRequiredModal
@@ -197,87 +195,60 @@ function DiscussionCard({ discussion }: DiscussionCardProps) {
 
   return (
     <Card className="hover:shadow-md transition-shadow">
-      <CardContent className="p-6">
-        <div className="flex items-start space-x-4">
+      <CardContent className="p-0">
+        <div className="py-2 px-4">
+        <div className="flex items-center space-x-3">
           {/* Voting */}
           <div className="flex-shrink-0">
             <VoteButtons
               targetId={discussion.id}
               targetType="discussion"
               initialScore={discussion.score || 0}
+              className="scale-75"
             />
           </div>
 
-          {/* Avatar */}
-          <div className="flex-shrink-0">
-            {discussion.profiles?.avatar_url ? (
-              <Image
-                src={discussion.profiles.avatar_url}
-                alt={discussion.profiles.full_name || discussion.profiles.username || "User"}
-                width={40}
-                height={40}
-                className="rounded-full"
-              />
-            ) : (
-              <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
-                <Users className="w-5 h-5 text-emerald-600" />
-              </div>
-            )}
-          </div>
-
-          {/* Content */}
+          {/* Content - No Avatar */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center space-x-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2 flex-1 min-w-0">
                 <h3
-                  className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-emerald-600 cursor-pointer transition-colors"
+                  className="text-base font-semibold text-gray-900 dark:text-gray-100 hover:text-emerald-600 cursor-pointer transition-colors truncate"
                   onClick={() => router.push(`/communities/discussions/${discussion.id}`)}
                 >
                   {discussion.title}
                 </h3>
                 {discussion.communities && (
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="secondary" className="text-sm shrink-0">
                     {discussion.communities.name}
                   </Badge>
                 )}
               </div>
-              <div className="flex items-center text-sm text-muted-foreground">
-                <Clock className="w-4 h-4 mr-1" />
-                {formatTimeAgo(discussion.created_at || "")}
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2 text-sm text-muted-foreground mb-3">
-              <span>
-                por {discussion.profiles?.full_name || discussion.profiles?.username || "Anónimo"}
-              </span>
-            </div>
-
-            {discussion.content && (
-              <p className="text-muted-foreground mb-4 line-clamp-2">
-                {discussion.content}
-              </p>
-            )}
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center text-sm text-muted-foreground">
+              
+              <div className="flex items-center space-x-4 text-sm text-muted-foreground shrink-0 ml-4">
+                <span>
+                  @{discussion.profiles?.username || "anon"}
+                </span>
+                <div className="flex items-center">
                   <MessageSquare className="w-4 h-4 mr-1" />
-                  <span>0 respuestas</span>
+                  <span>0</span>
                 </div>
-              </div>
-              <div className="flex gap-2">
+                <div className="flex items-center">
+                  <Clock className="w-4 h-4 mr-1" />
+                  <span>{formatTimeAgo(discussion.created_at || "")}</span>
+                </div>
                 <Button
                   variant="outline"
                   size="sm"
                   className="border-emerald-500 text-emerald-500 hover:text-emerald-500"
                   onClick={() => router.push(`/communities/discussions/${discussion.id}`)}
                 >
-                  Ver Discusión
+                  Ver
                 </Button>
               </div>
             </div>
           </div>
+        </div>
         </div>
       </CardContent>
     </Card>
