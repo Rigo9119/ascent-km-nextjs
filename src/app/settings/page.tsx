@@ -1,6 +1,7 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { PageContainer } from "@/components/page-container";
+import SimpleSettingsContent from "./components/simple-settings-content";
 
 export default async function SettingsPage() {
   const supabase = await createSupabaseServerClient();
@@ -10,12 +11,28 @@ export default async function SettingsPage() {
     redirect('/auth');
   }
 
+  // Fetch community types
+  const { data: communityTypes } = await supabase
+    .from('community_types')
+    .select('*')
+    .order('name');
+
+  // Fetch user's current preferences  
+  const { data: userPreferences } = await supabase
+    .from('user_preferences')
+    .select('preference_id')
+    .eq('user_id', user.id);
+
+  const selectedPreferences = userPreferences?.map(p => p.preference_id) || [];
+
   return (
     <PageContainer>
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Configuración</h1>
-        <p className="text-gray-600">Página de configuración próximamente.</p>
-      </div>
+      <SimpleSettingsContent 
+        communityTypes={communityTypes || []}
+        selectedPreferences={selectedPreferences}
+        userId={user.id}
+        userEmail={user.email || ''}
+      />
     </PageContainer>
   );
 }

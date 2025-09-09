@@ -93,7 +93,7 @@ export default function DiscussionDetail({
             <SafeTitle 
               content={discussion.title} 
               as="h1" 
-              className="text-2xl md:text-3xl font-bold text-gray-900 mb-4"
+              className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4"
             />
 
             {/* Author and metadata */}
@@ -109,7 +109,7 @@ export default function DiscussionDetail({
                   />
                 </Avatar>
                 <div>
-                  <p className="font-medium text-gray-900">
+                  <p className="font-medium text-gray-900 dark:text-gray-100">
                     {discussion.profiles?.full_name || discussion.profiles?.username || 'Anonymous'}
                   </p>
                   <div className="flex items-center text-sm text-gray-500">
