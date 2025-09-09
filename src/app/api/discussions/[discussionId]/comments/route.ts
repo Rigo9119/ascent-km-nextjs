@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createSupabaseServerAction } from '@/lib/supabase/server'
+import { createCommentSchema } from '@/lib/validations/api'
+import { sanitizeUserContent } from '@/lib/utils/sanitization'
 
 export async function POST(
   request: Request,
@@ -7,7 +9,7 @@ export async function POST(
 ) {
   try {
     const { discussionId } = await params
-    const { content, parent_comment_id } = await request.json()
+    const body = await request.json()
     
     const supabase = await createSupabaseServerAction()
     
@@ -18,14 +20,23 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Validate input
-    if (!content || !content.trim()) {
-      return NextResponse.json({ error: 'Content is required' }, { status: 400 })
+    // Validate discussion ID format
+    if (!discussionId || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(discussionId)) {
+      return NextResponse.json({ error: 'Invalid discussion ID format' }, { status: 400 })
     }
 
-    if (content.length > 1000) {
-      return NextResponse.json({ error: 'Content too long (max 1000 characters)' }, { status: 400 })
+    // Validate and sanitize input using Zod schema
+    const validationResult = createCommentSchema.safeParse(body)
+    
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.errors[0]?.message || 'Invalid input'
+      return NextResponse.json({ error: errorMessage }, { status: 400 })
     }
+
+    const { content, parent_comment_id } = validationResult.data
+
+    // Sanitize content to prevent XSS
+    const sanitizedContent = sanitizeUserContent(content)
 
     // Check if discussion exists
     const { data: discussion, error: discussionError } = await supabase
@@ -52,11 +63,11 @@ export async function POST(
       }
     }
 
-    // Create the comment
+    // Create the comment with sanitized data
     const { data: comment, error: commentError } = await supabase
       .from('comments')
       .insert({
-        content: content.trim(),
+        content: sanitizedContent,
         discussion_id: discussionId,
         user_id: user.id,
         parent_comment_id: parent_comment_id || null,

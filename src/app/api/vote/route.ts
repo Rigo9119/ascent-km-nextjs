@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseServerAction } from '@/lib/supabase/server'
+import { voteSchema } from '@/lib/validations/api'
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,29 +16,24 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { targetId, targetType, voteType } = body
 
-    // Validate input
-    if (!targetId || !targetType || !voteType) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
+    // Transform body to match schema expectations
+    const transformedBody = {
+      target_id: body.targetId,
+      target_type: body.targetType,
+      vote_type: body.voteType === 'upvote' ? 'up' : 'down'
     }
 
-    if (!['discussion', 'comment'].includes(targetType)) {
-      return NextResponse.json(
-        { error: 'Invalid target type' },
-        { status: 400 }
-      )
+    // Validate input using Zod schema
+    const validationResult = voteSchema.safeParse(transformedBody)
+    
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.errors[0]?.message || 'Invalid input'
+      return NextResponse.json({ error: errorMessage }, { status: 400 })
     }
 
-    if (!['upvote', 'downvote'].includes(voteType)) {
-      return NextResponse.json(
-        { error: 'Invalid vote type' },
-        { status: 400 }
-      )
-    }
+    const { target_id: targetId, target_type: targetType, vote_type } = validationResult.data
+    const voteType = vote_type === 'up' ? 'upvote' : 'downvote'
 
     // Check if user has already voted on this target
     const { data: existingVote, error: fetchError } = await supabase

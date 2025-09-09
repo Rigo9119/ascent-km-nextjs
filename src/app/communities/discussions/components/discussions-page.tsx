@@ -14,6 +14,7 @@ import { User } from "@supabase/supabase-js";
 import { useAuth } from "@/hooks/use-auth";
 import { VoteButtons } from "@/components/vote-buttons";
 import { sortingService, SortOption, sortOptions } from "@/services/sorting";
+import { SafeTitle } from "@/components/ui/safe-content";
 
 export type FilterState = {
   search: string;
@@ -212,12 +213,12 @@ function DiscussionCard({ discussion }: DiscussionCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2 flex-1 min-w-0">
-                <h3
+                <SafeTitle
+                  content={discussion.title}
+                  as="h3"
                   className="text-base font-semibold text-gray-900 dark:text-gray-100 hover:text-emerald-600 cursor-pointer transition-colors truncate"
                   onClick={() => router.push(`/communities/discussions/${discussion.id}`)}
-                >
-                  {discussion.title}
-                </h3>
+                />
                 {discussion.communities && (
                   <Badge variant="secondary" className="text-sm shrink-0">
                     {discussion.communities.name}

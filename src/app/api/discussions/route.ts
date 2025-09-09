@@ -1,18 +1,11 @@
 import { NextResponse } from 'next/server'
 import { createSupabaseServerAction } from '@/lib/supabase/server'
+import { createDiscussionSchema } from '@/lib/validations/api'
+import { sanitizeTitle, sanitizeUserContent, sanitizeUrl } from '@/lib/utils/sanitization'
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { 
-      id, 
-      community_id, 
-      user_id, 
-      title, 
-      content, 
-      link_url, 
-      link_title 
-    } = body
     
     const supabase = await createSupabaseServerAction()
     
@@ -23,26 +16,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Validate required fields
-    if (!title || !title.trim()) {
-      return NextResponse.json({ error: 'Title is required' }, { status: 400 })
+    // Validate and sanitize input using Zod schema
+    const validationResult = createDiscussionSchema.safeParse(body)
+    
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.errors[0]?.message || 'Invalid input'
+      return NextResponse.json({ error: errorMessage }, { status: 400 })
     }
 
-    if (!content || !content.trim()) {
-      return NextResponse.json({ error: 'Content is required' }, { status: 400 })
-    }
+    const { title, content, community_id, link_url, link_title } = validationResult.data
 
-    if (!community_id) {
-      return NextResponse.json({ error: 'Community ID is required' }, { status: 400 })
-    }
+    // Sanitize content to prevent XSS
+    const sanitizedTitle = sanitizeTitle(title)
+    const sanitizedContent = sanitizeUserContent(content)
+    const sanitizedLinkUrl = link_url ? sanitizeUrl(link_url) : null
+    const sanitizedLinkTitle = link_title ? sanitizeTitle(link_title) : null
 
-    // Validate title and content length
-    if (title.length > 200) {
-      return NextResponse.json({ error: 'Title too long (max 200 characters)' }, { status: 400 })
-    }
-
-    if (content.length > 5000) {
-      return NextResponse.json({ error: 'Content too long (max 5000 characters)' }, { status: 400 })
+    // Validate URL if provided
+    if (link_url && !sanitizedLinkUrl) {
+      return NextResponse.json({ error: 'Invalid URL format' }, { status: 400 })
     }
 
     // Verify community exists and user has access
@@ -56,15 +48,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Community not found' }, { status: 404 })
     }
 
-    // Create the discussion
+    // Create the discussion with sanitized data
     const discussionData = {
-      id: id || crypto.randomUUID(),
+      id: crypto.randomUUID(),
       community_id,
       user_id: user.id, // Use authenticated user ID
-      title: title.trim(),
-      content: content.trim(),
-      link_url: link_url?.trim() || null,
-      link_title: link_title?.trim() || null,
+      title: sanitizedTitle,
+      content: sanitizedContent,
+      link_url: sanitizedLinkUrl,
+      link_title: sanitizedLinkTitle,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     }

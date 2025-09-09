@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { SafeUserContent } from '@/components/ui/safe-content';
 import AuthRequiredModal from '@/components/auth-required-modal';
 import EmojiPicker from '@/components/emoji-picker';
 import {
@@ -185,10 +186,11 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
               </span>
             </div>
 
-            <div className={`text-gray-700 leading-relaxed mb-2 whitespace-pre-wrap ${depth > 3 ? 'text-xs' : 'text-sm'
-              }`}>
-              {comment.content}
-            </div>
+            <SafeUserContent
+              content={comment.content}
+              className={`text-gray-700 leading-relaxed mb-2 whitespace-pre-wrap ${depth > 3 ? 'text-xs' : 'text-sm'
+              }`}
+            />
 
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4 text-xs text-gray-500">
@@ -319,9 +321,10 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
           <div className="py-4">
             <div className="p-3 bg-gray-50 rounded-lg border-l-4 border-red-500">
               <p className="text-sm text-gray-700 font-medium mb-1">Comentario a eliminar:</p>
-              <p className="text-sm text-gray-600 line-clamp-3">
-                {comment.content}
-              </p>
+              <SafeUserContent
+                content={comment.content}
+                className="text-sm text-gray-600 line-clamp-3"
+              />
             </div>
           </div>
 

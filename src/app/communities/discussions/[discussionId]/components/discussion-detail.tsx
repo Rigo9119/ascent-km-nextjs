@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { SafeTitle, SafeUserContent } from '@/components/ui/safe-content';
 import CommentSection from './comment-section';
 import {
   MessageSquare,
@@ -89,9 +90,11 @@ export default function DiscussionDetail({
             )}
 
             {/* Discussion Title */}
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              {discussion.title}
-            </h1>
+            <SafeTitle 
+              content={discussion.title} 
+              as="h1" 
+              className="text-2xl md:text-3xl font-bold text-gray-900 mb-4"
+            />
 
             {/* Author and metadata */}
             <div className="flex items-center justify-between">
@@ -140,9 +143,10 @@ export default function DiscussionDetail({
             {/* Discussion Content */}
             {discussion.content && (
               <div className="prose max-w-none mb-6">
-                <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                  {discussion.content}
-                </div>
+                <SafeUserContent 
+                  content={discussion.content}
+                  className="text-gray-700 leading-relaxed whitespace-pre-wrap"
+                />
               </div>
             )}
 
