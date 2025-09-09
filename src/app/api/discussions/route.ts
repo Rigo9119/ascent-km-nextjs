@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     const validationResult = createDiscussionSchema.safeParse(body)
     
     if (!validationResult.success) {
-      const errorMessage = validationResult.error.errors[0]?.message || 'Invalid input'
+      const errorMessage = validationResult.error.issues[0]?.message || 'Invalid input'
       return NextResponse.json({ error: errorMessage }, { status: 400 })
     }
 

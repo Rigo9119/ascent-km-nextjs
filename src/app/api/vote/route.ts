@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     const validationResult = voteSchema.safeParse(transformedBody)
     
     if (!validationResult.success) {
-      const errorMessage = validationResult.error.errors[0]?.message || 'Invalid input'
+      const errorMessage = validationResult.error.issues[0]?.message || 'Invalid input'
       return NextResponse.json({ error: errorMessage }, { status: 400 })
     }
 
