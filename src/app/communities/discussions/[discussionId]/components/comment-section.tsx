@@ -239,7 +239,7 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
                   {selectedReaction && ['👍', '❤️', '😄', '😮'].includes(selectedReaction) ? (
                     <div className="flex items-center space-x-1 ml-2">
                       <button
-                        className="text-sm bg-emerald-50 border border-emerald-200 rounded px-1.5 py-0.5 hover:bg-emerald-100 transition-colors"
+                        className="text-sm bg-emerald-50 dark:bg-emerald-900 border border-emerald-200 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200 rounded px-1.5 py-0.5 hover:bg-emerald-100 dark:hover:bg-emerald-800 transition-colors"
                         onClick={() => handleEmojiReaction(selectedReaction)}
                         title={`Remove ${selectedReaction} reaction`}
                       >
@@ -249,7 +249,7 @@ function CommentItem({ comment, currentUser, onReply, depth = 0 }: CommentItemPr
                   ) : selectedReaction ? (
                     <div className="flex items-center space-x-1 ml-2">
                       <button
-                        className="text-sm bg-emerald-50 border border-emerald-200 rounded px-1.5 py-0.5 hover:bg-emerald-100 transition-colors"
+                        className="text-sm bg-emerald-50 dark:bg-emerald-900 border border-emerald-200 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200 rounded px-1.5 py-0.5 hover:bg-emerald-100 dark:hover:bg-emerald-800 transition-colors"
                         onClick={() => handleEmojiReaction(selectedReaction)}
                         title={`Remove ${selectedReaction} reaction`}
                       >
