@@ -62,9 +62,9 @@ export default function CommunityTabs({
         {discussions.length === 0 ? (
           <Card>
             <CardContent className="text-center py-12">
-              <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Aún no hay discusiones</h3>
-              <p className="text-gray-500 mb-4">
+              <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-card-foreground mb-2">Aún no hay discusiones</h3>
+              <p className="text-muted-foreground mb-4">
                 {isMember
                   ? "¡Sé el primero en iniciar una discusión en esta comunidad!"
                   : "Únete a esta comunidad para participar en discusiones."
@@ -83,7 +83,7 @@ export default function CommunityTabs({
         ) : (
           <div className="space-y-4">
             {discussions.map((discussion) => (
-              <Card key={discussion.id} className="hover:shadow-md transition-shadow bg-white dark:bg-black">
+              <Card key={discussion.id} className="hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3 flex-1 min-w-0">

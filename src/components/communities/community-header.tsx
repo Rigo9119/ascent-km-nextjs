@@ -107,7 +107,7 @@ export default function CommunityHeader({
   const isOwner = currentUser?.id === community.admin_id;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div className="bg-card text-card-foreground rounded-xl shadow-sm border border-border overflow-hidden">
       {/* Cover Image */}
       {community.image_url && (
         <div className="h-48 bg-gradient-to-r from-emerald-400 to-emerald-600 relative">
@@ -134,7 +134,7 @@ export default function CommunityHeader({
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">
-                <h1 className="text-2xl font-bold text-gray-900 truncate">
+                <h1 className="text-2xl font-bold text-card-foreground truncate">
                   {community.name}
                 </h1>
                 {community.is_public ? (
@@ -149,12 +149,12 @@ export default function CommunityHeader({
                 )}
               </div>
 
-              <p className="text-gray-600 mb-3 line-clamp-2">
+              <p className="text-muted-foreground mb-3 line-clamp-2">
                 {community.description}
               </p>
 
               {/* Community Stats */}
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <Users className="w-4 h-4" />
                   <span>{members.length} miembros</span>
