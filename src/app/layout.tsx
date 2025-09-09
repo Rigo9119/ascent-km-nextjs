@@ -4,7 +4,7 @@ import "./globals.css";
 import { SidebarLayout } from "@/components/app-sidebar/sidebar-layout";
 import { AuthProvider } from "@/contexts/auth-context";
 import { NextFontWithVariable } from "next/dist/compiled/@next/font";
-import { Toaster } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 
 

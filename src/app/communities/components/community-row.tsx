@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Users, MapPin, Star } from "lucide-react";
@@ -7,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { User } from "@supabase/supabase-js";
 import { Community } from "@/types/community";
+import { toast } from "sonner";
 
 interface CommunityRowProps {
   community: Community;
@@ -18,6 +20,61 @@ interface CommunityRowProps {
 
 export function CommunityRow({ community, isMember = false, currentUser, isLast = false }: CommunityRowProps) {
   const router = useRouter();
+  const [isJoining, setIsJoining] = useState(false);
+  const [memberStatus, setMemberStatus] = useState(isMember);
+  const [memberCount, setMemberCount] = useState(community.member_count || 0);
+
+  const handleJoinCommunity = async () => {
+    if (!currentUser) {
+      toast.error('Debes iniciar sesión para unirte a una comunidad');
+      return;
+    }
+
+    if (memberStatus) {
+      // If already a member, just navigate to community
+      router.push(`/communities/${community.id}`);
+      return;
+    }
+
+    setIsJoining(true);
+    
+    try {
+      const response = await fetch(`/api/communities/${community.id}/members/${currentUser.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        setMemberStatus(true);
+        setMemberCount(prev => prev + 1);
+        toast.success(`Te has unido a ${community.name}`);
+      } else {
+        let errorMessage = 'Error al unirse a la comunidad';
+        
+        try {
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            const error = await response.json();
+            errorMessage = error.message || errorMessage;
+          } else {
+            const errorText = await response.text();
+            errorMessage = errorText || errorMessage;
+          }
+        } catch (parseError) {
+          console.error('Error parsing response:', parseError);
+        }
+        
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      console.error('Error joining community:', error);
+      toast.error('Error al unirse a la comunidad');
+    } finally {
+      setIsJoining(false);
+    }
+  };
 
   return (
     <div className={`flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors ${!isLast ? 'border-b border-gray-100 dark:border-gray-800' : ''}`}>
@@ -57,7 +114,7 @@ export function CommunityRow({ community, isMember = false, currentUser, isLast 
           </div>
 
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>{community.member_count || 0} miembros</span>
+            <span>{memberCount} miembros</span>
             {community.description && (
               <>
                 <span>•</span>
@@ -73,13 +130,15 @@ export function CommunityRow({ community, isMember = false, currentUser, isLast 
         {currentUser && (
           <Button
             size="sm"
-            variant={isMember ? "outline" : "default"}
-            className={isMember
+            variant={memberStatus ? "outline" : "default"}
+            className={memberStatus
               ? "border-emerald-500 text-emerald-500 hover:text-emerald-500 text-xs px-3 h-7"
               : "bg-emerald-500 hover:bg-emerald-600 text-xs px-3 h-7"
             }
+            onClick={handleJoinCommunity}
+            disabled={isJoining}
           >
-            {isMember ? 'Miembro' : 'Unirse'}
+            {isJoining ? 'Uniéndose...' : memberStatus ? 'Miembro' : 'Unirse'}
           </Button>
         )}
       </div>

@@ -198,6 +198,7 @@ export class CommunitiesService {
 
   async joinCommunity(communityId: string, userId: string) {
     try {
+      // Add the user to community_members (trigger will update member_count automatically)
       const { data: membership, error: sbError } = await this.supabase
         .from('community_members')
         .insert({
@@ -209,6 +210,7 @@ export class CommunitiesService {
         .single();
 
       if (sbError) throw new Error(`joinCommunity error: ${sbError.message}`);
+
       return membership;
     } catch (error) {
       throw new Error(`joinCommunity-service-error: ${error}`);
@@ -217,6 +219,7 @@ export class CommunitiesService {
 
   async leaveCommunity(communityId: string, userId: string) {
     try {
+      // Remove the user from community_members (trigger will update member_count automatically)
       const { error: sbError } = await this.supabase
         .from('community_members')
         .delete()
@@ -224,6 +227,7 @@ export class CommunitiesService {
         .eq('user_id', userId);
 
       if (sbError) throw new Error(`leaveCommunity error: ${sbError.message}`);
+
       return { success: true };
     } catch (error) {
       throw new Error(`leaveCommunity-service-error: ${error}`);

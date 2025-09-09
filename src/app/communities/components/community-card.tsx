@@ -1,4 +1,5 @@
 'use client'
+import { useState } from "react";
 import { Community } from "@/types/community";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
@@ -7,6 +8,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Users, MapPin, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface CommunityCardProps {
   community: Community;
@@ -22,6 +24,9 @@ export function CommunityCard({
   currentUser
 }: CommunityCardProps) {
   const router = useRouter();
+  const [isJoining, setIsJoining] = useState(false);
+  const [memberStatus, setMemberStatus] = useState(isMember);
+  const [memberCount, setMemberCount] = useState(community.member_count || 0);
 
   // Helper function to format location
   const formatLocation = (location: string | null) => {
@@ -47,6 +52,58 @@ export function CommunityCard({
 
   // Location feature not implemented yet
   // const formattedLocation = formatLocation(community.location);
+
+  const handleJoinCommunity = async () => {
+    if (!currentUser) {
+      toast.error('Debes iniciar sesión para unirte a una comunidad');
+      return;
+    }
+
+    if (memberStatus) {
+      // If already a member, just navigate to community
+      router.push(`/communities/${community.id}`);
+      return;
+    }
+
+    setIsJoining(true);
+    
+    try {
+      const response = await fetch(`/api/communities/${community.id}/members/${currentUser.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        setMemberStatus(true);
+        setMemberCount(prev => prev + 1);
+        toast.success(`Te has unido a ${community.name}`);
+      } else {
+        let errorMessage = 'Error al unirse a la comunidad';
+        
+        try {
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            const error = await response.json();
+            errorMessage = error.message || errorMessage;
+          } else {
+            const errorText = await response.text();
+            errorMessage = errorText || errorMessage;
+          }
+        } catch (parseError) {
+          console.error('Error parsing response:', parseError);
+        }
+        
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      console.error('Error joining community:', error);
+      toast.error('Error al unirse a la comunidad');
+    } finally {
+      setIsJoining(false);
+    }
+  };
 
   // Featured community card (grid layout) - keep original design
   return (
@@ -98,7 +155,7 @@ export function CommunityCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
             <Users className="w-4 h-4 text-gray-400" />
-            <span className="text-sm font-medium">{community.member_count || 0} miembros</span>
+            <span className="text-sm font-medium">{memberCount} miembros</span>
           </div>
           <Badge variant={community.is_public ? "default" : "secondary"} className="text-xs">
             {community.is_public ? 'Público' : 'Privado'}
@@ -107,13 +164,33 @@ export function CommunityCard({
 
         {/* Actions */}
         <div className="flex gap-2 pt-2">
-          <Button
-            size="sm"
-            className="flex-1 bg-emerald-500 hover:bg-emerald-600"
-            onClick={() => router.push(`/communities/${community.id}`)}
-          >
-            {isMember ? 'Ver Comunidad' : 'Conocer Más'}
-          </Button>
+          {currentUser && !memberStatus ? (
+            <>
+              <Button
+                size="sm"
+                className="flex-1 bg-emerald-500 hover:bg-emerald-600"
+                onClick={handleJoinCommunity}
+                disabled={isJoining}
+              >
+                {isJoining ? 'Uniéndose...' : 'Unirse'}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => router.push(`/communities/${community.id}`)}
+              >
+                Ver Más
+              </Button>
+            </>
+          ) : (
+            <Button
+              size="sm"
+              className="flex-1 bg-emerald-500 hover:bg-emerald-600"
+              onClick={() => router.push(`/communities/${community.id}`)}
+            >
+              {memberStatus ? 'Ver Comunidad' : 'Conocer Más'}
+            </Button>
+          )}
         </div>
       </div>
     </Card>
