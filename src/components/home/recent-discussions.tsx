@@ -101,7 +101,7 @@ export default function RecentDiscussions({ discussions, currentUser }: RecentDi
                 </div>
 
                 {discussion.content && (
-                  <p className="text-muted-foreground mb-4 line-clamp-2">
+                  <p className="text-muted-foreground dark:text-white mb-4 line-clamp-2">
                     {discussion.content}
                   </p>
                 )}
