@@ -1,10 +1,10 @@
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSbServerClient } from '@/lib/supabase/server';
 import { SettingsService } from '@/services/settings-service';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function PUT(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServerClient();
+    const supabase = await createSbServerClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {

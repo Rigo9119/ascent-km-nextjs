@@ -1,5 +1,5 @@
 "use client";
-import { createSupabaseClient } from "@/lib/supabase/client";
+import { createSbBrowserClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { AnyFieldApi, useForm } from "@tanstack/react-form";
 import { useRouter } from "next/navigation";
@@ -38,7 +38,7 @@ export function dataURLtoBlob(dataurl: string) {
 
 export default function OnboardingForm({ user, communityTypes }: OnboardingFormProps) {
   const router = useRouter();
-  const supabase = createSupabaseClient();
+  const supabase = createSbBrowserClient();
   const [selectedCommunityTypes, setSelectedCommunityTypes] = useState<string[]>([]);
   const [phoneCountryCode, setPhoneCountryCode] = useState<string>("");
   const [userPreferences, setUserPreferences] = useState<UserPreferences>(defaultPreferences);

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSupabaseServerAction } from '@/lib/supabase/server'
+import { createSbServerClient } from '@/lib/supabase/server'
 
 interface SearchResult {
   id: string
@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json([])
     }
 
-    const supabase = await createSupabaseServerAction()
+    const supabase = await createSbServerClient()
 
     // Search in parallel across all content types
     const [events, locations, communities] = await Promise.allSettled([

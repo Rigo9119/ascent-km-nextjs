@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSbServerClient } from "@/lib/supabase/server";
 import { UserService } from "@/services/user-service";
 import { CommunitiesService } from "@/services/communities-service";
 import { redirect } from "next/navigation";
@@ -22,7 +22,7 @@ async function getProfileData(supabase: SupabaseClient, userId: string) {
 }
 
 export default async function ProfilePage() {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createSbServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

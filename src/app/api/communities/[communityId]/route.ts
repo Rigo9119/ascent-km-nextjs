@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerAction } from '@/lib/supabase/server';
+import { createSbServerClient } from '@/lib/supabase/server';
 import { CommunitiesService } from '@/services/communities-service';
 
 export async function GET(
@@ -8,7 +8,7 @@ export async function GET(
 ) {
   try {
     const { communityId } = await params;
-    const supabase = await createSupabaseServerAction();
+    const supabase = await createSbServerClient();
     const communitiesService = new CommunitiesService(supabase);
 
     const community = await communitiesService.getCommunityById(communityId);
@@ -26,7 +26,7 @@ export async function PUT(
 ) {
   try {
     const { communityId } = await params;
-    const supabase = await createSupabaseServerAction();
+    const supabase = await createSbServerClient();
     const communitiesService = new CommunitiesService(supabase);
     
     const { data: { user } } = await supabase.auth.getUser();
@@ -72,7 +72,7 @@ export async function DELETE(
 ) {
   try {
     const { communityId } = await params;
-    const supabase = await createSupabaseServerAction();
+    const supabase = await createSbServerClient();
     const communitiesService = new CommunitiesService(supabase);
     
     const { data: { user } } = await supabase.auth.getUser();

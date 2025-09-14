@@ -2,18 +2,18 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { createSupabaseClient } from '@/lib/supabase/client'
+import { createSbBrowserClient } from '@/lib/supabase/client'
 
 export default function AuthCallback() {
   const router = useRouter()
 
   useEffect(() => {
     const handleAuthCallback = async () => {
-      const supabase = createSupabaseClient()
-      
+      const supabase = createSbBrowserClient()
+
       try {
         const { data, error } = await supabase.auth.getSession()
-        
+
         if (error) {
           console.error('Auth callback error:', error)
           router.push('/auth')
@@ -24,9 +24,9 @@ export default function AuthCallback() {
           // Check if user was created in the last minute (likely a new signup)
           const userCreatedAt = new Date(data.session.user.created_at)
           const oneMinuteAgo = new Date(Date.now() - 60 * 1000)
-          
+
           const isNewUser = userCreatedAt > oneMinuteAgo || data.session.user.user_metadata?.is_new_user
-          
+
           if (isNewUser) {
             router.push('/auth/onboarding')
           } else {

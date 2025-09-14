@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { createSupabaseServerAction } from '@/lib/supabase/server';
+import { createSbServerClient } from '@/lib/supabase/server';
 import { CommunitiesService } from '@/services/communities-service';
 import { PageContainer } from '@/components/page-container';
 import { redirect } from 'next/navigation';
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: CommunityManagePageProps): Pr
 
 export default async function CommunityManagePage({ params }: CommunityManagePageProps) {
   const { communityId } = await params;
-  const supabase = await createSupabaseServerAction();
+  const supabase = await createSbServerClient();
   const communitiesService = new CommunitiesService(supabase);
   
   const { data: { user } } = await supabase.auth.getUser();

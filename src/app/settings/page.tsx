@@ -1,23 +1,21 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSbServerClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { PageContainer } from "@/components/page-container";
 import SimpleSettingsContent from "./components/simple-settings-content";
 
 export default async function SettingsPage() {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createSbServerClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
     redirect('/auth');
   }
 
-  // Fetch community types
   const { data: communityTypes } = await supabase
     .from('community_types')
     .select('*')
     .order('name');
 
-  // Fetch user's current preferences  
   const { data: userPreferences } = await supabase
     .from('user_preferences')
     .select('preference_id')
@@ -27,7 +25,7 @@ export default async function SettingsPage() {
 
   return (
     <PageContainer>
-      <SimpleSettingsContent 
+      <SimpleSettingsContent
         communityTypes={communityTypes || []}
         selectedPreferences={selectedPreferences}
         userId={user.id}

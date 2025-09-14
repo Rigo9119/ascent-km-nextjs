@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createSupabaseServerAction } from '@/lib/supabase/server'
+import { createSbServerClient } from '@/lib/supabase/server'
 import { createCommentSchema } from '@/lib/validations/api'
 import { sanitizeUserContent } from '@/lib/utils/sanitization'
 
@@ -11,7 +11,7 @@ export async function POST(
     const { discussionId } = await params
     const body = await request.json()
     
-    const supabase = await createSupabaseServerAction()
+    const supabase = await createSbServerClient()
     
     // Get the authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -104,7 +104,7 @@ export async function GET(
 ) {
   try {
     const { discussionId } = await params
-    const supabase = await createSupabaseServerAction()
+    const supabase = await createSbServerClient()
 
     const { data: comments, error } = await supabase
       .from('comments')

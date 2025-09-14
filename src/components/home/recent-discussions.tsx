@@ -9,27 +9,15 @@ import { MessageSquare, Users, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { VoteButtons } from "@/components/vote-buttons";
+import { formatTimeAgo } from "@/lib/utils/utils";
 
 interface RecentDiscussionsProps {
   discussions: DiscussionWithDetails[];
   currentUser: User | null;
 }
 
-export default function RecentDiscussions({ discussions, currentUser }: RecentDiscussionsProps) {
+export default function RecentDiscussions({ discussions }: RecentDiscussionsProps) {
   const router = useRouter();
-
-  const formatTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-    if (diffInSeconds < 60) return 'Ahora mismo';
-    if (diffInSeconds < 3600) return `hace ${Math.floor(diffInSeconds / 60)}m`;
-    if (diffInSeconds < 86400) return `hace ${Math.floor(diffInSeconds / 3600)}h`;
-    if (diffInSeconds < 604800) return `hace ${Math.floor(diffInSeconds / 86400)}d`;
-
-    return date.toLocaleDateString();
-  };
 
   if (!discussions || discussions.length === 0) {
     return (
@@ -45,25 +33,25 @@ export default function RecentDiscussions({ discussions, currentUser }: RecentDi
       {discussions.map((discussion) => (
         <Card key={discussion.id} className="hover:shadow-md transition-shadow bg-white dark:bg-black">
           <CardContent className="p-6">
-            <div className="flex items-start space-x-4">
+            <div className="flex items-center space-x-4">
               {/* Voting */}
               <div className="flex-shrink-0">
-                <VoteButtons 
-                  targetId={discussion.id} 
+                <VoteButtons
+                  targetId={discussion.id}
                   targetType="discussion"
                   initialScore={discussion.score || 0}
                 />
               </div>
 
               {/* Avatar */}
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 flex items-center justify-center">
                 {discussion.profiles?.avatar_url ? (
                   <Image
                     src={discussion.profiles.avatar_url}
                     alt={discussion.profiles.full_name || discussion.profiles.username || "User"}
                     width={40}
                     height={40}
-                    className="rounded-full"
+                    className="rounded-full object-cover"
                   />
                 ) : (
                   <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">

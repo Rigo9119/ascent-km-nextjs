@@ -1,33 +1,34 @@
-import { PageContainer } from "@/components/page-container";
 import { CommunitiesService } from "@/services/communities-service";
-import { createSbServerClient } from "@/lib/supabase/server";
+import { DiscussionsService } from "@/services/discussions-service";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { createSbBrowserClient } from "@/lib/supabase/client";
-import CommunitiesPageCmp from "./components/communities-page";
 
-const getPageData = async () => {
-  let supabase = await createSbServerClient();
+export const getExplorePageData = async (supabase: SupabaseClient) => {
   let user = null;
+  let effectiveSupabase = supabase;
 
-  // Try to get user, if JWT error occurs, use anonymous client
   try {
     const { data: { user: authUser } } = await supabase.auth.getUser();
     user = authUser;
   } catch (error) {
+    // If JWT error, create anonymous client for public data
     if (error instanceof Error && error.message.includes('JWSError')) {
-      console.log('JWT error detected in communities, using anonymous client');
-      supabase = createSbBrowserClient();
+      console.log('JWT error detected, using anonymous client for public data');
+      effectiveSupabase = createSbBrowserClient();
     }
   }
 
-  let publicCommunities, featuredCommunities, communityTypes;
+  let publicCommunities, featuredCommunities, communityTypes, recentDiscussions;
 
   try {
-    const communitiesService = new CommunitiesService(supabase);
+    const communitiesService = new CommunitiesService(effectiveSupabase);
+    const discussionsService = new DiscussionsService(effectiveSupabase);
 
-    [publicCommunities, featuredCommunities, communityTypes] = await Promise.all([
+    [publicCommunities, featuredCommunities, communityTypes, recentDiscussions] = await Promise.all([
       communitiesService.getPublicCommunities(),
       communitiesService.getPublicFeaturedCommunities(),
       communitiesService.getAllCommunityTypes(),
+      discussionsService.getMostRecentDiscussionPerCommunity()
     ]);
   } catch (error) {
     // If still getting JWT errors, fall back to anonymous client
@@ -35,23 +36,26 @@ const getPageData = async () => {
       console.log('JWT error in service calls, retrying with anonymous client');
       const anonSupabase = createSbBrowserClient();
       const communitiesService = new CommunitiesService(anonSupabase);
+      const discussionsService = new DiscussionsService(anonSupabase);
 
-      [publicCommunities, featuredCommunities, communityTypes] = await Promise.all([
+      [publicCommunities, featuredCommunities, communityTypes, recentDiscussions] = await Promise.all([
         communitiesService.getPublicCommunities(),
         communitiesService.getPublicFeaturedCommunities(),
         communitiesService.getAllCommunityTypes(),
+        discussionsService.getMostRecentDiscussionPerCommunity()
       ]);
     } else {
       throw error;
     }
   }
 
+  // Get user memberships if user is logged in
   let userMemberships: string[] = [];
   if (user) {
     try {
-
-      const originalSupabase = await createSbServerClient();
-      const { data: memberships, error } = await originalSupabase
+      console.log('Fetching memberships for user ID:', user.id);
+      // Use original supabase client for authenticated requests
+      const { data: memberships, error } = await supabase
         .from('community_members')
         .select('community_id')
         .eq('user_id', user.id);
@@ -71,22 +75,7 @@ const getPageData = async () => {
     featuredCommunities,
     communityTypes,
     userMemberships,
+    recentDiscussions,
     currentUser: user,
   };
 };
-
-export default async function CommunitiesPage() {
-  const { publicCommunities, featuredCommunities, communityTypes, userMemberships, currentUser } = await getPageData();
-
-  return (
-    <PageContainer>
-      <CommunitiesPageCmp
-        communities={publicCommunities || []}
-        featuredCommunities={featuredCommunities || []}
-        communityTypes={communityTypes || []}
-        userMemberships={userMemberships}
-        currentUser={currentUser}
-      />
-    </PageContainer>
-  );
-}

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { createSupabaseServerAction } from '@/lib/supabase/server';
+import { createSbServerClient } from '@/lib/supabase/server';
 import { DiscussionsService } from '@/services/discussions-service';
 import { PageContainer } from '@/components/page-container';
 import DiscussionDetail from './components/discussion-detail';
@@ -12,7 +12,7 @@ interface DiscussionPageProps {
 }
 
 async function getDiscussionData(discussionId: string) {
-  const supabase = await createSupabaseServerAction();
+  const supabase = await createSbServerClient();
   const discussionsService = new DiscussionsService(supabase);
 
   try {
@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: DiscussionPageProps): Promise
 
 export default async function DiscussionPage({ params }: DiscussionPageProps) {
   const { discussionId } = await params;
-  const supabase = await createSupabaseServerAction();
+  const supabase = await createSbServerClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   const data = await getDiscussionData(discussionId);

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerAction } from '@/lib/supabase/server';
+import { createSbServerClient } from '@/lib/supabase/server';
 import { CommunitiesService } from '@/services/communities-service';
 
 export async function POST(
@@ -8,9 +8,9 @@ export async function POST(
 ) {
   try {
     const { communityId, userId } = await params;
-    const supabase = await createSupabaseServerAction();
+    const supabase = await createSbServerClient();
     const communitiesService = new CommunitiesService(supabase);
-    
+
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -58,9 +58,9 @@ export async function DELETE(
 ) {
   try {
     const { communityId, userId } = await params;
-    const supabase = await createSupabaseServerAction();
+    const supabase = await createSbServerClient();
     const communitiesService = new CommunitiesService(supabase);
-    
+
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

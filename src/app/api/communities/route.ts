@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSupabaseServerAction } from '@/lib/supabase/server'
+import { createSbServerClient } from '@/lib/supabase/server'
 import { CommunitiesService } from '@/services/communities-service'
 
 export async function GET() {
   try {
-    const supabase = await createSupabaseServerAction()
+    const supabase = await createSbServerClient()
     const communitiesService = new CommunitiesService(supabase)
     
     const communities = await communitiesService.getAllCommunities()
@@ -21,7 +21,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServerAction()
+    const supabase = await createSbServerClient()
     const communitiesService = new CommunitiesService(supabase)
     
     const communityData = await request.json()

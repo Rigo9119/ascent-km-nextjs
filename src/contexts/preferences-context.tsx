@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { createSupabaseClient } from '@/lib/supabase/client'
+import { createSbBrowserClient } from '@/lib/supabase/client'
 import { useAuth } from '@/hooks/use-auth'
 import { PreferencesService } from '@/services/preferences-service'
 import { UserPreferences, defaultPreferences, Notifications, Privacy, UserPreferencesUpdate } from '@/types/preferences'
@@ -26,7 +26,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const supabase = createSupabaseClient()
+  const supabase = createSbBrowserClient()
   const preferencesService = new PreferencesService(supabase)
 
   // Load preferences when user changes

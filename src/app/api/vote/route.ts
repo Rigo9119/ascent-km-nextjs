@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSupabaseServerAction } from '@/lib/supabase/server'
+import { createSbServerClient } from '@/lib/supabase/server'
 import { voteSchema } from '@/lib/validations/api'
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServerAction()
+    const supabase = await createSbServerClient()
     
     // Check if user is authenticated
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServerAction()
+    const supabase = await createSbServerClient()
     
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 

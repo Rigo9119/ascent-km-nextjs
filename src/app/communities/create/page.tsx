@@ -1,9 +1,10 @@
 import { PageContainer } from "@/components/page-container";
 import { CreateCommunityCmp } from "./components/create-community-cmp";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSbServerClient } from "@/lib/supabase/server";
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import { CommunitiesService } from "@/services/communities-service";
 import { UserService } from "@/services/user-service";
+import { Tables } from "@/lib/types/supabase";
 
 async function getCreateCommunityData(supabase: SupabaseClient, userId: string) {
   const userService = new UserService(supabase);
@@ -21,7 +22,7 @@ async function getCreateCommunityData(supabase: SupabaseClient, userId: string) 
 }
 
 export default async function CreateCommunityPage() {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createSbServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -29,7 +30,11 @@ export default async function CreateCommunityPage() {
 
   return (
     <PageContainer>
-      <CreateCommunityCmp user={user as unknown as User} profile={profile} communityTypes={communityTypes} />
+      <CreateCommunityCmp
+        user={user as unknown as User}
+        profile={profile}
+        communityTypes={communityTypes as unknown as Tables<"community_types">[]}
+      />
     </PageContainer>
   );
 }

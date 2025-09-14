@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
 import { CommunityType } from "@/types/community";
 import { CommunitiesService } from "@/services/communities-service";
-import { createSupabaseClient } from "@/lib/supabase/client";
+import { createSbBrowserClient } from "@/lib/supabase/client";
 
 interface CreateCommunityFormProps {
   userId: string;
@@ -29,7 +29,7 @@ export default function CreateCommunityForm({ userId, onCancel }: CreateCommunit
   useEffect(() => {
     const fetchCommunityTypes = async () => {
       try {
-        const supabase = createSupabaseClient();
+        const supabase = createSbBrowserClient();
         const communitiesService = new CommunitiesService(supabase);
         const types = await communitiesService.getAllCommunityTypes();
         setCommunityTypes(types || []);

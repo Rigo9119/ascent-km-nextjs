@@ -2,7 +2,7 @@
 
 import { createContext, useEffect, useState, ReactNode } from 'react'
 import { User, Session } from '@supabase/supabase-js'
-import { createSupabaseClient } from '@/lib/supabase/client'
+import { createSbBrowserClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { translateAuthError } from '@/lib/utils/translate-auth-errors'
 
@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
-  const supabase = createSupabaseClient()
+  const supabase = createSbBrowserClient()
 
   useEffect(() => {
     // Get initial session
@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Only redirect on actual sign-in, not on page load when user is already signed in
           const currentPath = window.location.pathname;
           const isOnAuthPage = currentPath.startsWith('/auth');
-          
+
           // Check if user has completed onboarding by checking if they have a profile
           if (session?.user && isOnAuthPage) {
             try {
@@ -172,30 +172,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setError(null)
       setIsLoading(true)
-      
+
       // Force immediate state update
       setUser(null)
       setSession(null)
-      
+
       // Try to sign out from Supabase with timeout
       try {
         const signOutPromise = supabase.auth.signOut({ scope: 'local' })
         const timeoutPromise = new Promise((_, reject) => {
           setTimeout(() => reject(new Error('SignOut timeout')), 5000)
         })
-        
+
         await Promise.race([signOutPromise, timeoutPromise])
       } catch (supabaseError) {
         // Continue with local logout even if Supabase fails
       }
-      
+
       // Navigate to auth page
       router.push('/auth')
-      
+
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred'
       setError(translateAuthError(message))
-      
+
       // Force clear state and navigate anyway
       setUser(null)
       setSession(null)

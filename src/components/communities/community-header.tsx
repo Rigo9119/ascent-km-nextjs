@@ -17,7 +17,7 @@ import {
   Share2
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { createSupabaseClient } from '@/lib/supabase/client';
+import { createSbBrowserClient } from '@/lib/supabase/client';
 import { CommunitiesService } from '@/services/communities-service';
 import { Community } from '@/types/community';
 import Image from 'next/image';
@@ -48,7 +48,7 @@ export default function CommunityHeader({
 }: CommunityHeaderProps) {
   const [isMember, setIsMember] = useState(initialIsMember);
   const [isLoading, setIsLoading] = useState(false);
-  const supabase = createSupabaseClient();
+  const supabase = createSbBrowserClient();
   const communitiesService = new CommunitiesService(supabase);
 
   const handleJoinLeave = async () => {

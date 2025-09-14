@@ -1,11 +1,11 @@
 import { PageContainer } from "@/components/page-container";
 import { DiscussionsService } from "@/services/discussions-service";
 import { CommunitiesService } from "@/services/communities-service";
-import { createSupabaseServerAction } from "@/lib/supabase/server";
+import { createSbServerClient } from "@/lib/supabase/server";
 import DiscussionsPageCmp from "./components/discussions-page";
 
 const getPageData = async () => {
-  const supabase = await createSupabaseServerAction();
+  const supabase = await createSbServerClient();
   const discussionsService = new DiscussionsService(supabase);
   const communitiesService = new CommunitiesService(supabase);
 
@@ -22,7 +22,7 @@ const getPageData = async () => {
 
 export default async function DiscussionsPage() {
   const { discussions, communities } = await getPageData();
-  const supabase = await createSupabaseServerAction();
+  const supabase = await createSbServerClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   return (

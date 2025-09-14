@@ -1,6 +1,6 @@
 import { PageContainer } from "@/components/page-container";
 import { redirect } from "next/navigation";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSbServerClient } from "@/lib/supabase/server";
 import { User } from "@supabase/supabase-js";
 import OnboardingPageContainer from "./components/OnboardingPageContainer";
 import { CommunitiesService } from "@/services/communities-service";
@@ -8,7 +8,7 @@ import { CommunityType } from "@/types/community-type";
 
 
 export default async function OnboardingPage() {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createSbServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

@@ -1,4 +1,4 @@
-import { createSupabaseClient } from '@/lib/supabase/client'
+import { createSbBrowserClient } from '@/lib/supabase/client'
 
 export type VoteType = 'upvote' | 'downvote'
 export type TargetType = 'discussion' | 'comment'
@@ -18,7 +18,7 @@ export interface VoteStatus {
 }
 
 export class VotingService {
-  private supabase = createSupabaseClient()
+  private supabase = createSbBrowserClient()
 
   async vote(targetId: string, targetType: TargetType, voteType: VoteType): Promise<VoteResult> {
     try {
@@ -54,7 +54,7 @@ export class VotingService {
   async getUserVote(targetId: string, targetType: TargetType): Promise<VoteType | null> {
     try {
       const response = await fetch(`/api/vote?targetId=${targetId}&targetType=${targetType}`)
-      
+
       if (!response.ok) {
         return null
       }
@@ -70,7 +70,7 @@ export class VotingService {
   async getVoteStatus(targetId: string, targetType: TargetType): Promise<VoteStatus | null> {
     try {
       const response = await fetch(`/api/vote?targetId=${targetId}&targetType=${targetType}`)
-      
+
       if (!response.ok) {
         return null
       }

@@ -1,28 +1,14 @@
 import { PageContainer } from "@/components/page-container";
-import { ResourcesService } from "@/services/resources-service";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSbServerClient } from "@/lib/supabase/server";
 import ResourcesPageCmp from "./components/resources-page";
+import { getResourcesPageData } from "@/data/resources";
 
 // Force dynamic rendering to avoid cookie/static generation conflicts
 export const dynamic = 'force-dynamic';
 
-const getPageData = async () => {
-  try {
-    const supabase = await createSupabaseServerClient();
-    const resourcesService = new ResourcesService(supabase);
-    const resources = await resourcesService.getAllResources();
-
-    return { resources: resources || [] };
-  } catch (error) {
-    // Gracefully handle any errors during build or runtime
-    console.error('Error fetching resources:', error);
-    // Return empty array - the component will handle showing "no resources" state
-    return { resources: [] };
-  }
-};
-
 export default async function ResourcesPage() {
-  const { resources } = await getPageData();
+  const supabase = await createSbServerClient();
+  const { resources } = await getResourcesPageData(supabase);
 
   return (
     <PageContainer>

@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { createSupabaseServerAction, createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSbServerClient } from '@/lib/supabase/server';
 import { CommunitiesService } from '@/services/communities-service';
 import { DiscussionsService } from '@/services/discussions-service';
 import CommunityHeader from '@/components/communities/community-header';
@@ -14,7 +14,7 @@ interface CommunityPageProps {
 }
 
 export async function generateMetadata({ params }: CommunityPageProps): Promise<Metadata> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createSbServerClient();
   const communitiesService = new CommunitiesService(supabase);
   const { communityId } = await params;
 
@@ -47,7 +47,7 @@ async function getCommunityPageData(supabase: SupabaseClient, communityId: strin
 }
 export default async function CommunityPage({ params }: CommunityPageProps) {
   const { communityId } = await params
-  const supabase = await createSupabaseServerAction()
+  const supabase = await createSbServerClient()
   const communityService = new CommunitiesService(supabase);
   const { data: { user } } = await supabase.auth.getUser();
   const { community, members, discussions } = await getCommunityPageData(supabase, communityId);

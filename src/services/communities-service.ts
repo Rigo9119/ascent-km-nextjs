@@ -45,7 +45,8 @@ export class CommunitiesService {
       if (sbError) throw new Error(`getPublicCommunities error: ${sbError.message}`);
       return communities;
     } catch (error) {
-      throw new Error(`getPublicCommunities-services-error: ${error}`);
+      console.log(`getPublicCommunities-services-error: ${error}`)
+      //throw new Error(`getPublicCommunities-services-error: ${error}`);
     }
   }
 
@@ -175,7 +176,8 @@ export class CommunitiesService {
       if (sbError) throw new Error(`getAllCommunityTypes error: ${sbError.message}`);
       return communityTypes;
     } catch (error) {
-      throw new Error(`getAllCommunityTypes-service-error: ${error}`);
+      console.log(`getAllCommunityTypes-service-error: ${error}`)
+      //throw new Error(`getAllCommunityTypes-service-error: ${error}`);
     }
   }
 
