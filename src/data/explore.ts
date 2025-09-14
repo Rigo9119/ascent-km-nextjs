@@ -32,15 +32,6 @@ export const getExplorePageData = async (supabase: SupabaseClient) => {
       discussionsService.getMostRecentDiscussionPerCommunity()
     ]);
 
-    // Debug: Log community data to check member_count
-    console.log('Sample community data:', {
-      totalCommunities: publicCommunities?.length,
-      firstCommunity: publicCommunities?.[0],
-      memberCounts: publicCommunities?.slice(0, 3).map(c => ({ 
-        name: c.name, 
-        member_count: c.member_count 
-      }))
-    });
 
   } catch (error) {
     console.error('Database access error:', error);
