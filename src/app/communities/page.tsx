@@ -49,18 +49,10 @@ const getPageData = async () => {
   let userMemberships: string[] = [];
   if (user) {
     try {
-
       const originalSupabase = await createSbServerClient();
-      const { data: memberships, error } = await originalSupabase
-        .from('community_members')
-        .select('community_id')
-        .eq('user_id', user.id);
-
-      if (error) {
-        console.error('Supabase error fetching memberships:', error);
-      }
-
-      userMemberships = memberships?.map(m => m.community_id) || [];
+      const authCommunitiesService = new CommunitiesService(originalSupabase);
+      const { membershipsIds } = await authCommunitiesService.getUserMemberships(user.id);
+      userMemberships = membershipsIds;
     } catch (error) {
       console.log('Error fetching user memberships:', error);
     }

@@ -18,16 +18,13 @@ export const getHomePageData = async () => {
 
       if (user) {
         const discussionsService = new DiscussionsService(authClient);
+        const authCommunitiesService = new CommunitiesService(authClient);
+        
         userRecentDiscussions = await discussionsService.getRecentDiscussionsFromUserCommunities(user.id);
-        // TODO: Implement user memberships into a service
-        const { data: memberships, error } = await authClient
-          .from('community_members')
-          .select('community_id')
-          .eq('user_id', user.id);
-
-        if (!error) {
-          userMemberships = memberships?.map(m => m.community_id) || [];
-        }
+        
+        // Use communities service for user memberships
+        const { membershipsIds } = await authCommunitiesService.getUserMemberships(user.id);
+        userMemberships = membershipsIds;
       }
     } catch (error) {
       console.log(`No authenticated user or auth error, showing public content only -> ${error}`);

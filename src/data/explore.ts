@@ -1,28 +1,29 @@
 import { CommunitiesService } from "@/services/communities-service";
 import { DiscussionsService } from "@/services/discussions-service";
 import { SupabaseClient } from "@supabase/supabase-js";
-import { createSbBrowserClient } from "@/lib/supabase/client";
+import { createAnonymousClient } from "@/lib/supabase/client";
 
 export const getExplorePageData = async (supabase: SupabaseClient) => {
-  let user = null;
-  let effectiveSupabase = supabase;
+  // Use completely anonymous client for public data
+  const publicClient = createAnonymousClient();
 
+  // Try to get user with server client, but don't let it fail the whole request
+  let user = null;
   try {
     const { data: { user: authUser } } = await supabase.auth.getUser();
     user = authUser;
   } catch (error) {
-    // If JWT error, create anonymous client for public data
-    if (error instanceof Error && error.message.includes('JWSError')) {
-      console.log('JWT error detected, using anonymous client for public data');
-      effectiveSupabase = createSbBrowserClient();
-    }
+    console.log('No authenticated user, showing public content only');
   }
 
+  // Test direct database access without services
   let publicCommunities, featuredCommunities, communityTypes, recentDiscussions;
 
   try {
-    const communitiesService = new CommunitiesService(effectiveSupabase);
-    const discussionsService = new DiscussionsService(effectiveSupabase);
+
+    // If direct query works, use services
+    const communitiesService = new CommunitiesService(publicClient);
+    const discussionsService = new DiscussionsService(publicClient);
 
     [publicCommunities, featuredCommunities, communityTypes, recentDiscussions] = await Promise.all([
       communitiesService.getPublicCommunities(),
@@ -30,23 +31,24 @@ export const getExplorePageData = async (supabase: SupabaseClient) => {
       communitiesService.getAllCommunityTypes(),
       discussionsService.getMostRecentDiscussionPerCommunity()
     ]);
-  } catch (error) {
-    // If still getting JWT errors, fall back to anonymous client
-    if (error instanceof Error && error.message.includes('JWSError')) {
-      console.log('JWT error in service calls, retrying with anonymous client');
-      const anonSupabase = createSbBrowserClient();
-      const communitiesService = new CommunitiesService(anonSupabase);
-      const discussionsService = new DiscussionsService(anonSupabase);
 
-      [publicCommunities, featuredCommunities, communityTypes, recentDiscussions] = await Promise.all([
-        communitiesService.getPublicCommunities(),
-        communitiesService.getPublicFeaturedCommunities(),
-        communitiesService.getAllCommunityTypes(),
-        discussionsService.getMostRecentDiscussionPerCommunity()
-      ]);
-    } else {
-      throw error;
-    }
+    // Debug: Log community data to check member_count
+    console.log('Sample community data:', {
+      totalCommunities: publicCommunities?.length,
+      firstCommunity: publicCommunities?.[0],
+      memberCounts: publicCommunities?.slice(0, 3).map(c => ({ 
+        name: c.name, 
+        member_count: c.member_count 
+      }))
+    });
+
+  } catch (error) {
+    console.error('Database access error:', error);
+    // Return empty data if database access fails
+    publicCommunities = [];
+    featuredCommunities = [];
+    communityTypes = [];
+    recentDiscussions = [];
   }
 
   // Get user memberships if user is logged in
@@ -54,17 +56,10 @@ export const getExplorePageData = async (supabase: SupabaseClient) => {
   if (user) {
     try {
       console.log('Fetching memberships for user ID:', user.id);
-      // Use original supabase client for authenticated requests
-      const { data: memberships, error } = await supabase
-        .from('community_members')
-        .select('community_id')
-        .eq('user_id', user.id);
-
-      if (error) {
-        console.error('Supabase error fetching memberships:', error);
-      }
-
-      userMemberships = memberships?.map(m => m.community_id) || [];
+      // Use server client with communities service for authenticated requests
+      const authCommunitiesService = new CommunitiesService(supabase);
+      const { membershipsIds } = await authCommunitiesService.getUserMemberships(user.id);
+      userMemberships = membershipsIds;
     } catch (error) {
       console.log('Error fetching user memberships:', error);
     }

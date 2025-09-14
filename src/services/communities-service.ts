@@ -99,6 +99,21 @@ export class CommunitiesService {
     }
   }
 
+  async getUserMemberships(userId: string) {
+    const { data: memberships, error } = await this.supabase
+      .from('community_members')
+      .select('community_id')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw Error(`user memberships error: ${error.message}`);
+
+    return {
+      memberships,
+      membershipsIds: memberships.map(membership => membership.community_id)
+    };
+  }
+
   async createCommunity(communityData: Community) {
     console.log('communityData', communityData)
     try {
