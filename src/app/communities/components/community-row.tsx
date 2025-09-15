@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Users, MapPin, Star } from "lucide-react";
+import { Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { User } from "@supabase/supabase-js";
@@ -37,7 +37,7 @@ export function CommunityRow({ community, isMember = false, currentUser, isLast 
     }
 
     setIsJoining(true);
-    
+
     try {
       const response = await fetch(`/api/communities/${community.id}/members/${currentUser.id}`, {
         method: 'POST',
@@ -52,12 +52,19 @@ export function CommunityRow({ community, isMember = false, currentUser, isLast 
         toast.success(`Te has unido a ${community.name}`);
       } else {
         let errorMessage = 'Error al unirse a la comunidad';
-        
+
         try {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {
             const error = await response.json();
-            errorMessage = error.message || errorMessage;
+            errorMessage = error.error || errorMessage;
+
+            // If user is already a member, update the UI state
+            if (response.status === 400 && errorMessage.includes('Already a member')) {
+              setMemberStatus(true);
+              toast.info('Ya eres miembro de esta comunidad');
+              return;
+            }
           } else {
             const errorText = await response.text();
             errorMessage = errorText || errorMessage;
@@ -65,7 +72,7 @@ export function CommunityRow({ community, isMember = false, currentUser, isLast 
         } catch (parseError) {
           console.error('Error parsing response:', parseError);
         }
-        
+
         toast.error(errorMessage);
       }
     } catch (error) {
@@ -127,18 +134,14 @@ export function CommunityRow({ community, isMember = false, currentUser, isLast 
 
       {/* Right side - Actions */}
       <div className="flex items-center gap-2">
-        {currentUser && (
+        {currentUser && !memberStatus && (
           <Button
             size="sm"
-            variant={memberStatus ? "outline" : "default"}
-            className={memberStatus
-              ? "border-emerald-500 text-emerald-500 hover:text-emerald-500 text-xs px-3 h-7"
-              : "bg-emerald-500 hover:bg-emerald-600 text-xs px-3 h-7"
-            }
+            className="bg-emerald-500 hover:bg-emerald-600 text-xs px-3 h-7"
             onClick={handleJoinCommunity}
             disabled={isJoining}
           >
-            {isJoining ? 'Uniéndose...' : memberStatus ? 'Miembro' : 'Unirse'}
+            {isJoining ? 'Uniéndose...' : 'Unirse'}
           </Button>
         )}
       </div>

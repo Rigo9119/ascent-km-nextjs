@@ -3,13 +3,7 @@
 import { useState } from "react";
 import { Community } from "@/types/community";
 import { CommunityType } from "@/types/community-type";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import FormSelect from "@/components/forms/form-components/form-select";
-import { AnyFieldApi } from "@tanstack/react-form";
 import { User } from "@supabase/supabase-js";
 import { CommunityCard } from "./community-card";
 import { CommunityRow } from "./community-row";
@@ -119,42 +113,6 @@ export default function CommunitiesPageCmp({
       )}
 
       <div className="grid grid-cols-1 gap-8">
-        {/* Filters Sidebar - Hidden */}
-        <div className="hidden lg:col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle>Filtros</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="search">Buscar Comunidades</Label>
-                <Input
-                  id="search"
-                  placeholder="Buscar por nombre..."
-                  value={filters.search}
-                  onChange={(e) => handleFilterChange("search", e.target.value)}
-                />
-              </div>
-
-              <FormSelect
-                field={{} as AnyFieldApi}
-                label="Tipo de Comunidad"
-                value={filters.communityType}
-                placeholder="Seleccionar tipo"
-                options={communityTypeOptions}
-                onValueChange={(value) => handleFilterChange("communityType", value)}
-              />
-
-              <Button
-                variant="outline"
-                className="w-full mt-4 border-emerald-500 text-emerald-500 hover:text-emerald-500"
-                onClick={handleClearAll}
-              >
-                Limpiar Todo
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
 
         {/* Communities List */}
         <div className="col-span-1">

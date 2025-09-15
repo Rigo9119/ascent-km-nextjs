@@ -51,8 +51,8 @@ const getPageData = async () => {
     try {
       const originalSupabase = await createSbServerClient();
       const authCommunitiesService = new CommunitiesService(originalSupabase);
-      const { membershipsIds } = await authCommunitiesService.getUserMemberships(user.id);
-      userMemberships = membershipsIds;
+      const result = await authCommunitiesService.getUserMemberships(user.id);
+      userMemberships = result.membershipsIds || [];
     } catch (error) {
       console.log('Error fetching user memberships:', error);
     }

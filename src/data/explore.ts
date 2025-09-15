@@ -42,12 +42,9 @@ export const getExplorePageData = async (supabase: SupabaseClient) => {
     recentDiscussions = [];
   }
 
-  // Get user memberships if user is logged in
   let userMemberships: string[] = [];
   if (user) {
     try {
-      console.log('Fetching memberships for user ID:', user.id);
-      // Use server client with communities service for authenticated requests
       const authCommunitiesService = new CommunitiesService(supabase);
       const { membershipsIds } = await authCommunitiesService.getUserMemberships(user.id);
       userMemberships = membershipsIds;

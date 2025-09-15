@@ -86,7 +86,14 @@ export function CommunityCard({
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {
             const error = await response.json();
-            errorMessage = error.message || errorMessage;
+            errorMessage = error.error || errorMessage;
+            
+            // If user is already a member, update the UI state
+            if (response.status === 400 && errorMessage.includes('Already a member')) {
+              setMemberStatus(true);
+              toast.info('Ya eres miembro de esta comunidad');
+              return;
+            }
           } else {
             const errorText = await response.text();
             errorMessage = errorText || errorMessage;

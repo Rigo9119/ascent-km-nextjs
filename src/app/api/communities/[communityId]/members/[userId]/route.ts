@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSbServerClient } from '@/lib/supabase/server';
 import { CommunitiesService } from '@/services/communities-service';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(
   request: NextRequest,
@@ -41,6 +42,9 @@ export async function POST(
 
     // Join the community
     const result = await communitiesService.joinCommunity(communityId, userId);
+
+    // Revalidate the communities page to update membership status
+    revalidatePath('/communities');
 
     return NextResponse.json({ success: true, result });
   } catch (error) {
