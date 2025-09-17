@@ -4,6 +4,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink, FileText, Star, Globe, BookOpen } from "lucide-react";
+import { useState, useMemo } from "react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface ResourcesPageProps {
   resources: Resource[];
@@ -12,8 +22,30 @@ interface ResourcesPageProps {
 export default function ResourcesPageCmp({
   resources,
 }: ResourcesPageProps) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 9;
 
   const featuredResources = resources.filter(resource => resource.badge === "featured");
+  const allResources = resources;
+
+  // Pagination logic
+  const { paginatedResources, totalPages } = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const paginated = allResources.slice(startIndex, endIndex);
+    const total = Math.ceil(allResources.length / ITEMS_PER_PAGE);
+    
+    return {
+      paginatedResources: paginated,
+      totalPages: total
+    };
+  }, [allResources, currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of resources section
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="space-y-8">
@@ -47,21 +79,97 @@ export default function ResourcesPageCmp({
         <div className="mb-6">
           <h2 className="text-2xl font-bold">Todos los Recursos</h2>
           <p className="text-muted-foreground">
-            {resources.length} recurso{resources.length !== 1 ? "s" : ""} disponible{resources.length !== 1 ? "s" : ""}
+            {allResources.length} recurso{allResources.length !== 1 ? "s" : ""} disponible{allResources.length !== 1 ? "s" : ""}
+            {totalPages > 1 && (
+              <span className="ml-2">• Página {currentPage} de {totalPages}</span>
+            )}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {resources.length === 0 ? (
+          {allResources.length === 0 ? (
             <div className="col-span-full text-center py-8 text-muted-foreground">
               No hay recursos disponibles.
             </div>
           ) : (
-            resources.map((resource) => (
+            paginatedResources.map((resource) => (
               <ResourceCard key={resource.id} resource={resource} featured />
             ))
           )}
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-8">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (currentPage > 1) handlePageChange(currentPage - 1);
+                    }}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+                
+                {/* Page Numbers */}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                  // Show first page, last page, current page, and pages around current
+                  const shouldShow = 
+                    page === 1 || 
+                    page === totalPages || 
+                    (page >= currentPage - 1 && page <= currentPage + 1);
+                  
+                  if (!shouldShow && page === 2 && currentPage > 4) {
+                    return (
+                      <PaginationItem key="ellipsis-start">
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    );
+                  }
+                  
+                  if (!shouldShow && page === totalPages - 1 && currentPage < totalPages - 3) {
+                    return (
+                      <PaginationItem key="ellipsis-end">
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    );
+                  }
+                  
+                  if (!shouldShow) return null;
+                  
+                  return (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handlePageChange(page);
+                        }}
+                        isActive={currentPage === page}
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                })}
+                
+                <PaginationItem>
+                  <PaginationNext 
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (currentPage < totalPages) handlePageChange(currentPage + 1);
+                    }}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
       </div>
     </div>
   );
