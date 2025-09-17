@@ -5,6 +5,7 @@ import { ChangeEvent } from "react";
 import { Button } from "../ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { loginSchema, signUpSchema } from "@/lib/validations/auth";
+import Link from "next/link";
 
 export default function LoginForm({ mode }: { mode: string }) {
   const { signInWithPassword, signUp, isLoading } = useAuth();
@@ -89,6 +90,40 @@ export default function LoginForm({ mode }: { mode: string }) {
           </Button>
         )}
       </loginForm.Subscribe>
+      
+      {mode === "login" && (
+        <div className="text-center space-y-3">
+          <Link 
+            href="/auth?mode=reset" 
+            className="text-sm text-gray-600 hover:text-emerald-600 block"
+          >
+            ¿Olvidaste tu contraseña?
+          </Link>
+          <div className="text-sm text-gray-600">
+            ¿No tienes cuenta?{" "}
+            <Link 
+              href="/auth?mode=sign-up" 
+              className="text-emerald-600 hover:text-emerald-500 font-medium"
+            >
+              Regístrate aquí
+            </Link>
+          </div>
+        </div>
+      )}
+      
+      {mode === "sign-up" && (
+        <div className="text-center">
+          <div className="text-sm text-gray-600">
+            ¿Ya tienes cuenta?{" "}
+            <Link 
+              href="/auth?mode=login" 
+              className="text-emerald-600 hover:text-emerald-500 font-medium"
+            >
+              Inicia sesión aquí
+            </Link>
+          </div>
+        </div>
+      )}
     </form>
   );
 }

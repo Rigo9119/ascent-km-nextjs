@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación a Ascent KM</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f8fafc;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .header::before {
+            content: '✉️';
+            font-size: 48px;
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .invitation-from {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-left: 4px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+
+        .invitation-from h3 {
+            color: #0c4a6e;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .invitation-from p {
+            color: #075985;
+            font-size: 16px;
+        }
+
+        .inviter-info {
+            display: flex;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #bae6fd;
+        }
+
+        .inviter-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .inviter-details h4 {
+            color: #0c4a6e;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .inviter-details p {
+            color: #0369a1;
+            font-size: 14px;
+        }
+
+        .welcome-text {
+            font-size: 18px;
+            color: #1f2937;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .message {
+            font-size: 16px;
+            color: #4b5563;
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 24px;
+            transition: transform 0.2s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-1px);
+        }
+
+        .alternative-link {
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 24px 0;
+        }
+
+        .alternative-link p {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .alternative-link code {
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            color: #374151;
+            word-break: break-all;
+            display: block;
+            margin-top: 8px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 32px 0;
+        }
+
+        .feature-card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .feature-card h4 {
+            color: #374151;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .info-box {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 24px 0;
+        }
+
+        .info-box p {
+            font-size: 14px;
+            color: #92400e;
+            margin: 0;
+        }
+
+        .footer {
+            background-color: #f9fafb;
+            padding: 24px 30px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .footer p {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .footer a {
+            color: #6366f1;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .social-links {
+            margin-top: 16px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 8px;
+            color: #6b7280;
+            text-decoration: none;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 600px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .footer {
+                padding: 20px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .inviter-info {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .inviter-avatar {
+                margin-right: 0;
+                margin-bottom: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>¡Te han invitado a Ascent KM!</h1>
+            <p>Únete a nuestra comunidad de conocimiento</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Invitation Info -->
+            <div class="invitation-from">
+                <h3>Invitación de:</h3>
+                <div class="inviter-info">
+                    <div class="inviter-details">
+                        <h4>{{ .InviterName }}</h4>
+                        <p>{{ .InviterEmail }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="welcome-text">¡Hola {{ .Email }}!</p>
+
+            <div class="message">
+                <p><strong>{{ .InviterName }}</strong> te ha invitado a unirte a <strong>Ascent KM</strong>, una plataforma de gestión de conocimiento donde puedes conectar con comunidades, participar en discusiones y acceder a recursos valiosos.</p>
+
+                <p>{{if .PersonalMessage}}{{ .PersonalMessage }}{{else}}¡Esperamos verte pronto en nuestra comunidad!{{end}}</p>
+            </div>
+
+            <!-- CTA Button -->
+            <a href="{{ .InviteURL }}" class="cta-button">
+                🚀 Aceptar invitación y crear cuenta
+            </a>
+
+            <!-- Features -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">👥</span>
+                    <h4>Comunidades</h4>
+                    <p>Crea y únete a comunidades de interés</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">💬</span>
+                    <h4>Discusiones</h4>
+                    <p>Participa en conversaciones significativas</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📚</span>
+                    <h4>Recursos</h4>
+                    <p>Accede a herramientas y guías útiles</p>
+                </div>
+            </div>
+
+            <!-- Alternative Link -->
+            <div class="alternative-link">
+                <p><strong>¿Problemas con el botón?</strong> Copia y pega este enlace en tu navegador:</p>
+                <code>{{ .InviteURL }}</code>
+            </div>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <p><strong>⏰ Importante:</strong> Esta invitación expira en 7 días. ¡No te pierdas la oportunidad de unirte a nuestra comunidad!</p>
+            </div>
+
+            <div class="message">
+                <p>Al aceptar esta invitación, podrás:</p>
+                <ul style="margin: 16px 0; padding-left: 20px; color: #4b5563;">
+                    <li>Conectar directamente con {{ .InviterName }} y otros miembros</li>
+                    <li>Participar en discusiones exclusivas</li>
+                    <li>Acceder a recursos compartidos por la comunidad</li>
+                    <li>Crear tu propio perfil personalizado</li>
+                    <li>Formar parte de una red de conocimiento colaborativo</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Si no deseas recibir más invitaciones, puedes <a href="#">desuscribirte aquí</a>.</p>
+            <p>Esta invitación fue enviada por <strong>{{ .InviterName }}</strong> desde <a href="#">Ascent KM</a></p>
+
+            <div class="social-links">
+                <a href="#">Política de Privacidad</a> |
+                <a href="#">Términos de Servicio</a> |
+                <a href="#">Soporte</a>
+            </div>
+
+            <p style="margin-top: 16px; font-size: 12px; color: #9ca3af;">
+                © 2024 Ascent KM. Todos los derechos reservados.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

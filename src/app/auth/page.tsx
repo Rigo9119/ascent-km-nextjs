@@ -6,17 +6,39 @@ import { Suspense } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import Image from 'next/image'
 import LoginForm from '@/components/forms/login-form'
+import ResetPasswordForm from '@/components/forms/reset-password-form'
+import Link from 'next/link'
 
 function AuthContent() {
   const searchParams = useSearchParams()
   const mode = searchParams.get('mode') || 'login'
   const { signInWithProvider, isLoading, error, clearError } = useAuth()
 
+  const getTitle = () => {
+    switch (mode) {
+      case 'login':
+        return 'Iniciar Sesión'
+      case 'sign-up':
+        return 'Registrarse'
+      case 'reset':
+        return 'Restablecer Contraseña'
+      default:
+        return 'Iniciar Sesión'
+    }
+  }
+
+  const getErrorClass = () => {
+    if (mode === 'reset' && error && error.includes('enviado')) {
+      return "mb-4 p-4 text-sm text-green-800 bg-green-100 rounded-md flex justify-between items-center"
+    }
+    return "mb-4 p-4 text-sm text-red-800 bg-red-100 rounded-md flex justify-between items-center"
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center dark:bg-background">
       <div className='w-full max-w-md space-y-8 rounded-lg bg-white dark:bg-black p-6 shadow-lg border border-gray-200 dark:border-emerald-500'>
         {error && (
-          <div className="mb-4 p-4 text-sm text-red-800 bg-red-100 rounded-md flex justify-between items-center">
+          <div className={getErrorClass()}>
             <span>{error}</span>
             <button onClick={clearError} className="text-red-600 hover:text-red-800">
               ×
@@ -24,7 +46,7 @@ function AuthContent() {
           </div>
         )}
         <div>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{mode === 'login' ? 'Iniciar Sesión' : 'Registrarse'}</h2>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{getTitle()}</h2>
           <p className="mt-2 text-sm text-gray-600 hidden">O continúa con</p>
           <div className="mt-3 flex flex-col justify-center gap-3 hidden">
             <Button
@@ -56,7 +78,21 @@ function AuthContent() {
             </div>
           </div>
         </div>
-        <LoginForm mode={mode} />
+        {mode === 'reset' ? (
+          <div className="space-y-4">
+            <ResetPasswordForm />
+            <div className="text-center">
+              <Link 
+                href="/auth?mode=login" 
+                className="text-sm text-emerald-600 hover:text-emerald-500"
+              >
+                ← Volver al inicio de sesión
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <LoginForm mode={mode} />
+        )}
       </div>
     </div>
   )

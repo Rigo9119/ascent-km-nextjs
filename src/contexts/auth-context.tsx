@@ -17,6 +17,7 @@ interface AuthContextType extends AuthState {
   signInWithProvider: (provider: 'google' | 'kakao') => Promise<void>
   signInWithPassword: (email: string, password: string) => Promise<void>
   signUp: (email: string, password: string) => Promise<void>
+  resetPassword: (email: string) => Promise<void>
   signOut: () => Promise<void>
   clearError: () => void
 }
@@ -168,6 +169,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const resetPassword = async (email: string) => {
+    try {
+      setIsLoading(true)
+      setError(null)
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/reset-password`
+      })
+
+      if (error) throw error
+
+      // Success message
+      setError('Revisa tu correo electrónico. Te hemos enviado un enlace para restablecer tu contraseña.')
+
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'An unexpected error occurred'
+      setError(translateAuthError(message))
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const signOut = async () => {
     try {
       setError(null)
@@ -215,6 +238,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signInWithProvider,
     signInWithPassword,
     signUp,
+    resetPassword,
     signOut,
     clearError,
   }

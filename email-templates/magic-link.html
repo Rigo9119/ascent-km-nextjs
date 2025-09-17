@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu enlace de acceso - Ascent KM</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f8fafc;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '🔐';
+            font-size: 48px;
+            display: block;
+            margin-bottom: 16px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .security-badge {
+            background: linear-gradient(135deg, #dcfdf7 0%, #a7f3d0 100%);
+            border: 1px solid #6ee7b7;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        
+        .security-badge .shield {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .security-badge p {
+            color: #065f46;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .welcome-text {
+            font-size: 18px;
+            color: #1f2937;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .message {
+            font-size: 16px;
+            color: #4b5563;
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+            color: white;
+            text-decoration: none;
+            padding: 18px 36px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 18px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 24px;
+            transition: transform 0.2s ease;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
+        }
+        
+        .timer-section {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 24px 0;
+            text-align: center;
+        }
+        
+        .timer-section .clock {
+            font-size: 32px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .timer-section h3 {
+            color: #92400e;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .timer-section p {
+            color: #d97706;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .countdown {
+            font-size: 24px;
+            font-weight: bold;
+            color: #dc2626;
+            margin-top: 8px;
+        }
+        
+        .alternative-link {
+            background-color: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 24px 0;
+        }
+        
+        .alternative-link p {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+        
+        .alternative-link code {
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            color: #374151;
+            word-break: break-all;
+            display: block;
+            margin-top: 8px;
+        }
+        
+        .security-info {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 32px 0;
+        }
+        
+        .security-info h3 {
+            color: #1e40af;
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .security-info h3::before {
+            content: '🛡️';
+            margin-right: 8px;
+        }
+        
+        .security-info ul {
+            color: #1e3a8a;
+            font-size: 14px;
+            margin-left: 20px;
+        }
+        
+        .security-info li {
+            margin-bottom: 6px;
+        }
+        
+        .warning-box {
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 24px 0;
+        }
+        
+        .warning-box h4 {
+            color: #dc2626;
+            font-size: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .warning-box h4::before {
+            content: '⚠️';
+            margin-right: 8px;
+        }
+        
+        .warning-box p {
+            font-size: 14px;
+            color: #991b1b;
+            margin: 0;
+        }
+        
+        .device-info {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 20px 0;
+            font-size: 13px;
+            color: #64748b;
+        }
+        
+        .device-info .label {
+            font-weight: 600;
+            color: #475569;
+        }
+        
+        .footer {
+            background-color: #f9fafb;
+            padding: 24px 30px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .footer p {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+        
+        .footer a {
+            color: #7c3aed;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .social-links {
+            margin-top: 16px;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            margin: 0 8px;
+            color: #6b7280;
+            text-decoration: none;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 600px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .footer {
+                padding: 20px;
+            }
+            
+            .cta-button {
+                font-size: 16px;
+                padding: 16px 32px;
+            }
+        }
+        
+        /* Animation for countdown */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .countdown {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Tu enlace de acceso seguro</h1>
+            <p>Inicia sesión sin contraseña</p>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Security Badge -->
+            <div class="security-badge">
+                <span class="shield">🛡️</span>
+                <p>Enlace de acceso único y seguro generado para tu cuenta</p>
+            </div>
+            
+            <p class="welcome-text">¡Hola {{ .Email }}!</p>
+            
+            <div class="message">
+                <p>Hemos recibido una solicitud para iniciar sesión en tu cuenta de <strong>Ascent KM</strong>. Usa el enlace de abajo para acceder de forma segura sin necesidad de contraseña.</p>
+                
+                <p>Este método de autenticación es más seguro que las contraseñas tradicionales y te permite acceder rápidamente a tu cuenta.</p>
+            </div>
+            
+            <!-- CTA Button -->
+            <a href="{{ .ConfirmationURL }}" class="cta-button">
+                🚀 Iniciar sesión en Ascent KM
+            </a>
+            
+            <!-- Timer Section -->
+            <div class="timer-section">
+                <span class="clock">⏰</span>
+                <h3>Enlace de acceso temporal</h3>
+                <p>Este enlace expira en:</p>
+                <div class="countdown">15 minutos</div>
+            </div>
+            
+            <!-- Device Info -->
+            <div class="device-info">
+                <div><span class="label">Solicitud desde:</span> {{ .IPAddress | default "Dirección IP no disponible" }}</div>
+                <div><span class="label">Fecha y hora:</span> {{ .Timestamp | default "Ahora" }}</div>
+                <div><span class="label">User-Agent:</span> {{ .UserAgent | default "Navegador no identificado" }}</div>
+            </div>
+            
+            <!-- Alternative Link -->
+            <div class="alternative-link">
+                <p><strong>¿El botón no funciona?</strong> Copia y pega este enlace en tu navegador:</p>
+                <code>{{ .ConfirmationURL }}</code>
+            </div>
+            
+            <!-- Security Info -->
+            <div class="security-info">
+                <h3>¿Por qué es seguro?</h3>
+                <ul>
+                    <li>El enlace es único y se genera específicamente para tu cuenta</li>
+                    <li>Solo funciona una vez y expira automáticamente</li>
+                    <li>No requiere contraseñas que puedan ser comprometidas</li>
+                    <li>Se envía únicamente a tu dirección de correo verificada</li>
+                </ul>
+            </div>
+            
+            <!-- Warning Box -->
+            <div class="warning-box">
+                <h4>¿No solicitaste este acceso?</h4>
+                <p>Si no intentaste iniciar sesión en Ascent KM, puedes ignorar este correo de forma segura. Tu cuenta permanece protegida. También puedes <a href="#" style="color: #dc2626; text-decoration: underline;">reportar actividad sospechosa</a>.</p>
+            </div>
+            
+            <div class="message">
+                <p><strong>Consejos de seguridad:</strong></p>
+                <ul style="margin: 16px 0; padding-left: 20px; color: #4b5563;">
+                    <li>Nunca compartas este enlace con nadie</li>
+                    <li>Asegúrate de estar en el sitio oficial de Ascent KM</li>
+                    <li>Si sospechas actividad no autorizada, contacta a soporte</li>
+                    <li>Usa este enlace únicamente desde un dispositivo de confianza</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>Este enlace de acceso fue solicitado para la cuenta: <strong>{{ .Email }}</strong></p>
+            <p>Si tienes problemas para acceder, <a href="#">contacta a nuestro soporte</a></p>
+            
+            <div class="social-links">
+                <a href="#">Política de Privacidad</a> |
+                <a href="#">Términos de Servicio</a> |
+                <a href="#">Centro de Ayuda</a>
+            </div>
+            
+            <p style="margin-top: 16px; font-size: 12px; color: #9ca3af;">
+                © 2024 Ascent KM. Todos los derechos reservados.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
