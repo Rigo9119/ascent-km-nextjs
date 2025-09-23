@@ -25,7 +25,7 @@ export function UserMenu() {
 
   if (!user) {
     return (
-      <div className="flex gap-2">
+      <div className="hidden sm:flex gap-2">
         <Button
           onClick={() => window.location.href = '/auth?mode=login'}
           variant="outline"

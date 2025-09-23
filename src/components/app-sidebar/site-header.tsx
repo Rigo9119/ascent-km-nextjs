@@ -21,7 +21,11 @@ export function SiteHeader({ breadcrumbs }: SiteHeaderProps) {
       <div className="w-full flex items-center gap-4 px-4 py-6 lg:px-6">
         <div className="flex items-center gap-2">
           <SidebarTrigger className="bg-emerald-300 -ml-1" />
-          {breadcrumbs.length > 0 && (<AppBreadcrumbs breadcrumbs={breadcrumbs} />)}
+          {breadcrumbs.length > 0 && (
+            <div className="hidden sm:block">
+              <AppBreadcrumbs breadcrumbs={breadcrumbs} />
+            </div>
+          )}
         </div>
         <div className="flex-1 flex justify-center items-center">
           <HomeSearch />

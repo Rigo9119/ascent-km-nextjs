@@ -90,6 +90,34 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Mobile Auth Buttons - Only show when not authenticated and on mobile */}
+        {!user && !isLoading && (
+          <>
+            <SidebarSeparator />
+            <SidebarGroup>
+              <SidebarGroupContent>
+                <div className="flex flex-col gap-2 px-2 sm:hidden">
+                  <Button
+                    onClick={() => window.location.href = '/auth?mode=login'}
+                    variant="outline"
+                    size="sm"
+                    className="w-full justify-start"
+                  >
+                    Iniciar Sesión
+                  </Button>
+                  <Button
+                    onClick={() => window.location.href = '/auth?mode=sign-up'}
+                    size="sm"
+                    className="w-full justify-start bg-emerald-500 hover:bg-emerald-600"
+                  >
+                    Registrarse
+                  </Button>
+                </div>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </>
+        )}
       </SidebarContent>
 
       <SidebarFooter>
